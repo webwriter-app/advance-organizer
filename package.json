@@ -1,27 +1,29 @@
 {
-	"name": "@webwriter/advance-organizer",
-	"version": "0.0.1",
-	"scripts": {
-		"prepublishOnly": "npx @webwriter/build",
-		"dev": "npx @webwriter/build dev",
-		"localize": "lit-localize extract && npx @webwriter/build localize && lit-localize build"
-	},
-	"dependencies": {
-		"lit": "^3",
-		"@webwriter/lit": "^2"
-	},
-	"devDependencies": {
-		"@lit/localize-tools": "^0.8"
-	},
-	"exports": {
-		"./widgets/webwriter-advance-organizer.*": {
-			"source": "./widgets/webwriter-advance-organizer.ts",
-			"default": "./dist/widgets/webwriter-advance-organizer.*"
-		}
-	},
-	"keywords": [
-		"webwriter-widget"
-	],
-	"license": "MIT",
-	"author": "Constantin Birken"
+    "name": "@webwriter/advance-organizer",
+    "version": "0.0.1",
+    "keywords": [
+        "webwriter-widget"
+    ],
+    "license": "MIT",
+    "author": "Constantin Birken",
+    "scripts": {
+        "prepublishOnly": "npx @webwriter/build",
+        "dev": "npx @webwriter/build dev",
+        "localize": "lit-localize extract && npx @webwriter/build localize && lit-localize build"
+    },
+    "dependencies": {
+        "@shoelace-style/shoelace": "^2.20.1",
+        "@webwriter/lit": "^2",
+        "lit": "^3"
+    },
+    "devDependencies": {
+        "@lit/localize-tools": "^0.8",
+        "typescript": "^6.0.3"
+    },
+    "exports": {
+        "./widgets/webwriter-advance-organizer.*": {
+            "source": "./src/widgets/webwriter-advance-organizer.ts",
+            "default": "./dist/widgets/webwriter-advance-organizer.*"
+        }
+    }
 }

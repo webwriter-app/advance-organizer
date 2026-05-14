@@ -1,7 +1,6 @@
-import {html, css} from "lit"
-import {LitElementWw} from "@webwriter/lit"
-import {customElement} from "lit/decorators.js"
-
+import { html, css, TemplateResult } from "lit";
+import { LitElementWw } from "@webwriter/lit";
+import { customElement } from "lit/decorators.js";
 
 /* Optional LOCALIZATION: Uncomment this after first running `npm run localize` in the command line.
 import LOCALIZE from '../localization/generated'
@@ -10,7 +9,6 @@ import {msg} from '@lit/localize'
 
 @customElement("webwriter-advance-organizer")
 export class WebwriterAdvanceOrganizer extends LitElementWw {
-
   /* Optional LOCALIZATION: Uncomment this after first running `npm run localize` in the command line.
   localize = LOCALIZE
   */
@@ -21,13 +19,13 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
    * ...
    *   static scopedElements = {"sl-button": SlButton}
    **/
-  static scopedElements = {}
+  static override scopedElements = {};
 
   /** Put the styles for your Shadow DOM (what is rendered through render()) here. */
-  static styles = css``
+  static override styles = css``;
 
   /** Define your template here and return it. */
-  render() {
-    return html`Hello, world!`
+  protected override render(): TemplateResult {
+    return html`Hello, world!`;
   }
 }
