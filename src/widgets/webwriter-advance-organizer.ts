@@ -1,6 +1,15 @@
-import { html, css, TemplateResult } from "lit";
+import { html, TemplateResult } from "lit";
 import { LitElementWw } from "@webwriter/lit";
 import { customElement } from "lit/decorators.js";
+import { styles } from "./webwriter-advance-organizer.styles";
+
+import { WwToolbar } from "../components/ui/toolbar";
+import { AoCanvas } from "../components/canvas/canvas";
+
+import shoelaceTheme from "@shoelace-style/shoelace/dist/themes/light.styles.js";
+
+import SlButton from "@shoelace-style/shoelace/dist/components/button/button.component.js";
+import SlButtonGroup from "@shoelace-style/shoelace/dist/components/button-group/button-group.component.js";
 
 /* Optional LOCALIZATION: Uncomment this after first running `npm run localize` in the command line.
 import LOCALIZE from '../localization/generated'
@@ -19,13 +28,24 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
    * ...
    *   static scopedElements = {"sl-button": SlButton}
    **/
-  static override scopedElements = {};
+  static override scopedElements = {
+    "ww-toolbar": WwToolbar,
+    "ao-canvas": AoCanvas,
 
-  /** Put the styles for your Shadow DOM (what is rendered through render()) here. */
-  static override styles = css``;
+    "sl-button": SlButton,
+    "sl-button-group": SlButtonGroup,
+  };
 
-  /** Define your template here and return it. */
+  static override styles = [styles, shoelaceTheme];
+
   protected override render(): TemplateResult {
-    return html`Hello, world!`;
+    return html`<ww-toolbar>
+        <sl-button-group>
+          <sl-button>Button 1</sl-button>
+          <sl-button>Button 2</sl-button>
+          <sl-button>Button 3</sl-button>
+        </sl-button-group>
+      </ww-toolbar>
+      <ao-canvas></ao-canvas>`;
   }
 }

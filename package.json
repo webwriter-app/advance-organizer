@@ -12,12 +12,14 @@
         "localize": "lit-localize extract && npx @webwriter/build localize && lit-localize build"
     },
     "dependencies": {
+        "@lit/context": "^1.1.6",
         "@shoelace-style/shoelace": "^2.20.1",
         "@webwriter/lit": "^2",
         "lit": "^3"
     },
     "devDependencies": {
         "@lit/localize-tools": "^0.8",
+        "@tabler/icons": "^3.44.0",
         "typescript": "^6.0.3"
     },
     "exports": {
