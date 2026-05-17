@@ -33,6 +33,23 @@ export class SelectionController extends Observable {
     return this._entries.size === 0;
   }
 
+  allOfSameKind(): boolean {
+    let kind: "node" | "edge" | null = null;
+    for (const id of this._entries) {
+      const item = this.doc.get(id);
+      if (!item) {
+        continue;
+      }
+      const itemKind = item.kind;
+      if (!kind) {
+        kind = itemKind;
+      } else if (kind !== itemKind) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   select(id: Id): void {
     this._entries.clear();
     this._entries.add(id);

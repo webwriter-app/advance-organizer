@@ -7,9 +7,11 @@ import { WwToolbar } from "../components/ui/toolbar";
 import { AoCanvas } from "../components/canvas/canvas";
 
 import shoelaceTheme from "@shoelace-style/shoelace/dist/themes/light.styles.js";
-
-import SlButton from "@shoelace-style/shoelace/dist/components/button/button.component.js";
-import SlButtonGroup from "@shoelace-style/shoelace/dist/components/button-group/button-group.component.js";
+import { AoNodeActionsGroup } from "../components/ui/toolbar-groups/node-actions";
+import { provide } from "@lit/context";
+import { documentContext, selectionContext } from "../state/contexts";
+import { DocumentController } from "../state/document";
+import { SelectionController } from "../state/selection";
 
 /* Optional LOCALIZATION: Uncomment this after first running `npm run localize` in the command line.
 import LOCALIZE from '../localization/generated'
@@ -18,6 +20,16 @@ import {msg} from '@lit/localize'
 
 @customElement("webwriter-advance-organizer")
 export class WebwriterAdvanceOrganizer extends LitElementWw {
+  @provide({
+    context: documentContext,
+  })
+  accessor doc = new DocumentController(this);
+
+  @provide({
+    context: selectionContext,
+  })
+  accessor selection = new SelectionController(this, this.doc);
+
   /* Optional LOCALIZATION: Uncomment this after first running `npm run localize` in the command line.
   localize = LOCALIZE
   */
@@ -32,19 +44,14 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
     "ww-toolbar": WwToolbar,
     "ao-canvas": AoCanvas,
 
-    "sl-button": SlButton,
-    "sl-button-group": SlButtonGroup,
+    "ao-node-actions": AoNodeActionsGroup,
   };
 
   static override styles = [styles, shoelaceTheme];
 
   protected override render(): TemplateResult {
     return html`<ww-toolbar>
-        <sl-button-group>
-          <sl-button>Button 1</sl-button>
-          <sl-button>Button 2</sl-button>
-          <sl-button>Button 3</sl-button>
-        </sl-button-group>
+        <ao-node-actions></ao-node-actions>
       </ww-toolbar>
       <ao-canvas></ao-canvas>`;
   }

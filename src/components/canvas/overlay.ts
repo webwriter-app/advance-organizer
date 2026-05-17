@@ -25,20 +25,23 @@ function renderSelectionIndicator(
   if (!item) return svg``;
 
   if (item.kind === "node") {
-    const DISTANCE = 0;
-
     return svg`
-      <rect
-        x=${item.position.x - item.dimension.width / 2 - DISTANCE}
-        y=${item.position.y - item.dimension.height / 2 - DISTANCE}
-        width=${item.dimension.width + DISTANCE * 2}
-        height=${item.dimension.height + DISTANCE * 2}
-        fill="none"
-        stroke="var(--ao-selection-color, #3b82f6)"
-        stroke-width="2"
-        vector-effect="non-scaling-stroke"
+      <g
+        data-selection-id=${entryId}
+        transform="translate(${item.position.x}, ${item.position.y})"
         pointer-events="none"
-      />`;
+      >
+        <rect
+          x=${-item.dimension.width / 2}
+          y=${-item.dimension.height / 2}
+          width=${item.dimension.width}
+          height=${item.dimension.height}
+          fill="none"
+          stroke="var(--ao-selection-color, #3b82f6)"
+          stroke-width="2"
+          vector-effect="non-scaling-stroke"
+        />
+      </g>`;
   } else {
     console.log("TODO: render edge selection indicator");
     return svg``;
@@ -62,34 +65,39 @@ function renderResizeHandles(
     cursor: string;
     handle: string;
   }> = [
-    { cx: x - w / 2, cy: y - h / 2, cursor: "nwse-resize", handle: "tl" },
-    { cx: x, cy: y - h / 2, cursor: "ns-resize", handle: "t" },
-    { cx: x + w / 2, cy: y - h / 2, cursor: "nesw-resize", handle: "tr" },
-    { cx: x + w / 2, cy: y, cursor: "ew-resize", handle: "r" },
-    { cx: x + w / 2, cy: y + h / 2, cursor: "nwse-resize", handle: "br" },
-    { cx: x, cy: y + h / 2, cursor: "ns-resize", handle: "b" },
-    { cx: x - w / 2, cy: y + h / 2, cursor: "nesw-resize", handle: "bl" },
-    { cx: x - w / 2, cy: y, cursor: "ew-resize", handle: "l" },
+    { cx: -w / 2, cy: -h / 2, cursor: "nwse-resize", handle: "tl" },
+    { cx: 0, cy: -h / 2, cursor: "ns-resize", handle: "t" },
+    { cx: w / 2, cy: -h / 2, cursor: "nesw-resize", handle: "tr" },
+    { cx: w / 2, cy: 0, cursor: "ew-resize", handle: "r" },
+    { cx: w / 2, cy: h / 2, cursor: "nwse-resize", handle: "br" },
+    { cx: 0, cy: h / 2, cursor: "ns-resize", handle: "b" },
+    { cx: -w / 2, cy: h / 2, cursor: "nesw-resize", handle: "bl" },
+    { cx: -w / 2, cy: 0, cursor: "ew-resize", handle: "l" },
   ];
 
   return svg`
-    ${handles.map(
-      (h) => svg`
-      <rect 
-        class="resize-handle"
-        x=${h.cx - 4}
-        y=${h.cy - 4}
-        width="8"
-        height="8"
-        fill="white"
-        stroke="var(--ao-selection-color, #3b82f6)"
-        stroke-width="1.5"
-        style="cursor: ${h.cursor}"
-        data-handle=${h.handle}
-        data-item-id=${entryId}
-        pointer-events="all"
-      />
-    `,
-    )}
+    <g
+      class="resize-handles"
+      data-resize-id=${entryId}
+      transform="translate(${x}, ${y})"
+      pointer-events="all"
+      fill="white"
+      stroke="var(--ao-selection-color, #3b82f6)"
+      stroke-width="1.5"
+    >
+      ${handles.map(
+        (h) => svg`
+        <rect 
+          class="resize-handle"
+          x=${h.cx - 4}
+          y=${h.cy - 4}
+          width="8"
+          height="8"
+          style="cursor: ${h.cursor}"
+          data-handle=${h.handle}
+        />
+      `,
+      )}
+    </g>
   `;
 }
