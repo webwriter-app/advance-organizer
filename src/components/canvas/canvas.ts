@@ -9,8 +9,14 @@ import { renderOverlay } from "./overlay";
 import { DocumentController } from "../../state/document";
 import { SubscribeController } from "../../state/subscribe";
 import { repeat } from "lit/directives/repeat.js";
-import { Id, Point } from "../../model/types";
+import { Dimension, Id, Point, ResizeHandle } from "../../model/types";
 import { state } from "lit/decorators.js";
+import {
+  applyResize,
+  computeResize,
+  getHandlePositions,
+  HANDLE_SIZE,
+} from "./helper";
 
 type InteractionMode =
   | { kind: "idle" }
@@ -21,6 +27,14 @@ type InteractionMode =
       start: Point;
       startPositions: Map<Id, Point>;
       items: Set<Id>;
+    }
+  | {
+      kind: "resize";
+      start: Point;
+      startPosition: Point;
+      startDimension: Dimension;
+      handle: ResizeHandle;
+      itemId: Id;
     }
   | { kind: "draw-edge"; sourceId: Id; cursor: Point };
 
@@ -71,10 +85,19 @@ export class AoCanvas extends LitElementWw {
     if (e.button !== 0) return; // ignore non-left clicks
 
     const target = e.target as Element;
-    const itemEl = target.closest<SVGElement>("[data-item-id]");
+    const handleEl = target.closest<SVGElement>("[data-handle]");
+    const itemEl = !handleEl
+      ? target.closest<SVGElement>("[data-item-id]")
+      : null;
     const additive = e.shiftKey || e.ctrlKey || e.metaKey;
 
-    if (itemEl) {
+    if (handleEl) {
+      const handle = handleEl.dataset["handle"]! as ResizeHandle;
+      const groupEl = handleEl.closest<SVGElement>("[data-resize-id]");
+      const resizeId = groupEl?.dataset["resizeId"];
+      if (!resizeId || !this.selection.has(resizeId)) return;
+      this._beginResize(e, resizeId, handle);
+    } else if (itemEl) {
       const id = itemEl.dataset["itemId"]!;
 
       if (additive) {
@@ -107,38 +130,105 @@ export class AoCanvas extends LitElementWw {
     };
   }
 
+  private _beginResize(
+    e: PointerEvent,
+    itemId: Id,
+    handle: ResizeHandle,
+  ): void {
+    const item = this.doc.get(itemId);
+    if (!item || item.kind !== "node") return;
+
+    this._mode = {
+      kind: "resize",
+      start: { x: e.clientX, y: e.clientY },
+      startPosition: { ...item.position },
+      startDimension: { ...item.dimension },
+      handle,
+      itemId,
+    };
+  }
+
   private _onPointerMove(e: PointerEvent): void {
-    if (this._mode.kind !== "drag") return;
+    if (this._mode.kind !== "drag" && this._mode.kind !== "resize") return;
 
     this._pendingPointer = { x: e.clientX, y: e.clientY };
 
     if (this._rafId === null) {
       this._rafId = requestAnimationFrame(() => {
         this._rafId = null;
-        if (this._mode.kind !== "drag" || !this._pendingPointer) return;
+        if (!this._pendingPointer) return;
 
-        const dx = this._pendingPointer.x - this._mode.start.x;
-        const dy = this._pendingPointer.y - this._mode.start.y;
+        if (this._mode.kind === "drag") {
+          const dx = this._pendingPointer.x - this._mode.start.x;
+          const dy = this._pendingPointer.y - this._mode.start.y;
 
-        for (const [id, startPos] of this._mode.startPositions) {
-          const transform = `translate(${startPos.x + dx}, ${startPos.y + dy})`;
-          (
-            this.renderRoot.querySelector(
-              `g.node[data-item-id="${id}"]`,
-            ) as SVGGElement | null
-          )?.setAttribute("transform", transform);
-          (
-            this.renderRoot.querySelector(
-              `[data-selection-id="${id}"]`,
-            ) as SVGGElement | null
-          )?.setAttribute("transform", transform);
-          (
-            this.renderRoot.querySelector(
-              `.resize-handles[data-resize-id="${id}"]`,
-            ) as SVGGElement | null
-          )?.setAttribute("transform", transform);
+          for (const [id, startPos] of this._mode.startPositions) {
+            const newPos = { x: startPos.x + dx, y: startPos.y + dy };
+            this._applyDragDom(id, newPos);
+          }
+        } else if (this._mode.kind === "resize") {
+          const dx = this._pendingPointer.x - this._mode.start.x;
+          const dy = this._pendingPointer.y - this._mode.start.y;
+          const { newPos, newDim } = computeResize(
+            this._mode.handle,
+            this._mode.startPosition,
+            this._mode.startDimension,
+            dx,
+            dy,
+          );
+          this._applyResizeDom(this._mode.itemId, newPos, newDim);
         }
       });
+    }
+  }
+
+  private _applyDragDom(id: Id, newPos: Point): void {
+    const translate = `translate(${newPos.x}, ${newPos.y})`;
+
+    const nodeG = this.renderRoot.querySelector(
+      `g.node[data-item-id="${id}"]`,
+    ) as SVGGElement | null;
+    const selG = this.renderRoot.querySelector(
+      `[data-selection-id="${id}"]`,
+    ) as SVGGElement | null;
+    const handlesG = this.renderRoot.querySelector(
+      `.resize-handles[data-resize-id="${id}"]`,
+    ) as SVGGElement | null;
+
+    nodeG?.setAttribute("transform", translate);
+    selG?.setAttribute("transform", translate);
+    handlesG?.setAttribute("transform", translate);
+  }
+
+  private _applyResizeDom(id: Id, newPos: Point, newDim: Dimension): void {
+    this._applyDragDom(id, newPos);
+
+    const shapeEl = this.renderRoot.querySelector(
+      `g.node[data-item-id="${id}"] g.shape > *`,
+    ) as SVGElement | null;
+    if (shapeEl) {
+      applyResize(shapeEl, newDim);
+    }
+
+    const selRect = this.renderRoot.querySelector(
+      `g[data-selection-id="${id}"] rect`,
+    ) as SVGRectElement | null;
+    if (selRect) {
+      applyResize(selRect, newDim);
+    }
+
+    const handlesG = this.renderRoot.querySelector(
+      `.resize-handles[data-resize-id="${id}"]`,
+    ) as SVGGElement | null;
+    if (handlesG) {
+      const handlePositions = getHandlePositions(newDim);
+      for (const { handle, pos } of handlePositions) {
+        const rect = handlesG.querySelector(`[data-handle="${handle}"]`);
+        if (rect) {
+          rect.setAttribute("x", String(pos.x - HANDLE_SIZE / 2));
+          rect.setAttribute("y", String(pos.y - HANDLE_SIZE / 2));
+        }
+      }
     }
   }
 
@@ -154,6 +244,17 @@ export class AoCanvas extends LitElementWw {
         }
         this.doc.moveNodes(finalPositions);
       }
+    } else if (this._mode.kind === "resize" && this._pendingPointer) {
+      const dx = this._pendingPointer.x - this._mode.start.x;
+      const dy = this._pendingPointer.y - this._mode.start.y;
+      const { newPos, newDim } = computeResize(
+        this._mode.handle,
+        this._mode.startPosition,
+        this._mode.startDimension,
+        dx,
+        dy,
+      );
+      this.doc.resizeNode(this._mode.itemId, newPos, newDim);
     }
 
     if (this._rafId !== null) {

@@ -2,6 +2,7 @@ import { svg, type TemplateResult } from "lit";
 import { SelectionController } from "../../state/selection";
 import { Id } from "../../model/types";
 import { DocumentController } from "../../state/document";
+import { getHandlePositions, HANDLE_SIZE } from "./helper";
 
 export function renderOverlay(
   selection: SelectionController,
@@ -57,23 +58,9 @@ function renderResizeHandles(
 
   const {
     position: { x, y },
-    dimension: { width: w, height: h },
+    dimension,
   } = item;
-  const handles: ReadonlyArray<{
-    cx: number;
-    cy: number;
-    cursor: string;
-    handle: string;
-  }> = [
-    { cx: -w / 2, cy: -h / 2, cursor: "nwse-resize", handle: "tl" },
-    { cx: 0, cy: -h / 2, cursor: "ns-resize", handle: "t" },
-    { cx: w / 2, cy: -h / 2, cursor: "nesw-resize", handle: "tr" },
-    { cx: w / 2, cy: 0, cursor: "ew-resize", handle: "r" },
-    { cx: w / 2, cy: h / 2, cursor: "nwse-resize", handle: "br" },
-    { cx: 0, cy: h / 2, cursor: "ns-resize", handle: "b" },
-    { cx: -w / 2, cy: h / 2, cursor: "nesw-resize", handle: "bl" },
-    { cx: -w / 2, cy: 0, cursor: "ew-resize", handle: "l" },
-  ];
+  const handles = getHandlePositions(dimension);
 
   return svg`
     <g
@@ -89,10 +76,10 @@ function renderResizeHandles(
         (h) => svg`
         <rect 
           class="resize-handle"
-          x=${h.cx - 4}
-          y=${h.cy - 4}
-          width="8"
-          height="8"
+          x=${h.pos.x - HANDLE_SIZE / 2}
+          y=${h.pos.y - HANDLE_SIZE / 2}
+          width=${HANDLE_SIZE}
+          height=${HANDLE_SIZE}
           style="cursor: ${h.cursor}"
           data-handle=${h.handle}
         />

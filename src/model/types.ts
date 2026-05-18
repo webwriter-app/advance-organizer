@@ -78,3 +78,5 @@ export interface AdvanceOrganizer {
   readonly edges: readonly Edge[];
   readonly images: readonly Image[];
 }
+
+export type ResizeHandle = "tl" | "t" | "tr" | "r" | "br" | "b" | "bl" | "l";

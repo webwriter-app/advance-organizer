@@ -1,4 +1,4 @@
-import { Edge, Id, Node } from "../model/types";
+import { Dimension, Edge, Id, Node } from "../model/types";
 import { Point } from "../model/types";
 import { Observable } from "./observable";
 
@@ -77,6 +77,13 @@ export class DocumentController extends Observable {
     const node = this._nodes.get(id);
     if (!node) return;
     Object.assign(node, update);
+    this.notify();
+  }
+
+  resizeNode(id: Id, position: Point, dimension: Dimension): void {
+    const node = this._nodes.get(id);
+    if (!node) return;
+    this._nodes.set(id, { ...node, position, dimension });
     this.notify();
   }
 
