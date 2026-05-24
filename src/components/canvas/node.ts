@@ -46,16 +46,20 @@ function renderShape(n: Node): TemplateResult {
       class="shape"
       fill="${n.style.fill || "lightgray"}"
       stroke="${n.style.stroke || "black"}"
-      stroke-width="${n.style.strokeWidth || 1}"
-      stroke-dasharray="${getStrokeDashArray(n.style.strokeStyle)}"
+      stroke-width="${n.style.strokeWidth ?? 1}"
+      stroke-dasharray="${getStrokeDashArray(n.style.strokeStyle, n.style.strokeWidth)}"
     >${shape}</g>`;
 }
 
-function getStrokeDashArray(strokeStyle?: string): string {
+function getStrokeDashArray(
+  strokeStyle?: string,
+  strokeWidth?: number,
+): string {
+  const width = strokeWidth ?? 1;
   if (strokeStyle === "dashed") {
-    return "5,5";
+    return `${8 * width},${5 * width}`;
   } else if (strokeStyle === "dotted") {
-    return "2,5";
+    return `${width},${2 * width}`;
   } else {
     return "0";
   }
