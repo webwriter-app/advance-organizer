@@ -1,4 +1,4 @@
-import { ReactiveControllerHost } from "lit";
+import { type ReactiveControllerHost } from "lit";
 import { Id } from "../model/types";
 import { DocumentController } from "./document";
 import { Observable } from "./observable";

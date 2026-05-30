@@ -1,6 +1,13 @@
 import { css } from "lit";
 
 export const actionsStyles = css`
+  :host {
+    display: flex;
+    align-items: center;
+    gap: var(--sl-spacing-x-small);
+    color: var(--sl-color-neutral-700);
+  }
+
   sl-tooltip {
     /* Fix dropdown position when using button with tooltip as dropdown trigger
        See https://github.com/shoelace-style/shoelace/discussions/1961 */
@@ -15,5 +22,11 @@ export const actionsStyles = css`
   sl-icon {
     height: 1.5em;
     width: 1.5em;
+  }
+
+  p {
+    margin: 0;
+    margin-left: var(--sl-spacing-x-small);
+    font-weight: bold;
   }
 `;
