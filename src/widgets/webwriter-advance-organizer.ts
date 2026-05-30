@@ -1,6 +1,6 @@
 import { html, PropertyValues, TemplateResult } from "lit";
 import { LitElementWw } from "@webwriter/lit";
-import { customElement, query, state } from "lit/decorators.js";
+import { customElement, property, query, state } from "lit/decorators.js";
 import { styles } from "./webwriter-advance-organizer.styles";
 
 import { WwToolbar } from "../components/ui/toolbar";
@@ -17,7 +17,7 @@ import {
 } from "../state/contexts";
 import { DocumentController } from "../state/document";
 import { SelectionController } from "../state/selection";
-import { Id } from "../model/types";
+import { Edge, Id, Node } from "../model/types";
 import { AoPageEditActionsGroup } from "../components/ui/toolbar-groups/page-edit-actions";
 import { PageController } from "../state/page";
 
@@ -43,11 +43,59 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
   })
   accessor pages = new PageController(this, this.doc);
 
+  @property({ type: Array, reflect: true })
+  accessor nodes: Node[] = [
+    {
+      id: "1",
+      label: { text: "Node 1" },
+      position: { x: 500, y: 300 },
+      dimension: { width: 100, height: 300 },
+      style: {
+        shape: "diamond",
+        fill: "lightblue",
+        stroke: "blue",
+        strokeWidth: 2,
+        strokeStyle: "dotted",
+      },
+      kind: "node",
+    },
+    {
+      id: "2",
+      label: { text: "Node 2" },
+      position: { x: 200, y: 200 },
+      dimension: { width: 100, height: 100 },
+      style: {
+        shape: "ellipse",
+        fill: "lightgreen",
+        stroke: "green",
+        strokeWidth: 2,
+        strokeStyle: "dashed",
+      },
+      kind: "node",
+    },
+    {
+      id: "3",
+      label: { text: "Node 3" },
+      position: { x: 250, y: 400 },
+      dimension: { width: 200, height: 100 },
+      style: {
+        shape: "rectangle",
+        fill: "lightcoral",
+        stroke: "red",
+        strokeWidth: 2,
+      },
+      kind: "node",
+    },
+  ];
+
+  @property({ type: Array, reflect: true })
+  accessor edges: Edge[] = [];
+
   @state()
-  accessor openPage: Id | null = null;
+  private accessor openPage: Id | null = null;
 
   @query("slot#page-slot")
-  accessor pageSlot!: HTMLSlotElement;
+  private accessor pageSlot!: HTMLSlotElement;
 
   /* Optional LOCALIZATION: Uncomment this after first running `npm run localize` in the command line.
   localize = LOCALIZE
@@ -74,6 +122,27 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
   };
 
   static override styles = [styles, shoelaceTheme];
+
+  protected override firstUpdated(changedProperties: PropertyValues): void {
+    super.firstUpdated(changedProperties);
+    this.doc.subscribe(() => {
+      this.nodes = this.doc.nodes;
+      this.edges = this.doc.edges;
+    });
+  }
+
+  protected override willUpdate(changedProperties: PropertyValues): void {
+    super.willUpdate(changedProperties);
+    if (changedProperties.has("nodes") || changedProperties.has("edges")) {
+      // TODO: Check if this check is really necessary or if we can always call load
+      if (
+        JSON.stringify(this.nodes) !== JSON.stringify(this.doc.nodes) ||
+        JSON.stringify(this.edges) !== JSON.stringify(this.doc.edges)
+      ) {
+        this.doc.load(this.nodes, this.edges);
+      }
+    }
+  }
 
   protected override updated(changedProperties: PropertyValues): void {
     super.updated(changedProperties);

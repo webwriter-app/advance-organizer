@@ -10,7 +10,8 @@ export const styles = css`
   }
 
   .page-container {
-    padding: 16px 16px 0 16px;
+    padding: var(--sl-spacing-medium);
+    padding-bottom: 0;
     box-sizing: border-box;
     background-color: var(--sl-color-gray-100);
   }
@@ -18,7 +19,7 @@ export const styles = css`
   .page-container slot {
     background-color: white;
     display: block;
-    padding: 16px;
+    padding: var(--sl-spacing-medium);
     border: 1px solid var(--sl-color-gray-300);
     border-bottom: none;
     border-radius: var(--sl-border-radius-medium) var(--sl-border-radius-medium)
