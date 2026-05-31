@@ -138,10 +138,7 @@ export class AoNodeActionsGroup extends LitElementWw {
       </sl-button-group>`;
     }
 
-    return html`<sl-button-group>
-      <sl-button>No</sl-button>
-      <sl-button>Selection</sl-button>
-    </sl-button-group>`;
+    return html``;
   }
 
   private _updateNodeShape(shape: NodeShape): void {

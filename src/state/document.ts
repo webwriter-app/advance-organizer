@@ -28,6 +28,14 @@ export class DocumentController extends Observable {
     return [...this._edges.values()];
   }
 
+  addNode(node: Omit<Node, "id" | "kind">): Node {
+    const id = crypto.randomUUID();
+    const newNode: Node = { ...node, id, kind: "node" };
+    this._nodes.set(id, newNode);
+    this.notify();
+    return newNode;
+  }
+
   resizeNode(id: Id, position: Point, dimension: Dimension): void {
     const node = this._nodes.get(id);
     if (!node) return;

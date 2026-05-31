@@ -20,6 +20,7 @@ import { SelectionController } from "../state/selection";
 import { Edge, Id, Node } from "../model/types";
 import { AoPageEditActionsGroup } from "../components/ui/toolbar-groups/page-edit-actions";
 import { PageController } from "../state/page";
+import { AoCreateActionsGroup } from "../components/ui/toolbar-groups/create-actions";
 
 /* Optional LOCALIZATION: Uncomment this after first running `npm run localize` in the command line.
 import LOCALIZE from '../localization/generated'
@@ -116,6 +117,7 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
     "ww-toolbar": WwToolbar,
     "ao-canvas": AoCanvas,
 
+    "ao-create-actions": AoCreateActionsGroup,
     "ao-node-actions": AoNodeActionsGroup,
     "ao-page-actions": AoPageActionsGroup,
     "ao-page-edit-actions": AoPageEditActionsGroup,
@@ -166,7 +168,8 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
   protected override render(): TemplateResult {
     return html`<ww-toolbar>
         ${this.openPage === null
-          ? html` <ao-node-actions></ao-node-actions>
+          ? html`<ao-create-actions></ao-create-actions
+              ><ao-node-actions></ao-node-actions>
               <ao-page-actions
                 @open-page=${(e: CustomEvent<{ pageId: Id | null }>) => {
                   const pageToOpen = e.detail.pageId;
