@@ -1,5 +1,6 @@
 import { svg, type TemplateResult } from "lit";
 import { Node } from "../../model/types";
+import { getStrokeDashArray } from "./helper";
 
 export function renderNode(n: Node): TemplateResult {
   return svg`
@@ -49,18 +50,4 @@ function renderShape(n: Node): TemplateResult {
       stroke-width="${n.style.strokeWidth ?? 1}"
       stroke-dasharray="${getStrokeDashArray(n.style.strokeStyle, n.style.strokeWidth)}"
     >${shape}</g>`;
-}
-
-function getStrokeDashArray(
-  strokeStyle?: string,
-  strokeWidth?: number,
-): string {
-  const width = strokeWidth ?? 1;
-  if (strokeStyle === "dashed") {
-    return `${8 * width},${5 * width}`;
-  } else if (strokeStyle === "dotted") {
-    return `${width},${2 * width}`;
-  } else {
-    return "0";
-  }
 }

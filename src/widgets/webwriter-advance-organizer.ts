@@ -21,6 +21,7 @@ import { Edge, Id, Node } from "../model/types";
 import { AoPageEditActionsGroup } from "../components/ui/toolbar-groups/page-edit-actions";
 import { PageController } from "../state/page";
 import { AoCreateActionsGroup } from "../components/ui/toolbar-groups/create-actions";
+import { AoEdgeActionsGroup } from "../components/ui/toolbar-groups/edge-actions";
 
 /* Optional LOCALIZATION: Uncomment this after first running `npm run localize` in the command line.
 import LOCALIZE from '../localization/generated'
@@ -90,7 +91,50 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
   ];
 
   @property({ type: Array, reflect: true })
-  accessor edges: Edge[] = [];
+  accessor edges: Edge[] = [
+    {
+      id: "e1",
+      kind: "edge",
+      source: "1",
+      target: "2",
+      sourcePosition: "left",
+      targetPosition: "right",
+      style: {
+        stroke: "purple",
+        strokeWidth: 2,
+        strokeStyle: "dashed",
+        markerStart: "arrow",
+        markerEnd: "arrow",
+      },
+    },
+    {
+      id: "e2",
+      kind: "edge",
+      source: "1",
+      target: "3",
+      sourcePosition: "bottom",
+      targetPosition: "right",
+      style: {
+        stroke: "orange",
+        strokeWidth: 3,
+        strokeStyle: "dotted",
+        markerEnd: "arrow",
+      },
+    },
+    {
+      id: "e3",
+      kind: "edge",
+      source: "2",
+      target: "3",
+      sourcePosition: "bottom",
+      targetPosition: "top",
+      style: {
+        stroke: "teal",
+        strokeWidth: 1,
+        markerEnd: "arrow",
+      },
+    },
+  ];
 
   @state()
   private accessor openPage: Id | null = null;
@@ -119,6 +163,7 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
 
     "ao-create-actions": AoCreateActionsGroup,
     "ao-node-actions": AoNodeActionsGroup,
+    "ao-edge-actions": AoEdgeActionsGroup,
     "ao-page-actions": AoPageActionsGroup,
     "ao-page-edit-actions": AoPageEditActionsGroup,
   };
@@ -168,8 +213,10 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
   protected override render(): TemplateResult {
     return html`<ww-toolbar>
         ${this.openPage === null
-          ? html`<ao-create-actions></ao-create-actions
-              ><ao-node-actions></ao-node-actions>
+          ? html`<ao-create-actions></ao-create-actions>
+              <div class="spacer"></div>
+              <ao-node-actions></ao-node-actions>
+              <ao-edge-actions></ao-edge-actions>
               <ao-page-actions
                 @open-page=${(e: CustomEvent<{ pageId: Id | null }>) => {
                   const pageToOpen = e.detail.pageId;

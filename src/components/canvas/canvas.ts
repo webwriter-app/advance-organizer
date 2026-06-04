@@ -2,6 +2,7 @@ import { LitElementWw } from "@webwriter/lit";
 import { html, PropertyValues, type TemplateResult } from "lit";
 import { canvasStyles } from "./canvas.styles";
 import { renderNode } from "./node";
+import { renderEdge } from "./edge";
 import { consume } from "@lit/context";
 import { documentContext, selectionContext } from "../../state/contexts";
 import { SelectionController } from "../../state/selection";
@@ -9,10 +10,11 @@ import { renderOverlay } from "./overlay";
 import { DocumentController } from "../../state/document";
 import { SubscribeController } from "../../state/subscribe";
 import { repeat } from "lit/directives/repeat.js";
-import { Dimension, Id, Point, ResizeHandle } from "../../model/types";
+import { Dimension, Id, Node, Point, ResizeHandle } from "../../model/types";
 import { state } from "lit/decorators.js";
 import {
   applyResize,
+  computeEdgePoints,
   computeResize,
   getHandlePositions,
   HANDLE_SIZE,
@@ -58,17 +60,38 @@ export class AoCanvas extends LitElementWw {
 
   static override styles = canvasStyles;
 
+  // TODO: Replace <marker> with current-stroke fills with custom solution to support Safari
+  // https://caniuse.com/wf-context-fill-stroke
   protected override render(): TemplateResult {
     return html`<svg
+      style="touch-action: none"
       width="100%"
       height="100%"
       @pointerdown=${this._onPointerDown}
       @pointermove=${this._onPointerMove}
       @pointerup=${this._onPointerUp}
       @pointercancel=${this._onPointerUp}>
+      <defs>
+        <marker
+          id="arrow"
+          viewBox="0 0 10 10"
+          refX="9"
+          refY="5"
+          markerWidth="8"
+          markerHeight="8"
+          orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="context-stroke" />
+        </marker>
+      </defs>
       <g class="viewport">
         <g class="background"></g>
-        <g class="edges"></g>
+        <g class="edges">
+          ${repeat(
+            this.doc.edges,
+            (e) => e.id,
+            (e) => renderEdge(e, this.doc),
+          )}
+        </g>
         <g class="nodes">
           ${repeat(
             this.doc.nodes,
@@ -162,9 +185,12 @@ export class AoCanvas extends LitElementWw {
           const dx = this._pendingPointer.x - this._mode.start.x;
           const dy = this._pendingPointer.y - this._mode.start.y;
 
+          const newPositions = new Map<Id, Point>();
           for (const [id, startPos] of this._mode.startPositions) {
-            const newPos = { x: startPos.x + dx, y: startPos.y + dy };
-            this._applyDragDom(id, newPos);
+            newPositions.set(id, { x: startPos.x + dx, y: startPos.y + dy });
+          }
+          for (const [id, newPos] of newPositions) {
+            this._applyDragDom(id, newPos, newPositions);
           }
         } else if (this._mode.kind === "resize") {
           const dx = this._pendingPointer.x - this._mode.start.x;
@@ -182,7 +208,11 @@ export class AoCanvas extends LitElementWw {
     }
   }
 
-  private _applyDragDom(id: Id, newPos: Point): void {
+  private _applyDragDom(
+    id: Id,
+    newPos: Point,
+    allNewPositions?: Map<Id, Point>,
+  ): void {
     const translate = `translate(${newPos.x}, ${newPos.y})`;
 
     const nodeG = this.renderRoot.querySelector(
@@ -198,6 +228,72 @@ export class AoCanvas extends LitElementWw {
     nodeG?.setAttribute("transform", translate);
     selG?.setAttribute("transform", translate);
     handlesG?.setAttribute("transform", translate);
+
+    this._updateConnectedEdgesDom(id, newPos, undefined, allNewPositions);
+  }
+
+  private _updateConnectedEdgesDom(
+    id: Id,
+    newPos: Point,
+    newDim?: Dimension,
+    allNewPositions?: Map<Id, Point>,
+  ): void {
+    const node = this.doc.get(id);
+    if (!node || node.kind !== "node") return;
+
+    const movedNode: Node = {
+      ...node,
+      position: newPos,
+      ...(newDim && { dimension: newDim }),
+    };
+
+    const _applyEdge = (gEl: SVGGElement, isSource: boolean): void => {
+      const edgeId = gEl.dataset["itemId"];
+      if (!edgeId) return;
+      const edge = this.doc.get(edgeId);
+      if (!edge || edge.kind !== "edge") return;
+
+      const otherId = isSource ? edge.target : edge.source;
+      const otherNode = this.doc.get(otherId);
+      if (!otherNode || otherNode.kind !== "node") return;
+
+      const otherNewPos = allNewPositions?.get(otherId);
+      const effectiveOther: Node = otherNewPos
+        ? { ...otherNode, position: otherNewPos }
+        : otherNode;
+
+      const source = isSource ? movedNode : effectiveOther;
+      const target = isSource ? effectiveOther : movedNode;
+      const { start, end } = computeEdgePoints(source, target, edge);
+
+      const selLine = this.renderRoot.querySelector(
+        `line[data-selection-id="${edgeId}"]`,
+      ) as SVGLineElement | null;
+      if (selLine) {
+        selLine.setAttribute("x1", String(start.x));
+        selLine.setAttribute("y1", String(start.y));
+        selLine.setAttribute("x2", String(end.x));
+        selLine.setAttribute("y2", String(end.y));
+      }
+
+      for (const lineEl of gEl.querySelectorAll("line")) {
+        lineEl.setAttribute("x1", String(start.x));
+        lineEl.setAttribute("y1", String(start.y));
+        lineEl.setAttribute("x2", String(end.x));
+        lineEl.setAttribute("y2", String(end.y));
+      }
+    };
+
+    for (const gEl of this.renderRoot.querySelectorAll<SVGGElement>(
+      `g.edge[data-source-id="${id}"]`,
+    )) {
+      _applyEdge(gEl, true);
+    }
+    for (const gEl of this.renderRoot.querySelectorAll<SVGGElement>(
+      `g.edge[data-target-id="${id}"]`,
+    )) {
+      _applyEdge(gEl, false);
+    }
   }
 
   private _applyResizeDom(id: Id, newPos: Point, newDim: Dimension): void {
@@ -230,6 +326,8 @@ export class AoCanvas extends LitElementWw {
         }
       }
     }
+
+    this._updateConnectedEdgesDom(id, newPos, newDim);
   }
 
   private _onPointerUp(): void {

@@ -1,7 +1,15 @@
-import { Dimension, Point, ResizeHandle } from "../../model/types";
+import {
+  Dimension,
+  Edge,
+  EdgePosition,
+  Node,
+  Point,
+  ResizeHandle,
+} from "../../model/types";
 
 export const MIN_NODE_SIZE = 20;
 export const HANDLE_SIZE = 8;
+export const MIN_TARGET_SIZE = 24;
 
 export function computeResize(
   handle: ResizeHandle,
@@ -61,4 +69,48 @@ export function getHandlePositions(
     { handle: "bl", pos: { x: -w / 2, y: h / 2 }, cursor: "nesw-resize" },
     { handle: "l", pos: { x: -w / 2, y: 0 }, cursor: "ew-resize" },
   ];
+}
+
+export function getStrokeDashArray(
+  strokeStyle?: string,
+  strokeWidth?: number,
+): string {
+  const width = strokeWidth ?? 1;
+  if (strokeStyle === "dashed") {
+    return `${8 * width},${5 * width}`;
+  } else if (strokeStyle === "dotted") {
+    return `${width},${2 * width}`;
+  } else {
+    return "0";
+  }
+}
+
+export function computeEdgePoints(
+  source: Node,
+  target: Node,
+  edge: Edge,
+): {
+  start: Point;
+  end: Point;
+} {
+  const computeNodeEdgePoint = (node: Node, position?: EdgePosition): Point => {
+    const { x, y } = node.position;
+    const { width: w, height: h } = node.dimension;
+
+    if (position === "top") {
+      return { x, y: y - h / 2 };
+    } else if (position === "bottom") {
+      return { x, y: y + h / 2 };
+    } else if (position === "left") {
+      return { x: x - w / 2, y };
+    } else if (position === "right") {
+      return { x: x + w / 2, y };
+    }
+
+    return { x, y };
+  };
+
+  const startPoint = computeNodeEdgePoint(source, edge.sourcePosition);
+  const endPoint = computeNodeEdgePoint(target, edge.targetPosition);
+  return { start: startPoint, end: endPoint };
 }

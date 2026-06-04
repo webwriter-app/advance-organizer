@@ -25,4 +25,8 @@ export const styles = css`
     border-radius: var(--sl-border-radius-medium) var(--sl-border-radius-medium)
       0 0;
   }
+
+  .spacer {
+    flex: 1;
+  }
 `;

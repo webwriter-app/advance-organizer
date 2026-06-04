@@ -1,4 +1,11 @@
-import { Dimension, Edge, Id, Node, NodeStyle } from "../model/types";
+import {
+  Dimension,
+  Edge,
+  EdgeStyle,
+  Id,
+  Node,
+  NodeStyle,
+} from "../model/types";
 import { Point } from "../model/types";
 import { Observable } from "./observable";
 
@@ -57,6 +64,13 @@ export class DocumentController extends Observable {
     const node = this._nodes.get(id);
     if (!node) return;
     this._nodes.set(id, { ...node, style: { ...node.style, ...style } });
+    this.notify();
+  }
+
+  updateEdgeStyle(id: Id, style: Partial<EdgeStyle>): void {
+    const edge = this._edges.get(id);
+    if (!edge) return;
+    this._edges.set(id, { ...edge, style: { ...edge.style, ...style } });
     this.notify();
   }
 }

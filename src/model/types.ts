@@ -40,6 +40,8 @@ export interface Node {
   readonly label: Label;
 }
 
+export type EdgePosition = "top" | "bottom" | "left" | "right";
+
 export type EdgeRouting = "straight";
 
 export type EdgeMarker = "none" | "arrow";
@@ -50,13 +52,16 @@ export interface EdgeStyle {
   readonly strokeStyle?: StrokeStyle;
   readonly markerStart?: EdgeMarker;
   readonly markerEnd?: EdgeMarker;
+  readonly routing?: EdgeRouting;
 }
 
 export interface Edge {
   readonly id: Id;
   readonly kind: "edge";
   readonly source: Id;
+  readonly sourcePosition?: EdgePosition;
   readonly target: Id;
+  readonly targetPosition?: EdgePosition;
   readonly style: EdgeStyle;
   readonly label?: Label;
 }
