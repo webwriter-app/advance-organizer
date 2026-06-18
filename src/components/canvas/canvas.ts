@@ -10,14 +10,23 @@ import { renderOverlay } from "./overlay";
 import { DocumentController } from "../../state/document";
 import { SubscribeController } from "../../state/subscribe";
 import { repeat } from "lit/directives/repeat.js";
-import { Dimension, Id, Node, Point, ResizeHandle } from "../../model/types";
+import {
+  Dimension,
+  EdgePosition,
+  Id,
+  Node,
+  Point,
+  ResizeHandle,
+} from "../../model/types";
 import { state } from "lit/decorators.js";
 import {
   applyResize,
   computeEdgePoints,
   computeResize,
+  getAnchorPoints,
   getHandlePositions,
   HANDLE_SIZE,
+  SNAP_RADIUS,
 } from "./helper";
 
 type InteractionMode =
@@ -38,7 +47,15 @@ type InteractionMode =
       handle: ResizeHandle;
       itemId: Id;
     }
-  | { kind: "draw-edge"; sourceId: Id; cursor: Point };
+  | { kind: "draw-edge"; sourceId: Id; cursor: Point }
+  | {
+      kind: "reanchor-edge";
+      edgeId: Id;
+      endpoint: "source" | "target";
+      otherNodeId: Id;
+      start: Point;
+      startEndpointPos: Point;
+    };
 
 export class AoCanvas extends LitElementWw {
   @consume({ context: documentContext })
@@ -52,6 +69,7 @@ export class AoCanvas extends LitElementWw {
 
   private _rafId: number | null = null;
   private _pendingPointer: Point | null = null;
+  private _snapTarget: { nodeId: Id; position: EdgePosition } | null = null;
 
   protected override firstUpdated(_changedProperties: PropertyValues): void {
     new SubscribeController(this, this.doc);
@@ -99,7 +117,15 @@ export class AoCanvas extends LitElementWw {
             (n) => renderNode(n),
           )}
         </g>
-        <g class="overlays">${renderOverlay(this.selection, this.doc)}</g>
+        <g class="overlays">
+          ${renderOverlay(this.selection, this.doc, {
+            active: this._mode.kind === "reanchor-edge",
+            skipNodeId:
+              this._mode.kind === "reanchor-edge"
+                ? this._mode.otherNodeId
+                : undefined,
+          })}
+        </g>
       </g>
     </svg>`;
   }
@@ -115,11 +141,17 @@ export class AoCanvas extends LitElementWw {
     const additive = e.shiftKey || e.ctrlKey || e.metaKey;
 
     if (handleEl) {
-      const handle = handleEl.dataset["handle"]! as ResizeHandle;
+      const handle = handleEl.dataset["handle"]!;
       const groupEl = handleEl.closest<SVGElement>("[data-resize-id]");
       const resizeId = groupEl?.dataset["resizeId"];
       if (!resizeId || !this.selection.has(resizeId)) return;
-      this._beginResize(e, resizeId, handle);
+      const item = this.doc.get(resizeId);
+      if (!item) return;
+      if (item.kind === "node") {
+        this._beginResize(e, resizeId, handle as ResizeHandle);
+      } else if (item.kind === "edge") {
+        this._beginReanchor(e, resizeId, handle as "source" | "target");
+      }
     } else if (itemEl) {
       const id = itemEl.dataset["itemId"]!;
 
@@ -171,8 +203,36 @@ export class AoCanvas extends LitElementWw {
     };
   }
 
+  private _beginReanchor(
+    e: PointerEvent,
+    edgeId: Id,
+    endpoint: "source" | "target",
+  ): void {
+    const edge = this.doc.get(edgeId);
+    if (!edge || edge.kind !== "edge") return;
+    const source = this.doc.get(edge.source);
+    const target = this.doc.get(edge.target);
+    if (!source || source.kind !== "node" || !target || target.kind !== "node")
+      return;
+
+    const { start, end } = computeEdgePoints(source, target, edge);
+    this._mode = {
+      kind: "reanchor-edge",
+      edgeId,
+      endpoint,
+      otherNodeId: endpoint === "source" ? edge.target : edge.source,
+      start: { x: e.clientX, y: e.clientY },
+      startEndpointPos: endpoint === "source" ? start : end,
+    };
+  }
+
   private _onPointerMove(e: PointerEvent): void {
-    if (this._mode.kind !== "drag" && this._mode.kind !== "resize") return;
+    if (
+      this._mode.kind !== "drag" &&
+      this._mode.kind !== "resize" &&
+      this._mode.kind !== "reanchor-edge"
+    )
+      return;
 
     this._pendingPointer = { x: e.clientX, y: e.clientY };
 
@@ -203,6 +263,36 @@ export class AoCanvas extends LitElementWw {
             dy,
           );
           this._applyResizeDom(this._mode.itemId, newPos, newDim);
+        } else if (this._mode.kind === "reanchor-edge") {
+          const dx = this._pendingPointer.x - this._mode.start.x;
+          const dy = this._pendingPointer.y - this._mode.start.y;
+
+          const pos = {
+            x: this._mode.startEndpointPos.x + dx,
+            y: this._mode.startEndpointPos.y + dy,
+          };
+          const snapTarget = this._findSnapTarget(pos, this._mode.otherNodeId);
+
+          const newSnap = snapTarget
+            ? { nodeId: snapTarget.nodeId, position: snapTarget.position }
+            : null;
+          if (
+            newSnap?.nodeId !== this._snapTarget?.nodeId ||
+            newSnap?.position !== this._snapTarget?.position
+          ) {
+            if (this._snapTarget) {
+              this._setAnchorHighlight(this._snapTarget, false);
+            }
+            if (newSnap) {
+              this._setAnchorHighlight(newSnap, true);
+            }
+            this._snapTarget = newSnap;
+          }
+          this._applyReanchorDom(
+            this._mode.edgeId,
+            this._mode.endpoint,
+            snapTarget ? snapTarget.point : pos,
+          );
         }
       });
     }
@@ -330,6 +420,65 @@ export class AoCanvas extends LitElementWw {
     this._updateConnectedEdgesDom(id, newPos, newDim);
   }
 
+  private _applyReanchorDom(
+    edgeId: Id,
+    endpoint: "source" | "target",
+    newPos: Point,
+  ): void {
+    const edgeG = this.renderRoot.querySelector(
+      `g.edge[data-item-id="${edgeId}"]`,
+    ) as SVGGElement | null;
+    if (!edgeG) return;
+
+    const attr1 = endpoint === "source" ? "x1" : "x2";
+    const attr2 = endpoint === "source" ? "y1" : "y2";
+
+    edgeG.querySelectorAll("line").forEach((lineEl) => {
+      lineEl.setAttribute(attr1, String(newPos.x));
+      lineEl.setAttribute(attr2, String(newPos.y));
+    });
+
+    const selLine = this.renderRoot.querySelector(
+      `line[data-selection-id="${edgeId}"]`,
+    ) as SVGLineElement | null;
+    if (selLine) {
+      selLine.setAttribute(attr1, String(newPos.x));
+      selLine.setAttribute(attr2, String(newPos.y));
+    }
+  }
+
+  private _findSnapTarget(pos: Point, excludeId?: Id) {
+    let closest: {
+      nodeId: Id;
+      position: EdgePosition;
+      point: Point;
+      distance: number;
+    } | null = null;
+
+    for (const node of this.doc.nodes) {
+      if (node.id === excludeId) continue;
+      const anchors = getAnchorPoints(node);
+      for (const [anchorPos, anchorPoint] of Object.entries(anchors)) {
+        const dx = anchorPoint.x - pos.x;
+        const dy = anchorPoint.y - pos.y;
+        const distance = Math.hypot(dx, dy);
+        if (
+          distance <= SNAP_RADIUS &&
+          (closest === null || distance < closest.distance)
+        ) {
+          closest = {
+            nodeId: node.id,
+            position: anchorPos as EdgePosition,
+            point: anchorPoint,
+            distance,
+          };
+        }
+      }
+    }
+
+    return closest;
+  }
+
   private _onPointerUp(): void {
     if (this._mode.kind === "drag" && this._pendingPointer) {
       const dx = this._pendingPointer.x - this._mode.start.x;
@@ -353,6 +502,35 @@ export class AoCanvas extends LitElementWw {
         dy,
       );
       this.doc.resizeNode(this._mode.itemId, newPos, newDim);
+    } else if (this._mode.kind === "reanchor-edge" && this._pendingPointer) {
+      const dx = this._pendingPointer.x - this._mode.start.x;
+      const dy = this._pendingPointer.y - this._mode.start.y;
+
+      const pos = {
+        x: this._mode.startEndpointPos.x + dx,
+        y: this._mode.startEndpointPos.y + dy,
+      };
+      const snapTarget = this._findSnapTarget(pos, this._mode.otherNodeId);
+
+      if (snapTarget) {
+        this.doc.reanchorEdge(
+          this._mode.edgeId,
+          this._mode.endpoint,
+          snapTarget.nodeId,
+          snapTarget.position,
+        );
+      } else {
+        this._applyReanchorDom(
+          this._mode.edgeId,
+          this._mode.endpoint,
+          this._mode.startEndpointPos,
+        );
+      }
+    }
+
+    if (this._snapTarget) {
+      this._setAnchorHighlight(this._snapTarget, false);
+      this._snapTarget = null;
     }
 
     if (this._rafId !== null) {
@@ -361,5 +539,18 @@ export class AoCanvas extends LitElementWw {
     }
     this._pendingPointer = null;
     this._mode = { kind: "idle" };
+  }
+
+  private _setAnchorHighlight(
+    target: { nodeId: Id; position: EdgePosition },
+    active: boolean,
+  ): void {
+    const circle = this.renderRoot.querySelector<SVGCircleElement>(
+      `[data-anchor-node-id="${target.nodeId}"] [data-anchor-position="${target.position}"]`,
+    );
+    circle?.setAttribute(
+      "fill",
+      active ? "var(--ao-anchor-color, #7d828a)" : "white",
+    );
   }
 }

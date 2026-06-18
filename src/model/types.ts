@@ -85,3 +85,8 @@ export interface AdvanceOrganizer {
 }
 
 export type ResizeHandle = "tl" | "t" | "tr" | "r" | "br" | "b" | "bl" | "l";
+
+export type AnchorRendering = {
+  active: boolean;
+  skipNodeId?: Id;
+};

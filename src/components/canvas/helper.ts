@@ -10,6 +10,7 @@ import {
 export const MIN_NODE_SIZE = 20;
 export const HANDLE_SIZE = 8;
 export const MIN_TARGET_SIZE = 24;
+export const SNAP_RADIUS = 16;
 
 export function computeResize(
   handle: ResizeHandle,
@@ -85,6 +86,17 @@ export function getStrokeDashArray(
   }
 }
 
+export function getAnchorPoints(node: Node): Record<EdgePosition, Point> {
+  const { x, y } = node.position;
+  const { width: w, height: h } = node.dimension;
+  return {
+    top: { x, y: y - h / 2 },
+    bottom: { x, y: y + h / 2 },
+    left: { x: x - w / 2, y },
+    right: { x: x + w / 2, y },
+  };
+}
+
 export function computeEdgePoints(
   source: Node,
   target: Node,
@@ -93,24 +105,7 @@ export function computeEdgePoints(
   start: Point;
   end: Point;
 } {
-  const computeNodeEdgePoint = (node: Node, position?: EdgePosition): Point => {
-    const { x, y } = node.position;
-    const { width: w, height: h } = node.dimension;
-
-    if (position === "top") {
-      return { x, y: y - h / 2 };
-    } else if (position === "bottom") {
-      return { x, y: y + h / 2 };
-    } else if (position === "left") {
-      return { x: x - w / 2, y };
-    } else if (position === "right") {
-      return { x: x + w / 2, y };
-    }
-
-    return { x, y };
-  };
-
-  const startPoint = computeNodeEdgePoint(source, edge.sourcePosition);
-  const endPoint = computeNodeEdgePoint(target, edge.targetPosition);
+  const startPoint = getAnchorPoints(source)[edge.sourcePosition ?? "right"];
+  const endPoint = getAnchorPoints(target)[edge.targetPosition ?? "left"];
   return { start: startPoint, end: endPoint };
 }

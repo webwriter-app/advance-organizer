@@ -1,6 +1,7 @@
 import {
   Dimension,
   Edge,
+  EdgePosition,
   EdgeStyle,
   Id,
   Node,
@@ -55,6 +56,30 @@ export class DocumentController extends Observable {
       const node = this._nodes.get(id);
       if (!node) continue;
       this._nodes.set(id, { ...node, position });
+    }
+    this.notify();
+  }
+
+  reanchorEdge(
+    id: Id,
+    endpoint: "source" | "target",
+    anchorNode: Id,
+    anchorPosition: EdgePosition,
+  ): void {
+    const edge = this._edges.get(id);
+    if (!edge) return;
+    if (endpoint === "source") {
+      this._edges.set(id, {
+        ...edge,
+        source: anchorNode,
+        sourcePosition: anchorPosition,
+      });
+    } else {
+      this._edges.set(id, {
+        ...edge,
+        target: anchorNode,
+        targetPosition: anchorPosition,
+      });
     }
     this.notify();
   }

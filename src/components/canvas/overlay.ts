@@ -1,12 +1,18 @@
 import { svg, type TemplateResult } from "lit";
 import { SelectionController } from "../../state/selection";
-import { Id } from "../../model/types";
+import { AnchorRendering, Id } from "../../model/types";
 import { DocumentController } from "../../state/document";
-import { computeEdgePoints, getHandlePositions, HANDLE_SIZE } from "./helper";
+import {
+  computeEdgePoints,
+  getAnchorPoints,
+  getHandlePositions,
+  HANDLE_SIZE,
+} from "./helper";
 
 export function renderOverlay(
   selection: SelectionController,
   doc: DocumentController,
+  anchorRendering: AnchorRendering,
 ): TemplateResult {
   return svg`
     <g 
@@ -15,6 +21,7 @@ export function renderOverlay(
     >
     ${[...selection.entries].map((e) => renderSelectionIndicator(e, doc))}
     ${selection.size === 1 ? renderResizeHandles([...selection.entries][0]!, doc) : svg``}
+    ${anchorRendering.active ? renderAnchorPoints(doc, anchorRendering) : svg``}
   </g>`;
 }
 
@@ -161,4 +168,41 @@ function renderResizeHandles(
   }
 
   return svg``;
+}
+
+function renderAnchorPoints(
+  doc: DocumentController,
+  anchorRendering: AnchorRendering,
+): TemplateResult {
+  return svg`
+    ${doc.nodes.map((node) => {
+      if (node.id === anchorRendering.skipNodeId) {
+        return svg``;
+      }
+      const anchors = getAnchorPoints(node);
+      return svg`
+        <g
+          class="anchor-points"
+          data-anchor-node-id=${node.id}
+          pointer-events="all"
+          fill="white"
+          stroke="var(--ao-anchor-color, #7d828a)"
+          stroke-width="1.5"
+        >
+          ${Object.entries(anchors).map(([pos, point]) => {
+            return svg`
+              <circle
+                class="anchor-point"
+                cx=${point.x}
+                cy=${point.y}
+                r=${HANDLE_SIZE}
+                style="cursor: crosshair"
+                data-anchor-position=${pos}
+              />
+            `;
+          })}
+        </g>
+      `;
+    })}
+  `;
 }
