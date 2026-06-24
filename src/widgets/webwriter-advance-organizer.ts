@@ -4,6 +4,7 @@ import { customElement, property, query, state } from "lit/decorators.js";
 import { styles } from "./webwriter-advance-organizer.styles";
 
 import { WwToolbar } from "../components/ui/toolbar";
+import { WwContextMenu } from "../components/ui/context-menu";
 import { AoCanvas } from "../components/canvas/canvas";
 
 import shoelaceTheme from "@shoelace-style/shoelace/dist/themes/light.styles.js";
@@ -137,7 +138,10 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
   ];
 
   @state()
-  private accessor openPage: Id | null = null;
+  private accessor _openPage: Id | null = null;
+
+  @state()
+  private accessor _contextMenu: { x: number; y: number } | null = null;
 
   @query("slot#page-slot")
   private accessor pageSlot!: HTMLSlotElement;
@@ -162,6 +166,7 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
    **/
   static override scopedElements = {
     "ww-toolbar": WwToolbar,
+    "ww-context-menu": WwContextMenu,
     "ao-canvas": AoCanvas,
 
     "ao-create-actions": AoCreateActionsGroup,
@@ -196,16 +201,16 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
 
   protected override updated(changedProperties: PropertyValues): void {
     super.updated(changedProperties);
-    if (changedProperties.has("openPage")) {
-      const prevPage = changedProperties.get("openPage") as Id | null;
+    if (changedProperties.has("_openPage")) {
+      const prevPage = changedProperties.get("_openPage") as Id | null;
       if (prevPage !== null) {
         const closedPage = this.pages.getPage(prevPage);
         closedPage
           ?.querySelectorAll<HTMLMediaElement>("audio, video")
           .forEach((m) => m.pause());
       }
-      if (this.openPage !== null && this.pageSlot) {
-        const page = this.pages.getPage(this.openPage);
+      if (this._openPage !== null && this.pageSlot) {
+        const page = this.pages.getPage(this._openPage);
         if (page) {
           this.pageSlot.assign(page);
         }
@@ -215,10 +220,10 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
 
   protected override render(): TemplateResult {
     return html`<ww-toolbar>
-        ${this.openPage === null
+        ${this._openPage === null
           ? html`<ao-create-actions
-                @start-draw-edge=${() => this.canvas?.beginDrawEdge()}
-              ></ao-create-actions>
+                @start-draw-edge=${() =>
+                  this.canvas?.beginDrawEdge()}></ao-create-actions>
               <div class="spacer"></div>
               <ao-node-actions></ao-node-actions>
               <ao-edge-actions></ao-edge-actions>
@@ -231,16 +236,40 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
                   if (!this.pages.hasPage(pageToOpen)) {
                     this.pages.addPage(pageToOpen);
                   }
-                  this.openPage = pageToOpen;
+                  this._openPage = pageToOpen;
                 }}></ao-page-actions>`
           : html`<ao-page-edit-actions
-              .openPageId=${this.openPage}
+              .openPageId=${this._openPage}
               @close-page=${() => {
-                this.openPage = null;
+                this._openPage = null;
               }}></ao-page-edit-actions>`}
       </ww-toolbar>
-      ${this.openPage === null
-        ? html`<ao-canvas></ao-canvas>`
+      ${this._openPage === null
+        ? html`<ao-canvas
+              @open-context-menu=${(
+                e: CustomEvent<{ x: number; y: number }>,
+              ) => {
+                const rect = this.getBoundingClientRect();
+                this._contextMenu = {
+                  x: e.detail.x - rect.left,
+                  y: e.detail.y - rect.top,
+                };
+              }}></ao-canvas>
+            ${this._contextMenu
+              ? html`<div
+                  class="context-menu-backdrop"
+                  @pointerdown=${() => {
+                    this._contextMenu = null;
+                  }}
+                  @contextmenu=${(e: Event) => e.preventDefault()}>
+                  <ww-context-menu
+                    style=${`left: ${this._contextMenu.x}px; top: ${this._contextMenu.y}px;`}
+                    @pointerdown=${(e: Event) => e.stopPropagation()}
+                    @close-context-menu=${() => {
+                      this._contextMenu = null;
+                    }}></ww-context-menu>
+                </div>`
+              : html``}`
         : html`<div class="page-container">
             <slot id="page-slot"></slot>
           </div>`}`;

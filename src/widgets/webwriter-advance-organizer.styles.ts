@@ -3,10 +3,21 @@ import { css } from "lit";
 export const styles = css`
   :host {
     display: block;
+    position: relative;
 
     border: 1px solid var(--sl-color-neutral-300);
     border-radius: var(--sl-border-radius-medium);
     box-sizing: border-box;
+  }
+
+  .context-menu-backdrop {
+    position: absolute;
+    inset: 0;
+    z-index: 1000;
+  }
+
+  .context-menu-backdrop ww-context-menu {
+    position: absolute;
   }
 
   .page-container {

@@ -44,6 +44,16 @@ export class PageController extends Observable {
     return page;
   }
 
+  duplicatePage(fromId: Id, toId: Id): Element | null {
+    const source = this.getPage(fromId);
+    if (!source) return null;
+    const clone = source.cloneNode(true) as Element;
+    clone.id = toId;
+    (this.host as LitElementWw).appendChild(clone);
+    this.notify();
+    return clone;
+  }
+
   removePage(id: Id): void {
     const page = this.getPage(id);
     if (page) {

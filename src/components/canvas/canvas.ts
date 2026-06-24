@@ -96,7 +96,8 @@ export class AoCanvas extends LitElementWw {
       @pointerdown=${this._onPointerDown}
       @pointermove=${this._onPointerMove}
       @pointerup=${this._onPointerUp}
-      @pointercancel=${this._onPointerUp}>
+      @pointercancel=${this._onPointerUp}
+      @contextmenu=${this._onContextMenu}>
       <defs>
         <marker
           id="arrow"
@@ -176,7 +177,7 @@ export class AoCanvas extends LitElementWw {
       if (additive) {
         this.selection.toggle(id);
       } else if (!this.selection.has(id)) {
-        this.selection.select(id);
+        this.selection.select(new Set<Id>([id]));
       }
 
       this._beginDrag(e);
@@ -295,14 +296,6 @@ export class AoCanvas extends LitElementWw {
     target: { nodeId: Id; anchor: EdgePosition },
   ): void {
     this._resetMode();
-    console.log(
-      "Adding edge from",
-      source.nodeId,
-      source.anchor,
-      "to",
-      target.nodeId,
-      target.anchor,
-    );
     this.doc.addEdge({
       source: source.nodeId,
       sourcePosition: source.anchor,
@@ -696,5 +689,31 @@ export class AoCanvas extends LitElementWw {
     }
     this._pendingPointer = null;
     this._mode = { kind: "idle" };
+  }
+
+  private _onContextMenu(e: PointerEvent): void {
+    if (this._mode.kind !== "idle") return;
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    const target = e.target as Element;
+    const itemEl = target.closest<SVGElement>("[data-item-id]");
+
+    if (!itemEl) return;
+
+    if (!this.selection.has(itemEl.dataset["itemId"]!)) {
+      this.selection.select(new Set<Id>([itemEl.dataset["itemId"]!]));
+    }
+
+    const contextMenuEvent = new CustomEvent("open-context-menu", {
+      detail: {
+        x: e.clientX,
+        y: e.clientY,
+      },
+      bubbles: true,
+      composed: true,
+    });
+    this.dispatchEvent(contextMenuEvent);
   }
 }

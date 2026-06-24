@@ -64,13 +64,68 @@ export class DocumentController extends Observable {
       )
         return null;
     }
-    console.log("survived addEdge checks", edge);
 
     const id = crypto.randomUUID();
     const newEdge: Edge = { ...edge, id, kind: "edge" };
     this._edges.set(id, newEdge);
     this.notify();
     return newEdge;
+  }
+
+  removeItems(ids: Set<Id>): void {
+    for (const id of ids) {
+      this._nodes.delete(id);
+      this._edges.delete(id);
+    }
+    for (const edge of this._edges.values()) {
+      if (ids.has(edge.source) || ids.has(edge.target)) {
+        this._edges.delete(edge.id);
+      }
+    }
+    this.notify();
+  }
+
+  duplicateItems(ids: Set<Id>): {
+    newIds: Set<Id>;
+    nodeIdMap: Map<Id, Id>;
+  } {
+    const newIds: Set<Id> = new Set();
+    const duplicatedNodeIds: Map<Id, Id> = new Map();
+
+    for (const id of ids) {
+      const node = this._nodes.get(id);
+      if (node) {
+        const newId = crypto.randomUUID();
+        duplicatedNodeIds.set(id, newId);
+        newIds.add(newId);
+        this._nodes.set(newId, {
+          ...node,
+          id: newId,
+          position: { x: node.position.x + 20, y: node.position.y + 20 },
+        });
+      }
+    }
+
+    for (const id of ids) {
+      const edge = this._edges.get(id);
+      if (edge) {
+        const newSourceId = duplicatedNodeIds.get(edge.source) ?? edge.source;
+        const newTargetId = duplicatedNodeIds.get(edge.target) ?? edge.target;
+        if (newSourceId === edge.source && newTargetId === edge.target) {
+          continue;
+        }
+        const newId = crypto.randomUUID();
+        newIds.add(newId);
+        this._edges.set(newId, {
+          ...edge,
+          id: newId,
+          source: newSourceId,
+          target: newTargetId,
+        });
+      }
+    }
+    this.notify();
+    return { newIds, nodeIdMap: duplicatedNodeIds };
   }
 
   resizeNode(id: Id, position: Point, dimension: Dimension): void {

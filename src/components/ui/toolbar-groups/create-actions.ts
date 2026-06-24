@@ -6,6 +6,7 @@ import { html, PropertyValues, type TemplateResult } from "lit";
 import { SubscribeController } from "../../../state/subscribe";
 import { actionsStyles } from "./toolbar-actions.styles";
 import { SelectionController } from "../../../state/selection";
+import { Id } from "../../../model/types";
 
 import SlButton from "@shoelace-style/shoelace/dist/components/button/button.component.js";
 import SlButtonGroup from "@shoelace-style/shoelace/dist/components/button-group/button-group.component.js";
@@ -63,7 +64,7 @@ export class AoCreateActionsGroup extends LitElementWw {
         strokeWidth: 2,
       },
     });
-    this.selection.select(newNode.id);
+    this.selection.select(new Set<Id>([newNode.id]));
   }
 
   private _handleAddEdgeClick(): void {

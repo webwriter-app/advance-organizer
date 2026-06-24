@@ -50,9 +50,11 @@ export class SelectionController extends Observable {
     return true;
   }
 
-  select(id: Id): void {
+  select(ids: Set<Id>): void {
     this._entries.clear();
-    this._entries.add(id);
+    for (const id of ids) {
+      this._entries.add(id);
+    }
     this.notify();
   }
 
