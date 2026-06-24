@@ -1,5 +1,5 @@
 import { svg, type TemplateResult } from "lit";
-import { type Edge } from "../../model/types";
+import { type Edge, type EdgeStyle, type Point } from "../../model/types";
 import { DocumentController } from "../../state/document";
 import {
   getStrokeDashArray,
@@ -15,7 +15,6 @@ export function renderEdge(e: Edge, doc: DocumentController): TemplateResult {
   }
 
   const { start, end } = computeEdgePoints(source, target, e);
-  const color = e.style.stroke ?? "black";
 
   return svg`
     <g
@@ -32,16 +31,36 @@ export function renderEdge(e: Edge, doc: DocumentController): TemplateResult {
         stroke="transparent"
         stroke-width="${MIN_TARGET_SIZE}"
       />
-      <line
-        x1="${start.x}"
-        y1="${start.y}"
-        x2="${end.x}"
-        y2="${end.y}"
-        stroke="${color}"
-        stroke-width="${e.style.strokeWidth ?? 1}"
-        stroke-dasharray="${getStrokeDashArray(e.style.strokeStyle, e.style.strokeWidth)}"
-        marker-start="${e.style.markerStart === "arrow" ? "url(#arrow)" : "none"}"
-        marker-end="${e.style.markerEnd === "arrow" ? "url(#arrow)" : "none"}"
-      />
+      ${renderEdgeLine(start, end, e.style)}
     </g>`;
+}
+
+export function renderEdgePreview(start: Point): TemplateResult {
+  return svg`
+    <g
+      class="edge-preview"
+      pointer-events="none"
+    >
+      ${renderEdgeLine(start, start, { markerEnd: "arrow" })}
+    </g>`;
+}
+
+function renderEdgeLine(
+  start: Point,
+  end: Point,
+  style: EdgeStyle,
+): TemplateResult {
+  const color = style.stroke ?? "black";
+  return svg`
+    <line
+      x1="${start.x}"
+      y1="${start.y}"
+      x2="${end.x}"
+      y2="${end.y}"
+      stroke="${color}"
+      stroke-width="${style.strokeWidth ?? 1}"
+      stroke-dasharray="${getStrokeDashArray(style.strokeStyle, style.strokeWidth)}"
+      marker-start="${style.markerStart === "arrow" ? "url(#arrow)" : "none"}"
+      marker-end="${style.markerEnd === "arrow" ? "url(#arrow)" : "none"}"
+    />`;
 }

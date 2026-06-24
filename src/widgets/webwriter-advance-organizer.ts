@@ -142,6 +142,9 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
   @query("slot#page-slot")
   private accessor pageSlot!: HTMLSlotElement;
 
+  @query("ao-canvas")
+  private accessor canvas!: AoCanvas | null;
+
   /* Optional LOCALIZATION: Uncomment this after first running `npm run localize` in the command line.
   localize = LOCALIZE
   */
@@ -213,7 +216,9 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
   protected override render(): TemplateResult {
     return html`<ww-toolbar>
         ${this.openPage === null
-          ? html`<ao-create-actions></ao-create-actions>
+          ? html`<ao-create-actions
+                @start-draw-edge=${() => this.canvas?.beginDrawEdge()}
+              ></ao-create-actions>
               <div class="spacer"></div>
               <ao-node-actions></ao-node-actions>
               <ao-edge-actions></ao-edge-actions>

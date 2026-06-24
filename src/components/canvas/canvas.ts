@@ -1,8 +1,8 @@
 import { LitElementWw } from "@webwriter/lit";
-import { html, PropertyValues, type TemplateResult } from "lit";
+import { html, svg, PropertyValues, type TemplateResult } from "lit";
 import { canvasStyles } from "./canvas.styles";
 import { renderNode } from "./node";
-import { renderEdge } from "./edge";
+import { renderEdge, renderEdgePreview } from "./edge";
 import { consume } from "@lit/context";
 import { documentContext, selectionContext } from "../../state/contexts";
 import { SelectionController } from "../../state/selection";
@@ -47,7 +47,15 @@ type InteractionMode =
       handle: ResizeHandle;
       itemId: Id;
     }
-  | { kind: "draw-edge"; sourceId: Id; cursor: Point }
+  | {
+      kind: "draw-edge";
+      source: {
+        nodeId: Id;
+        anchor: EdgePosition;
+        start: Point;
+        startEndpointPos: Point;
+      } | null;
+    }
   | {
       kind: "reanchor-edge";
       edgeId: Id;
@@ -109,6 +117,7 @@ export class AoCanvas extends LitElementWw {
             (e) => e.id,
             (e) => renderEdge(e, this.doc),
           )}
+          ${this._renderDrawEdgePreview()}
         </g>
         <g class="nodes">
           ${repeat(
@@ -119,11 +128,15 @@ export class AoCanvas extends LitElementWw {
         </g>
         <g class="overlays">
           ${renderOverlay(this.selection, this.doc, {
-            active: this._mode.kind === "reanchor-edge",
+            active:
+              this._mode.kind === "reanchor-edge" ||
+              this._mode.kind === "draw-edge",
             skipNodeId:
               this._mode.kind === "reanchor-edge"
                 ? this._mode.otherNodeId
-                : undefined,
+                : this._mode.kind === "draw-edge"
+                  ? (this._mode.source?.nodeId ?? undefined)
+                  : undefined,
           })}
         </g>
       </g>
@@ -132,6 +145,11 @@ export class AoCanvas extends LitElementWw {
 
   private _onPointerDown(e: PointerEvent): void {
     if (e.button !== 0) return; // ignore non-left clicks
+
+    if (this._mode.kind === "draw-edge") {
+      this._handleDrawEdgeClick(e);
+      return;
+    }
 
     const target = e.target as Element;
     const handleEl = target.closest<SVGElement>("[data-handle]");
@@ -203,6 +221,11 @@ export class AoCanvas extends LitElementWw {
     };
   }
 
+  beginDrawEdge(): void {
+    this.selection.clear();
+    this._mode = { kind: "draw-edge", source: null };
+  }
+
   private _beginReanchor(
     e: PointerEvent,
     edgeId: Id,
@@ -226,11 +249,94 @@ export class AoCanvas extends LitElementWw {
     };
   }
 
+  private _handleDrawEdgeClick(e: PointerEvent): void {
+    if (this._mode.kind !== "draw-edge") return;
+
+    const target = e.target as Element;
+    const anchorEl = target.closest<SVGElement>("[data-anchor-position]");
+    const anchorGroupEl = anchorEl?.closest<SVGElement>(
+      "[data-anchor-node-id]",
+    );
+
+    if (!anchorEl || !anchorGroupEl) {
+      this._resetMode();
+      return;
+    }
+
+    const nodeId = anchorGroupEl.dataset["anchorNodeId"]!;
+    const anchor = anchorEl.dataset["anchorPosition"] as EdgePosition;
+
+    if (this._mode.source === null) {
+      const node = this.doc.get(nodeId);
+      if (!node || node.kind !== "node") return;
+      const anchorRect = anchorEl.getBoundingClientRect();
+      this._mode = {
+        kind: "draw-edge",
+        source: {
+          nodeId,
+          anchor,
+          start: {
+            x: anchorRect.x + anchorRect.width / 2,
+            y: anchorRect.y + anchorRect.height / 2,
+          },
+          startEndpointPos: getAnchorPoints(node)[anchor],
+        },
+      };
+      return;
+    }
+
+    if (nodeId === this._mode.source.nodeId) return;
+
+    this._commitDrawEdge(this._mode.source, { nodeId, anchor });
+  }
+
+  private _commitDrawEdge(
+    source: { nodeId: Id; anchor: EdgePosition },
+    target: { nodeId: Id; anchor: EdgePosition },
+  ): void {
+    this._resetMode();
+    console.log(
+      "Adding edge from",
+      source.nodeId,
+      source.anchor,
+      "to",
+      target.nodeId,
+      target.anchor,
+    );
+    this.doc.addEdge({
+      source: source.nodeId,
+      sourcePosition: source.anchor,
+      target: target.nodeId,
+      targetPosition: target.anchor,
+      style: {
+        markerEnd: "arrow",
+      },
+    });
+  }
+
+  private _renderDrawEdgePreview(): TemplateResult {
+    if (this._mode.kind !== "draw-edge" || !this._mode.source) return svg``;
+    const node = this.doc.get(this._mode.source.nodeId);
+    if (!node || node.kind !== "node") return svg``;
+    const start = this._mode.source.startEndpointPos;
+    return renderEdgePreview(start);
+  }
+
+  private _applyDrawEdgePreviewDom(end: Point): void {
+    const line = this.renderRoot.querySelector<SVGLineElement>(
+      "g.edge-preview line",
+    );
+    if (!line) return;
+    line.setAttribute("x2", String(end.x));
+    line.setAttribute("y2", String(end.y));
+  }
+
   private _onPointerMove(e: PointerEvent): void {
     if (
       this._mode.kind !== "drag" &&
       this._mode.kind !== "resize" &&
-      this._mode.kind !== "reanchor-edge"
+      this._mode.kind !== "reanchor-edge" &&
+      !(this._mode.kind === "draw-edge" && this._mode.source !== null)
     )
       return;
 
@@ -272,27 +378,26 @@ export class AoCanvas extends LitElementWw {
             y: this._mode.startEndpointPos.y + dy,
           };
           const snapTarget = this._findSnapTarget(pos, this._mode.otherNodeId);
-
-          const newSnap = snapTarget
-            ? { nodeId: snapTarget.nodeId, position: snapTarget.position }
-            : null;
-          if (
-            newSnap?.nodeId !== this._snapTarget?.nodeId ||
-            newSnap?.position !== this._snapTarget?.position
-          ) {
-            if (this._snapTarget) {
-              this._setAnchorHighlight(this._snapTarget, false);
-            }
-            if (newSnap) {
-              this._setAnchorHighlight(newSnap, true);
-            }
-            this._snapTarget = newSnap;
-          }
+          this._updateSnapHighlight(snapTarget);
           this._applyReanchorDom(
             this._mode.edgeId,
             this._mode.endpoint,
             snapTarget ? snapTarget.point : pos,
           );
+        } else if (this._mode.kind === "draw-edge" && this._mode.source) {
+          const dx = this._pendingPointer.x - this._mode.source.start.x;
+          const dy = this._pendingPointer.y - this._mode.source.start.y;
+
+          const pos = {
+            x: this._mode.source.startEndpointPos.x + dx,
+            y: this._mode.source.startEndpointPos.y + dy,
+          };
+          const snapTarget = this._findSnapTarget(
+            pos,
+            this._mode.source.nodeId,
+          );
+          this._updateSnapHighlight(snapTarget);
+          this._applyDrawEdgePreviewDom(snapTarget ? snapTarget.point : pos);
         }
       });
     }
@@ -480,6 +585,25 @@ export class AoCanvas extends LitElementWw {
   }
 
   private _onPointerUp(): void {
+    if (this._mode.kind === "draw-edge") {
+      if (this._mode.source && this._pendingPointer) {
+        const dx = this._pendingPointer.x - this._mode.source.start.x;
+        const dy = this._pendingPointer.y - this._mode.source.start.y;
+        const pos = {
+          x: this._mode.source.startEndpointPos.x + dx,
+          y: this._mode.source.startEndpointPos.y + dy,
+        };
+        const snapTarget = this._findSnapTarget(pos, this._mode.source.nodeId);
+        if (snapTarget) {
+          this._commitDrawEdge(this._mode.source, {
+            nodeId: snapTarget.nodeId,
+            anchor: snapTarget.position,
+          });
+        }
+      }
+      return;
+    }
+
     if (this._mode.kind === "drag" && this._pendingPointer) {
       const dx = this._pendingPointer.x - this._mode.start.x;
       const dy = this._pendingPointer.y - this._mode.start.y;
@@ -528,17 +652,24 @@ export class AoCanvas extends LitElementWw {
       }
     }
 
-    if (this._snapTarget) {
-      this._setAnchorHighlight(this._snapTarget, false);
-      this._snapTarget = null;
-    }
+    this._resetMode();
+  }
 
-    if (this._rafId !== null) {
-      cancelAnimationFrame(this._rafId);
-      this._rafId = null;
+  private _updateSnapHighlight(
+    snapTarget: { nodeId: Id; position: EdgePosition } | null,
+  ): void {
+    if (
+      snapTarget?.nodeId !== this._snapTarget?.nodeId ||
+      snapTarget?.position !== this._snapTarget?.position
+    ) {
+      if (this._snapTarget) {
+        this._setAnchorHighlight(this._snapTarget, false);
+      }
+      if (snapTarget) {
+        this._setAnchorHighlight(snapTarget, true);
+      }
+      this._snapTarget = snapTarget;
     }
-    this._pendingPointer = null;
-    this._mode = { kind: "idle" };
   }
 
   private _setAnchorHighlight(
@@ -552,5 +683,18 @@ export class AoCanvas extends LitElementWw {
       "fill",
       active ? "var(--ao-anchor-color, #7d828a)" : "white",
     );
+  }
+
+  private _resetMode(): void {
+    if (this._snapTarget) {
+      this._setAnchorHighlight(this._snapTarget, false);
+      this._snapTarget = null;
+    }
+    if (this._rafId !== null) {
+      cancelAnimationFrame(this._rafId);
+      this._rafId = null;
+    }
+    this._pendingPointer = null;
+    this._mode = { kind: "idle" };
   }
 }

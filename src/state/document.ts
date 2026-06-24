@@ -44,6 +44,35 @@ export class DocumentController extends Observable {
     return newNode;
   }
 
+  addEdge(edge: Omit<Edge, "id" | "kind">): Edge | null {
+    // Prevent adding an edge if source and target node are the same
+    if (edge.source === edge.target) return null;
+    // Prevent adding an edge if source or target node does not exist
+    if (!this._nodes.has(edge.source) || !this._nodes.has(edge.target))
+      return null;
+    // Prevent adding an edge if an edge already exists between the same source and target anchors
+    for (const e of this._edges.values()) {
+      if (
+        (e.source === edge.source &&
+          e.sourcePosition === edge.sourcePosition &&
+          e.target === edge.target &&
+          e.targetPosition === edge.targetPosition) ||
+        (e.source === edge.target &&
+          e.sourcePosition === edge.targetPosition &&
+          e.target === edge.source &&
+          e.targetPosition === edge.sourcePosition)
+      )
+        return null;
+    }
+    console.log("survived addEdge checks", edge);
+
+    const id = crypto.randomUUID();
+    const newEdge: Edge = { ...edge, id, kind: "edge" };
+    this._edges.set(id, newEdge);
+    this.notify();
+    return newEdge;
+  }
+
   resizeNode(id: Id, position: Point, dimension: Dimension): void {
     const node = this._nodes.get(id);
     if (!node) return;

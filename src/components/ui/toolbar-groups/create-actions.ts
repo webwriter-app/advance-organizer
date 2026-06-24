@@ -44,7 +44,7 @@ export class AoCreateActionsGroup extends LitElementWw {
         </sl-button>
       </sl-tooltip>
       <sl-tooltip content="Add edge">
-        <sl-button>
+        <sl-button @click=${this._handleAddEdgeClick}>
           <sl-icon src=${iconAddEdge}></sl-icon>
         </sl-button>
       </sl-tooltip>
@@ -64,5 +64,14 @@ export class AoCreateActionsGroup extends LitElementWw {
       },
     });
     this.selection.select(newNode.id);
+  }
+
+  private _handleAddEdgeClick(): void {
+    this.dispatchEvent(
+      new CustomEvent("start-draw-edge", {
+        bubbles: true,
+        composed: true,
+      }),
+    );
   }
 }
