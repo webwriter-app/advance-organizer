@@ -42,7 +42,7 @@ export function computeResize(
 export function applyResize(el: SVGElement, newDim: Dimension): void {
   const { width: w, height: h } = newDim;
   const tag = el.tagName.toLowerCase();
-  if (tag === "rect") {
+  if (tag === "rect" || tag === "foreignobject") {
     el.setAttribute("x", String(-w / 2));
     el.setAttribute("y", String(-h / 2));
     el.setAttribute("width", String(w));

@@ -168,6 +168,20 @@ export class DocumentController extends Observable {
     this.notify();
   }
 
+  updateLabelText(id: Id, text: string): void {
+    const node = this._nodes.get(id);
+    if (node) {
+      this._nodes.set(id, { ...node, label: { ...node.label, text } });
+      this.notify();
+      return;
+    }
+    const edge = this._edges.get(id);
+    if (edge) {
+      this._edges.set(id, { ...edge, label: { ...edge.label, text } });
+      this.notify();
+    }
+  }
+
   // TODO: Always accept map / array of nodes to update -> less re-rendering
   updateNodeStyle(id: Id, style: Partial<NodeStyle>): void {
     const node = this._nodes.get(id);

@@ -69,7 +69,8 @@ export const styles = css`
 
   @media (prefers-reduced-motion: reduce) {
     ao-canvas,
-    .page-container {
+    .page-container,
+    .page-container slot {
       animation: none;
     }
   }

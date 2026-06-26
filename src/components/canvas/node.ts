@@ -1,16 +1,24 @@
 import { svg, type TemplateResult } from "lit";
 import { Node } from "../../model/types";
 import { getStrokeDashArray } from "./helper";
+import { renderLabel } from "./label";
 
-export function renderNode(n: Node): TemplateResult {
+export function renderNode(
+  n: Node,
+  editingLabel: boolean = false,
+): TemplateResult {
+  const position = {
+    x: -n.dimension.width / 2,
+    y: -n.dimension.height / 2,
+  };
   return svg`
-    <g 
+    <g
       class="node"
       data-item-id="${n.id}"
-      transform="translate(${n.position.x}, ${n.position.y})"  
+      transform="translate(${n.position.x}, ${n.position.y})"
     >
     ${renderShape(n)}
-    <text x="0" y="0" text-anchor="middle" alignment-baseline="middle">${n.label.text}</text>
+    ${renderLabel(n.id, n.label, position, n.dimension, editingLabel)}
   </g>`;
 }
 

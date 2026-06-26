@@ -49,7 +49,7 @@ export class AoPageActionsGroup extends LitElementWw {
 
       return html`<sl-button-group label="Connected page">
         <sl-tooltip content="Connected page">
-          <sl-button @click=${this._handleOpenPageClick}>
+          <sl-button variant="primary" @click=${this._handleOpenPageClick}>
             <sl-icon src=${iconEditFile}></sl-icon>
           </sl-button>
         </sl-tooltip>

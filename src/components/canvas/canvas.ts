@@ -75,9 +75,16 @@ export class AoCanvas extends LitElementWw {
   @state()
   private accessor _mode: InteractionMode = { kind: "idle" };
 
+  @state()
+  private accessor _editingId: Id | null = null;
+
   private _rafId: number | null = null;
   private _pendingPointer: Point | null = null;
   private _snapTarget: { nodeId: Id; position: EdgePosition } | null = null;
+  private _editFocusPending: boolean = false;
+  private _lastItemClick: { id: Id; time: number } | null = null;
+
+  private static readonly DOUBLE_CLICK_MS = 400;
 
   protected override firstUpdated(_changedProperties: PropertyValues): void {
     new SubscribeController(this, this.doc);
@@ -97,6 +104,8 @@ export class AoCanvas extends LitElementWw {
       @pointermove=${this._onPointerMove}
       @pointerup=${this._onPointerUp}
       @pointercancel=${this._onPointerUp}
+      @keydown=${this._onEditKeydown}
+      @focusout=${this._onEditFocusOut}
       @contextmenu=${this._onContextMenu}>
       <defs>
         <marker
@@ -124,7 +133,7 @@ export class AoCanvas extends LitElementWw {
           ${repeat(
             this.doc.nodes,
             (n) => n.id,
-            (n) => renderNode(n),
+            (n) => renderNode(n, this._editingId === n.id),
           )}
         </g>
         <g class="overlays">
@@ -145,6 +154,9 @@ export class AoCanvas extends LitElementWw {
   }
 
   private _onPointerDown(e: PointerEvent): void {
+    // Ignore clicks inside the label being edited, they are handled by the contenteditable div
+    if ((e.target as Element).closest(".label-editor")) return;
+
     if (e.button !== 0) return; // ignore non-left clicks
 
     if (this._mode.kind === "draw-edge") {
@@ -178,6 +190,20 @@ export class AoCanvas extends LitElementWw {
         this.selection.toggle(id);
       } else if (!this.selection.has(id)) {
         this.selection.select(new Set<Id>([id]));
+      }
+
+      const isDoubleClick =
+        this._lastItemClick?.id === id &&
+        e.timeStamp - this._lastItemClick.time < AoCanvas.DOUBLE_CLICK_MS;
+      this._lastItemClick = { id, time: e.timeStamp };
+
+      const item = this.doc.get(id);
+      if (isDoubleClick && item?.kind === "node") {
+        // Suppress browser focus handling
+        e.preventDefault();
+        this._lastItemClick = null;
+        this._startEditing(id);
+        return;
       }
 
       this._beginDrag(e);
@@ -515,6 +541,13 @@ export class AoCanvas extends LitElementWw {
       }
     }
 
+    const labelFo = this.renderRoot.querySelector(
+      `g.node[data-item-id="${id}"] foreignObject.label-fo`,
+    ) as SVGForeignObjectElement | null;
+    if (labelFo) {
+      applyResize(labelFo, newDim);
+    }
+
     this._updateConnectedEdgesDom(id, newPos, newDim);
   }
 
@@ -688,7 +721,71 @@ export class AoCanvas extends LitElementWw {
       this._rafId = null;
     }
     this._pendingPointer = null;
-    this._mode = { kind: "idle" };
+    if (this._mode.kind !== "idle") {
+      this._mode = { kind: "idle" };
+    }
+  }
+
+  protected override updated(): void {
+    if (this._editFocusPending && this._editingId) {
+      this._editFocusPending = false;
+      const el = this.renderRoot.querySelector<HTMLElement>(
+        `.label-editor[data-edit-id="${this._editingId}"]`,
+      );
+      if (el) {
+        // Set text imperatively to avoid Lit issues with contenteditable
+        const item = this.doc.get(this._editingId);
+        el.textContent = item?.label?.text ?? "";
+        el.focus();
+        const range = document.createRange();
+        range.selectNodeContents(el);
+        const sel = window.getSelection();
+        sel?.removeAllRanges();
+        sel?.addRange(range);
+      }
+    }
+  }
+
+  private _startEditing(id: Id): void {
+    this._editingId = id;
+    this._editFocusPending = true;
+  }
+
+  private _onEditKeydown(e: KeyboardEvent): void {
+    if (!this._editingId) return;
+    const el = e.target as HTMLElement;
+    if (!el.classList?.contains("label-editor")) return;
+
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      this._commitEdit();
+    } else if (e.key === "Escape") {
+      e.preventDefault();
+      this._cancelEdit();
+    }
+    e.stopPropagation();
+  }
+
+  private _onEditFocusOut(e: FocusEvent): void {
+    const el = e.target as HTMLElement;
+    if (!el.classList?.contains("label-editor")) return;
+    this._commitEdit();
+  }
+
+  private _commitEdit(): void {
+    if (!this._editingId) return;
+    const id = this._editingId;
+    const el = this.renderRoot.querySelector<HTMLElement>(
+      `.label-editor[data-edit-id="${id}"]`,
+    );
+    const text = (el?.innerText ?? "").trim();
+    this._editingId = null;
+    this.doc.updateLabelText(id, text);
+  }
+
+  private _cancelEdit(): void {
+    // Triggers re-render to restore previous label text
+    this._editingId = null;
   }
 
   private _onContextMenu(e: PointerEvent): void {
