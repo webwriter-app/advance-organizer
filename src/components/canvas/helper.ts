@@ -11,6 +11,7 @@ export const MIN_NODE_SIZE = 20;
 export const HANDLE_SIZE = 8;
 export const MIN_TARGET_SIZE = 24;
 export const SNAP_RADIUS = 16;
+export const MIN_EDGE_LABEL_WIDTH = 80;
 
 export function computeResize(
   handle: ResizeHandle,
@@ -108,4 +109,19 @@ export function computeEdgePoints(
   const startPoint = getAnchorPoints(source)[edge.sourcePosition ?? "right"];
   const endPoint = getAnchorPoints(target)[edge.targetPosition ?? "left"];
   return { start: startPoint, end: endPoint };
+}
+
+export function computeEdgeLabelLayout(
+  start: Point,
+  end: Point,
+): { position: Point; dimension: Dimension } {
+  const dimension = {
+    width: Math.max(Math.abs(start.x - end.x), MIN_EDGE_LABEL_WIDTH),
+    height: Math.abs(start.y - end.y),
+  };
+  const position = {
+    x: (start.x + end.x) / 2 - dimension.width / 2,
+    y: (start.y + end.y) / 2 - dimension.height / 2,
+  };
+  return { position, dimension };
 }

@@ -4,10 +4,16 @@ import { DocumentController } from "../../state/document";
 import {
   getStrokeDashArray,
   computeEdgePoints,
+  computeEdgeLabelLayout,
   MIN_TARGET_SIZE,
 } from "./helper";
+import { renderLabel } from "./label";
 
-export function renderEdge(e: Edge, doc: DocumentController): TemplateResult {
+export function renderEdge(
+  e: Edge,
+  doc: DocumentController,
+  editingLabel = false,
+): TemplateResult {
   const source = doc.get(e.source);
   const target = doc.get(e.target);
   if (!source || !target || source.kind !== "node" || target.kind !== "node") {
@@ -15,6 +21,9 @@ export function renderEdge(e: Edge, doc: DocumentController): TemplateResult {
   }
 
   const { start, end } = computeEdgePoints(source, target, e);
+
+  const { position: labelPosition, dimension: labelDimension } =
+    computeEdgeLabelLayout(start, end);
 
   return svg`
     <g
@@ -32,6 +41,7 @@ export function renderEdge(e: Edge, doc: DocumentController): TemplateResult {
         stroke-width="${MIN_TARGET_SIZE}"
       />
       ${renderEdgeLine(start, end, e.style)}
+      ${e.label ? renderLabel(e.id, e.label, labelPosition, labelDimension, editingLabel) : svg``}
     </g>`;
 }
 

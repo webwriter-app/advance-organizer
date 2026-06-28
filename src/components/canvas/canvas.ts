@@ -22,6 +22,7 @@ import { state } from "lit/decorators.js";
 import {
   applyResize,
   computeEdgePoints,
+  computeEdgeLabelLayout,
   computeResize,
   getAnchorPoints,
   getHandlePositions,
@@ -63,6 +64,7 @@ type InteractionMode =
       otherNodeId: Id;
       start: Point;
       startEndpointPos: Point;
+      otherEndpointPos: Point;
     };
 
 export class AoCanvas extends LitElementWw {
@@ -125,7 +127,7 @@ export class AoCanvas extends LitElementWw {
           ${repeat(
             this.doc.edges,
             (e) => e.id,
-            (e) => renderEdge(e, this.doc),
+            (e) => renderEdge(e, this.doc, this._editingId === e.id),
           )}
           ${this._renderDrawEdgePreview()}
         </g>
@@ -198,7 +200,10 @@ export class AoCanvas extends LitElementWw {
       this._lastItemClick = { id, time: e.timeStamp };
 
       const item = this.doc.get(id);
-      if (isDoubleClick && item?.kind === "node") {
+      if (
+        isDoubleClick &&
+        (item?.kind === "node" || (item?.kind === "edge" && !!item.label))
+      ) {
         // Suppress browser focus handling
         e.preventDefault();
         this._lastItemClick = null;
@@ -273,6 +278,7 @@ export class AoCanvas extends LitElementWw {
       otherNodeId: endpoint === "source" ? edge.target : edge.source,
       start: { x: e.clientX, y: e.clientY },
       startEndpointPos: endpoint === "source" ? start : end,
+      otherEndpointPos: endpoint === "source" ? end : start,
     };
   }
 
@@ -402,6 +408,7 @@ export class AoCanvas extends LitElementWw {
             this._mode.edgeId,
             this._mode.endpoint,
             snapTarget ? snapTarget.point : pos,
+            this._mode.otherEndpointPos,
           );
         } else if (this._mode.kind === "draw-edge" && this._mode.source) {
           const dx = this._pendingPointer.x - this._mode.source.start.x;
@@ -496,6 +503,8 @@ export class AoCanvas extends LitElementWw {
         lineEl.setAttribute("x2", String(end.x));
         lineEl.setAttribute("y2", String(end.y));
       }
+
+      this._updateEdgeLabelDom(gEl, start, end);
     };
 
     for (const gEl of this.renderRoot.querySelectorAll<SVGGElement>(
@@ -555,6 +564,7 @@ export class AoCanvas extends LitElementWw {
     edgeId: Id,
     endpoint: "source" | "target",
     newPos: Point,
+    otherPos: Point,
   ): void {
     const edgeG = this.renderRoot.querySelector(
       `g.edge[data-item-id="${edgeId}"]`,
@@ -576,6 +586,27 @@ export class AoCanvas extends LitElementWw {
       selLine.setAttribute(attr1, String(newPos.x));
       selLine.setAttribute(attr2, String(newPos.y));
     }
+
+    const start = endpoint === "source" ? newPos : otherPos;
+    const end = endpoint === "source" ? otherPos : newPos;
+    this._updateEdgeLabelDom(edgeG, start, end);
+  }
+
+  private _updateEdgeLabelDom(
+    edgeG: SVGGElement,
+    start: Point,
+    end: Point,
+  ): void {
+    const labelFo = edgeG.querySelector(
+      `foreignObject.label-fo`,
+    ) as SVGForeignObjectElement | null;
+    if (!labelFo) return;
+
+    const { position, dimension } = computeEdgeLabelLayout(start, end);
+    labelFo.setAttribute("x", String(position.x));
+    labelFo.setAttribute("y", String(position.y));
+    labelFo.setAttribute("width", String(dimension.width));
+    labelFo.setAttribute("height", String(dimension.height));
   }
 
   private _findSnapTarget(pos: Point, excludeId?: Id) {
@@ -674,6 +705,7 @@ export class AoCanvas extends LitElementWw {
           this._mode.edgeId,
           this._mode.endpoint,
           this._mode.startEndpointPos,
+          this._mode.otherEndpointPos,
         );
       }
     }

@@ -107,6 +107,10 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
         markerStart: "arrow",
         markerEnd: "arrow",
       },
+      label: {
+        text: "connects to",
+        bold: true,
+      },
     },
     {
       id: "e2",
@@ -121,6 +125,10 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
         strokeStyle: "dotted",
         markerEnd: "arrow",
       },
+      label: {
+        text: "leads to",
+        italic: true,
+      },
     },
     {
       id: "e3",
@@ -133,6 +141,10 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
         stroke: "teal",
         strokeWidth: 1,
         markerEnd: "arrow",
+      },
+      label: {
+        text: "points to",
+        underline: true,
       },
     },
   ];

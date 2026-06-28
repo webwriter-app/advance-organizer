@@ -18,6 +18,7 @@ export const canvasStyles = css`
 
   .label-fo {
     overflow: visible;
+    pointer-events: none;
   }
 
   .label-wrap {
@@ -32,7 +33,7 @@ export const canvasStyles = css`
   .label-content {
     max-width: 100%;
     text-align: center;
-    white-space: pre-wrap;
+    white-space: wrap;
     overflow-wrap: anywhere;
     user-select: none;
   }
@@ -42,5 +43,12 @@ export const canvasStyles = css`
     cursor: text;
     pointer-events: auto;
     user-select: text;
+  }
+
+  .edge .label-content {
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 4px;
+    padding: 2px 6px;
+    pointer-events: auto;
   }
 `;
