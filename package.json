@@ -1,46 +1,47 @@
 {
-  "name": "@webwriter/advance-organizer",
-  "version": "0.0.1",
-  "keywords": [
-    "webwriter-widget"
-  ],
-  "license": "MIT",
-  "author": "Constantin Birken",
-  "scripts": {
-    "prepublishOnly": "npx @webwriter/build",
-    "dev": "npx @webwriter/build dev",
-    "localize": "lit-localize extract && npx @webwriter/build localize && lit-localize build"
-  },
-  "dependencies": {
-    "@lit/context": "^1.1.6",
-    "@shoelace-style/shoelace": "^2.20.1",
-    "@webwriter/lit": "^2",
-    "lit": "^3"
-  },
-  "devDependencies": {
-    "@lit/localize-tools": "^0.8",
-    "@tabler/icons": "^3.44.0",
-    "typescript": "^6.0.3"
-  },
-  "exports": {
-    "./widgets/webwriter-advance-organizer.*": {
-      "source": "./src/widgets/webwriter-advance-organizer.ts",
-      "default": "./dist/widgets/webwriter-advance-organizer.*"
+    "name": "@webwriter/advance-organizer",
+    "version": "0.0.1",
+    "keywords": [
+        "webwriter-widget"
+    ],
+    "license": "MIT",
+    "author": "Constantin Birken",
+    "scripts": {
+        "prepublishOnly": "npx @webwriter/build",
+        "dev": "npx @webwriter/build dev",
+        "localize": "lit-localize extract && npx @webwriter/build localize && lit-localize build"
     },
-    "./widgets/webwriter-advance-organizer-page.*": {
-      "source": "./src/widgets/webwriter-advance-organizer-page.ts",
-      "default": "./dist/widgets/webwriter-advance-organizer-page.*"
-    }
-  },
-  "editingConfig": {
-    "./widgets/webwriter-advance-organizer": {
-      "definingAsContext": true,
-      "content": "(webwriter-advance-organizer-page)*"
+    "dependencies": {
+        "@lit/context": "^1.1.6",
+        "@shoelace-style/shoelace": "^2.20.1",
+        "@webwriter/lit": "^2",
+        "lit": "^3",
+        "panzoom": "^9.4.4"
     },
-    "./widgets/webwriter-advance-organizer-page": {
-      "definingForContent": true,
-      "content": "(flow)*",
-      "uninsertable": true
+    "devDependencies": {
+        "@lit/localize-tools": "^0.8",
+        "@tabler/icons": "^3.44.0",
+        "typescript": "^6.0.3"
+    },
+    "exports": {
+        "./widgets/webwriter-advance-organizer.*": {
+            "source": "./src/widgets/webwriter-advance-organizer.ts",
+            "default": "./dist/widgets/webwriter-advance-organizer.*"
+        },
+        "./widgets/webwriter-advance-organizer-page.*": {
+            "source": "./src/widgets/webwriter-advance-organizer-page.ts",
+            "default": "./dist/widgets/webwriter-advance-organizer-page.*"
+        }
+    },
+    "editingConfig": {
+        "./widgets/webwriter-advance-organizer": {
+            "definingAsContext": true,
+            "content": "(webwriter-advance-organizer-page)*"
+        },
+        "./widgets/webwriter-advance-organizer-page": {
+            "definingForContent": true,
+            "content": "(flow)*",
+            "uninsertable": true
+        }
     }
-  }
 }

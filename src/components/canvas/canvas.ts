@@ -1,5 +1,6 @@
 import { LitElementWw } from "@webwriter/lit";
 import { html, svg, PropertyValues, type TemplateResult } from "lit";
+import createPanZoom, { type PanZoom } from "panzoom";
 import { canvasStyles } from "./canvas.styles";
 import { renderNode } from "./node";
 import { renderEdge, renderEdgePreview } from "./edge";
@@ -28,6 +29,7 @@ import {
   getHandlePositions,
   HANDLE_SIZE,
   SNAP_RADIUS,
+  INTERACTIVE_SELECTOR,
 } from "./helper";
 
 type InteractionMode =
@@ -80,6 +82,7 @@ export class AoCanvas extends LitElementWw {
   @state()
   private accessor _editingId: Id | null = null;
 
+  private _panzoom: PanZoom | null = null;
   private _rafId: number | null = null;
   private _pendingPointer: Point | null = null;
   private _snapTarget: { nodeId: Id; position: EdgePosition } | null = null;
@@ -91,6 +94,18 @@ export class AoCanvas extends LitElementWw {
   protected override firstUpdated(_changedProperties: PropertyValues): void {
     new SubscribeController(this, this.doc);
     new SubscribeController(this, this.selection);
+    this._initPanZoom();
+  }
+
+  override disconnectedCallback(): void {
+    super.disconnectedCallback();
+    this.renderRoot
+      ?.querySelector<SVGSVGElement>("svg")
+      ?.removeEventListener("touchstart", this._onTouchStartCapture, {
+        capture: true,
+      });
+    this._panzoom?.dispose();
+    this._panzoom = null;
   }
 
   static override styles = canvasStyles;
@@ -153,6 +168,37 @@ export class AoCanvas extends LitElementWw {
         </g>
       </g>
     </svg>`;
+  }
+
+  private _isInteractiveTarget(target: EventTarget | null): boolean {
+    return !!(target as Element | null)?.closest(INTERACTIVE_SELECTOR);
+  }
+
+  private _initPanZoom(): void {
+    const viewport = this.renderRoot.querySelector<SVGGElement>("g.viewport");
+    const svg = this.renderRoot.querySelector<SVGSVGElement>("svg");
+    if (!viewport || !svg) return;
+
+    this._panzoom = createPanZoom(viewport, {
+      minZoom: 0.25,
+      maxZoom: 4,
+      zoomDoubleClickSpeed: 1, // disable double-click to zoom
+      beforeMouseDown: (e) => this._isInteractiveTarget(e.target),
+    });
+    svg.addEventListener("touchstart", this._onTouchStartCapture, {
+      capture: true,
+      passive: true,
+    });
+  }
+
+  private _onTouchStartCapture = (e: TouchEvent): void => {
+    if (this._isInteractiveTarget(e.target)) {
+      e.stopPropagation();
+    }
+  };
+
+  private _zoomScale(): number {
+    return this._panzoom?.getTransform().scale ?? 1;
   }
 
   private _onPointerDown(e: PointerEvent): void {
@@ -372,9 +418,10 @@ export class AoCanvas extends LitElementWw {
         this._rafId = null;
         if (!this._pendingPointer) return;
 
+        const scale = this._zoomScale();
         if (this._mode.kind === "drag") {
-          const dx = this._pendingPointer.x - this._mode.start.x;
-          const dy = this._pendingPointer.y - this._mode.start.y;
+          const dx = (this._pendingPointer.x - this._mode.start.x) / scale;
+          const dy = (this._pendingPointer.y - this._mode.start.y) / scale;
 
           const newPositions = new Map<Id, Point>();
           for (const [id, startPos] of this._mode.startPositions) {
@@ -384,8 +431,8 @@ export class AoCanvas extends LitElementWw {
             this._applyDragDom(id, newPos, newPositions);
           }
         } else if (this._mode.kind === "resize") {
-          const dx = this._pendingPointer.x - this._mode.start.x;
-          const dy = this._pendingPointer.y - this._mode.start.y;
+          const dx = (this._pendingPointer.x - this._mode.start.x) / scale;
+          const dy = (this._pendingPointer.y - this._mode.start.y) / scale;
           const { newPos, newDim } = computeResize(
             this._mode.handle,
             this._mode.startPosition,
@@ -395,8 +442,8 @@ export class AoCanvas extends LitElementWw {
           );
           this._applyResizeDom(this._mode.itemId, newPos, newDim);
         } else if (this._mode.kind === "reanchor-edge") {
-          const dx = this._pendingPointer.x - this._mode.start.x;
-          const dy = this._pendingPointer.y - this._mode.start.y;
+          const dx = (this._pendingPointer.x - this._mode.start.x) / scale;
+          const dy = (this._pendingPointer.y - this._mode.start.y) / scale;
 
           const pos = {
             x: this._mode.startEndpointPos.x + dx,
@@ -411,8 +458,10 @@ export class AoCanvas extends LitElementWw {
             this._mode.otherEndpointPos,
           );
         } else if (this._mode.kind === "draw-edge" && this._mode.source) {
-          const dx = this._pendingPointer.x - this._mode.source.start.x;
-          const dy = this._pendingPointer.y - this._mode.source.start.y;
+          const dx =
+            (this._pendingPointer.x - this._mode.source.start.x) / scale;
+          const dy =
+            (this._pendingPointer.y - this._mode.source.start.y) / scale;
 
           const pos = {
             x: this._mode.source.startEndpointPos.x + dx,
@@ -644,8 +693,9 @@ export class AoCanvas extends LitElementWw {
   private _onPointerUp(): void {
     if (this._mode.kind === "draw-edge") {
       if (this._mode.source && this._pendingPointer) {
-        const dx = this._pendingPointer.x - this._mode.source.start.x;
-        const dy = this._pendingPointer.y - this._mode.source.start.y;
+        const scale = this._zoomScale();
+        const dx = (this._pendingPointer.x - this._mode.source.start.x) / scale;
+        const dy = (this._pendingPointer.y - this._mode.source.start.y) / scale;
         const pos = {
           x: this._mode.source.startEndpointPos.x + dx,
           y: this._mode.source.startEndpointPos.y + dy,
@@ -661,9 +711,10 @@ export class AoCanvas extends LitElementWw {
       return;
     }
 
+    const scale = this._zoomScale();
     if (this._mode.kind === "drag" && this._pendingPointer) {
-      const dx = this._pendingPointer.x - this._mode.start.x;
-      const dy = this._pendingPointer.y - this._mode.start.y;
+      const dx = (this._pendingPointer.x - this._mode.start.x) / scale;
+      const dy = (this._pendingPointer.y - this._mode.start.y) / scale;
 
       if (dx !== 0 || dy !== 0) {
         const finalPositions = new Map<Id, Point>();
@@ -673,8 +724,8 @@ export class AoCanvas extends LitElementWw {
         this.doc.moveNodes(finalPositions);
       }
     } else if (this._mode.kind === "resize" && this._pendingPointer) {
-      const dx = this._pendingPointer.x - this._mode.start.x;
-      const dy = this._pendingPointer.y - this._mode.start.y;
+      const dx = (this._pendingPointer.x - this._mode.start.x) / scale;
+      const dy = (this._pendingPointer.y - this._mode.start.y) / scale;
       const { newPos, newDim } = computeResize(
         this._mode.handle,
         this._mode.startPosition,
@@ -684,8 +735,8 @@ export class AoCanvas extends LitElementWw {
       );
       this.doc.resizeNode(this._mode.itemId, newPos, newDim);
     } else if (this._mode.kind === "reanchor-edge" && this._pendingPointer) {
-      const dx = this._pendingPointer.x - this._mode.start.x;
-      const dy = this._pendingPointer.y - this._mode.start.y;
+      const dx = (this._pendingPointer.x - this._mode.start.x) / scale;
+      const dy = (this._pendingPointer.y - this._mode.start.y) / scale;
 
       const pos = {
         x: this._mode.startEndpointPos.x + dx,

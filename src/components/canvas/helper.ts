@@ -13,6 +13,9 @@ export const MIN_TARGET_SIZE = 24;
 export const SNAP_RADIUS = 16;
 export const MIN_EDGE_LABEL_WIDTH = 80;
 
+export const INTERACTIVE_SELECTOR =
+  "[data-item-id], [data-handle], [data-anchor-position], .label-editor";
+
 export function computeResize(
   handle: ResizeHandle,
   startPos: Point,
