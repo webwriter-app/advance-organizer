@@ -3,6 +3,7 @@ import { css } from "lit";
 export const canvasStyles = css`
   :host {
     display: block;
+    position: relative;
     width: 100%;
     height: 600px;
   }
@@ -14,6 +15,13 @@ export const canvasStyles = css`
   svg:focus-visible {
     outline: var(--sl-focus-ring);
     outline-offset: var(--sl-focus-ring-offset);
+  }
+
+  ao-zoom-controls {
+    position: absolute;
+    top: var(--sl-spacing-medium);
+    right: var(--sl-spacing-medium);
+    z-index: 10;
   }
 
   .label-fo {

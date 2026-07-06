@@ -19,7 +19,7 @@ import {
   Point,
   ResizeHandle,
 } from "../../model/types";
-import { state } from "lit/decorators.js";
+import { query, state } from "lit/decorators.js";
 import {
   applyResize,
   computeEdgePoints,
@@ -31,6 +31,7 @@ import {
   SNAP_RADIUS,
   INTERACTIVE_SELECTOR,
 } from "./helper";
+import { AoZoomControls } from "../ui/zoom-controls";
 
 type InteractionMode =
   | { kind: "idle" }
@@ -70,6 +71,10 @@ type InteractionMode =
     };
 
 export class AoCanvas extends LitElementWw {
+  static override scopedElements = {
+    "ao-zoom-controls": AoZoomControls,
+  };
+
   @consume({ context: documentContext })
   accessor doc!: DocumentController;
 
@@ -82,6 +87,9 @@ export class AoCanvas extends LitElementWw {
   @state()
   private accessor _editingId: Id | null = null;
 
+  @query("ao-zoom-controls")
+  private accessor _zoomControls!: AoZoomControls | null;
+
   private _panzoom: PanZoom | null = null;
   private _rafId: number | null = null;
   private _pendingPointer: Point | null = null;
@@ -90,6 +98,10 @@ export class AoCanvas extends LitElementWw {
   private _lastItemClick: { id: Id; time: number } | null = null;
 
   private static readonly DOUBLE_CLICK_MS = 400;
+  private static readonly MIN_ZOOM = 0.25;
+  private static readonly MAX_ZOOM = 4;
+  private static readonly ZOOM_STEP = 1.3;
+  private static readonly FIT_PADDING = 32;
 
   protected override firstUpdated(_changedProperties: PropertyValues): void {
     new SubscribeController(this, this.doc);
@@ -104,6 +116,7 @@ export class AoCanvas extends LitElementWw {
       ?.removeEventListener("touchstart", this._onTouchStartCapture, {
         capture: true,
       });
+    this._panzoom?.off("zoom", this._syncZoomLevel);
     this._panzoom?.dispose();
     this._panzoom = null;
   }
@@ -114,60 +127,67 @@ export class AoCanvas extends LitElementWw {
   // https://caniuse.com/wf-context-fill-stroke
   protected override render(): TemplateResult {
     return html`<svg
-      style="touch-action: none"
-      width="100%"
-      height="100%"
-      @pointerdown=${this._onPointerDown}
-      @pointermove=${this._onPointerMove}
-      @pointerup=${this._onPointerUp}
-      @pointercancel=${this._onPointerUp}
-      @keydown=${this._onEditKeydown}
-      @focusout=${this._onEditFocusOut}
-      @contextmenu=${this._onContextMenu}>
-      <defs>
-        <marker
-          id="arrow"
-          viewBox="0 0 10 10"
-          refX="9"
-          refY="5"
-          markerWidth="8"
-          markerHeight="8"
-          orient="auto-start-reverse">
-          <path d="M0,0 L10,5 L0,10 z" fill="context-stroke" />
-        </marker>
-      </defs>
-      <g class="viewport">
-        <g class="background"></g>
-        <g class="edges">
-          ${repeat(
-            this.doc.edges,
-            (e) => e.id,
-            (e) => renderEdge(e, this.doc, this._editingId === e.id),
-          )}
-          ${this._renderDrawEdgePreview()}
+        style="touch-action: none"
+        width="100%"
+        height="100%"
+        @pointerdown=${this._onPointerDown}
+        @pointermove=${this._onPointerMove}
+        @pointerup=${this._onPointerUp}
+        @pointercancel=${this._onPointerUp}
+        @keydown=${this._onEditKeydown}
+        @focusout=${this._onEditFocusOut}
+        @contextmenu=${this._onContextMenu}>
+        <defs>
+          <marker
+            id="arrow"
+            viewBox="0 0 10 10"
+            refX="9"
+            refY="5"
+            markerWidth="8"
+            markerHeight="8"
+            orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="context-stroke" />
+          </marker>
+        </defs>
+        <g class="viewport">
+          <g class="background"></g>
+          <g class="edges">
+            ${repeat(
+              this.doc.edges,
+              (e) => e.id,
+              (e) => renderEdge(e, this.doc, this._editingId === e.id),
+            )}
+            ${this._renderDrawEdgePreview()}
+          </g>
+          <g class="nodes">
+            ${repeat(
+              this.doc.nodes,
+              (n) => n.id,
+              (n) => renderNode(n, this._editingId === n.id),
+            )}
+          </g>
+          <g class="overlays">
+            ${renderOverlay(this.selection, this.doc, {
+              active:
+                this._mode.kind === "reanchor-edge" ||
+                this._mode.kind === "draw-edge",
+              skipNodeId:
+                this._mode.kind === "reanchor-edge"
+                  ? this._mode.otherNodeId
+                  : this._mode.kind === "draw-edge"
+                    ? (this._mode.source?.nodeId ?? undefined)
+                    : undefined,
+            })}
+          </g>
         </g>
-        <g class="nodes">
-          ${repeat(
-            this.doc.nodes,
-            (n) => n.id,
-            (n) => renderNode(n, this._editingId === n.id),
-          )}
-        </g>
-        <g class="overlays">
-          ${renderOverlay(this.selection, this.doc, {
-            active:
-              this._mode.kind === "reanchor-edge" ||
-              this._mode.kind === "draw-edge",
-            skipNodeId:
-              this._mode.kind === "reanchor-edge"
-                ? this._mode.otherNodeId
-                : this._mode.kind === "draw-edge"
-                  ? (this._mode.source?.nodeId ?? undefined)
-                  : undefined,
-          })}
-        </g>
-      </g>
-    </svg>`;
+      </svg>
+      <ao-zoom-controls
+        minZoom=${AoCanvas.MIN_ZOOM}
+        maxZoom=${AoCanvas.MAX_ZOOM}
+        @zoom-in=${this._zoomIn}
+        @zoom-out=${this._zoomOut}
+        @center-view=${this._fitToContent}>
+      </ao-zoom-controls> `;
   }
 
   private _isInteractiveTarget(target: EventTarget | null): boolean {
@@ -180,16 +200,24 @@ export class AoCanvas extends LitElementWw {
     if (!viewport || !svg) return;
 
     this._panzoom = createPanZoom(viewport, {
-      minZoom: 0.25,
-      maxZoom: 4,
+      minZoom: AoCanvas.MIN_ZOOM,
+      maxZoom: AoCanvas.MAX_ZOOM,
       zoomDoubleClickSpeed: 1, // disable double-click to zoom
       beforeMouseDown: (e) => this._isInteractiveTarget(e.target),
     });
+    this._panzoom.on("zoom", this._syncZoomLevel);
+    this._syncZoomLevel();
     svg.addEventListener("touchstart", this._onTouchStartCapture, {
       capture: true,
       passive: true,
     });
   }
+
+  private _syncZoomLevel = (): void => {
+    if (this._zoomControls && this._panzoom) {
+      this._zoomControls.zoomLevel = this._panzoom.getTransform().scale;
+    }
+  };
 
   private _onTouchStartCapture = (e: TouchEvent): void => {
     if (this._isInteractiveTarget(e.target)) {
@@ -200,6 +228,89 @@ export class AoCanvas extends LitElementWw {
   private _zoomScale(): number {
     return this._panzoom?.getTransform().scale ?? 1;
   }
+
+  private _viewportSize(): { width: number; height: number } {
+    const rect = this.renderRoot
+      .querySelector<SVGSVGElement>("svg")
+      ?.getBoundingClientRect();
+    return { width: rect?.width ?? 0, height: rect?.height ?? 0 };
+  }
+
+  private _clampZoom(scale: number): number {
+    return Math.min(AoCanvas.MAX_ZOOM, Math.max(AoCanvas.MIN_ZOOM, scale));
+  }
+
+  private _zoomTo(scale: number, x: number, y: number): void {
+    if (!this._panzoom) return;
+    const current = this._panzoom.getTransform().scale;
+    this._panzoom.zoomTo(0, 0, scale / current);
+    this._panzoom.moveTo(x, y);
+  }
+
+  private _zoomIn(): void {
+    this._zoomBy(AoCanvas.ZOOM_STEP);
+  }
+  private _zoomOut(): void {
+    this._zoomBy(1 / AoCanvas.ZOOM_STEP);
+  }
+
+  private _zoomBy(factor: number): void {
+    if (!this._panzoom) return;
+    const { width, height } = this._viewportSize();
+    const t = this._panzoom.getTransform();
+    const targetScale = this._clampZoom(t.scale * factor);
+    if (targetScale === t.scale) return;
+
+    const cx = width / 2;
+    const cy = height / 2;
+    const sceneX = (cx - t.x) / t.scale;
+    const sceneY = (cy - t.y) / t.scale;
+    this._zoomTo(
+      targetScale,
+      cx - sceneX * targetScale,
+      cy - sceneY * targetScale,
+    );
+  }
+
+  private _fitToContent = (): void => {
+    if (!this._panzoom) return;
+    const { width, height } = this._viewportSize();
+    if (width === 0 || height === 0) return;
+
+    const nodes = this.doc.nodes;
+    if (nodes.length === 0) {
+      this._zoomTo(1, width / 2, height / 2);
+      return;
+    }
+
+    let minX = Infinity;
+    let minY = Infinity;
+    let maxX = -Infinity;
+    let maxY = -Infinity;
+    for (const n of nodes) {
+      minX = Math.min(minX, n.position.x - n.dimension.width / 2);
+      minY = Math.min(minY, n.position.y - n.dimension.height / 2);
+      maxX = Math.max(maxX, n.position.x + n.dimension.width / 2);
+      maxY = Math.max(maxY, n.position.y + n.dimension.height / 2);
+    }
+
+    const bboxWidth = maxX - minX;
+    const bboxHeight = maxY - minY;
+    const scale = this._clampZoom(
+      Math.min(
+        (width - 2 * AoCanvas.FIT_PADDING) / bboxWidth,
+        (height - 2 * AoCanvas.FIT_PADDING) / bboxHeight,
+      ),
+    );
+
+    const centerX = minX + bboxWidth / 2;
+    const centerY = minY + bboxHeight / 2;
+    this._zoomTo(
+      scale,
+      width / 2 - centerX * scale,
+      height / 2 - centerY * scale,
+    );
+  };
 
   private _onPointerDown(e: PointerEvent): void {
     // Ignore clicks inside the label being edited, they are handled by the contenteditable div
