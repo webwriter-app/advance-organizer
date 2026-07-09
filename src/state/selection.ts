@@ -34,7 +34,7 @@ export class SelectionController extends Observable {
   }
 
   allOfSameKind(): boolean {
-    let kind: "node" | "edge" | null = null;
+    let kind: "node" | "edge" | "image" | null = null;
     for (const id of this._entries) {
       const item = this.doc.get(id);
       if (!item) {

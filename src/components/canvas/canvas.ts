@@ -12,6 +12,7 @@ import { DocumentController } from "../../state/document";
 import { SubscribeController } from "../../state/subscribe";
 import { repeat } from "lit/directives/repeat.js";
 import {
+  BoxItem,
   Dimension,
   EdgePosition,
   Id,
@@ -27,11 +28,13 @@ import {
   computeResize,
   getAnchorPoints,
   getHandlePositions,
+  HANDLE_CURSORS,
   HANDLE_SIZE,
   SNAP_RADIUS,
   INTERACTIVE_SELECTOR,
 } from "./helper";
 import { AoZoomControls } from "../ui/zoom-controls";
+import { renderImage } from "./image";
 
 type InteractionMode =
   | { kind: "idle" }
@@ -50,6 +53,8 @@ type InteractionMode =
       startDimension: Dimension;
       handle: ResizeHandle;
       itemId: Id;
+      aspectRatio: number;
+      lockByDefault: boolean;
     }
   | {
       kind: "draw-edge";
@@ -87,6 +92,9 @@ export class AoCanvas extends LitElementWw {
   @state()
   private accessor _editingId: Id | null = null;
 
+  @state()
+  private accessor _zoom: number = 1;
+
   @query("ao-zoom-controls")
   private accessor _zoomControls!: AoZoomControls | null;
 
@@ -96,6 +104,7 @@ export class AoCanvas extends LitElementWw {
   private _snapTarget: { nodeId: Id; position: EdgePosition } | null = null;
   private _editFocusPending: boolean = false;
   private _lastItemClick: { id: Id; time: number } | null = null;
+  private _shiftKey: boolean = false;
 
   private static readonly DOUBLE_CLICK_MS = 400;
   private static readonly MIN_ZOOM = 0.25;
@@ -151,6 +160,9 @@ export class AoCanvas extends LitElementWw {
         </defs>
         <g class="viewport">
           <g class="background"></g>
+          <g class="images">
+            ${repeat(this.doc.images, (img) => img.id, renderImage)}
+          </g>
           <g class="edges">
             ${repeat(
               this.doc.edges,
@@ -167,7 +179,7 @@ export class AoCanvas extends LitElementWw {
             )}
           </g>
           <g class="overlays">
-            ${renderOverlay(this.selection, this.doc, {
+            ${renderOverlay(this.selection, this.doc, this._zoom, {
               active:
                 this._mode.kind === "reanchor-edge" ||
                 this._mode.kind === "draw-edge",
@@ -187,7 +199,7 @@ export class AoCanvas extends LitElementWw {
         @zoom-in=${this._zoomIn}
         @zoom-out=${this._zoomOut}
         @center-view=${this._fitToContent}>
-      </ao-zoom-controls> `;
+      </ao-zoom-controls>`;
   }
 
   private _isInteractiveTarget(target: EventTarget | null): boolean {
@@ -214,8 +226,11 @@ export class AoCanvas extends LitElementWw {
   }
 
   private _syncZoomLevel = (): void => {
-    if (this._zoomControls && this._panzoom) {
-      this._zoomControls.zoomLevel = this._panzoom.getTransform().scale;
+    if (!this._panzoom) return;
+    const scale = this._panzoom.getTransform().scale;
+    this._zoom = scale;
+    if (this._zoomControls) {
+      this._zoomControls.zoomLevel = scale;
     }
   };
 
@@ -278,7 +293,9 @@ export class AoCanvas extends LitElementWw {
     if (width === 0 || height === 0) return;
 
     const nodes = this.doc.nodes;
-    if (nodes.length === 0) {
+    const images = this.doc.images;
+    const boxItems: BoxItem[] = [...nodes, ...images];
+    if (boxItems.length === 0) {
       this._zoomTo(1, width / 2, height / 2);
       return;
     }
@@ -287,11 +304,11 @@ export class AoCanvas extends LitElementWw {
     let minY = Infinity;
     let maxX = -Infinity;
     let maxY = -Infinity;
-    for (const n of nodes) {
-      minX = Math.min(minX, n.position.x - n.dimension.width / 2);
-      minY = Math.min(minY, n.position.y - n.dimension.height / 2);
-      maxX = Math.max(maxX, n.position.x + n.dimension.width / 2);
-      maxY = Math.max(maxY, n.position.y + n.dimension.height / 2);
+    for (const b of boxItems) {
+      minX = Math.min(minX, b.position.x - b.dimension.width / 2);
+      minY = Math.min(minY, b.position.y - b.dimension.height / 2);
+      maxX = Math.max(maxX, b.position.x + b.dimension.width / 2);
+      maxY = Math.max(maxY, b.position.y + b.dimension.height / 2);
     }
 
     const bboxWidth = maxX - minX;
@@ -323,6 +340,8 @@ export class AoCanvas extends LitElementWw {
       return;
     }
 
+    this._shiftKey = e.shiftKey;
+
     const target = e.target as Element;
     const handleEl = target.closest<SVGElement>("[data-handle]");
     const itemEl = !handleEl
@@ -337,7 +356,7 @@ export class AoCanvas extends LitElementWw {
       if (!resizeId || !this.selection.has(resizeId)) return;
       const item = this.doc.get(resizeId);
       if (!item) return;
-      if (item.kind === "node") {
+      if (item.kind === "node" || item.kind === "image") {
         this._beginResize(e, resizeId, handle as ResizeHandle);
       } else if (item.kind === "edge") {
         this._beginReanchor(e, resizeId, handle as "source" | "target");
@@ -380,7 +399,7 @@ export class AoCanvas extends LitElementWw {
     const startPositions = new Map<Id, Point>();
     for (const id of this.selection.entries) {
       const item = this.doc.get(id);
-      if (item?.kind === "node") {
+      if (item?.kind === "node" || item?.kind === "image") {
         startPositions.set(id, { ...item.position });
       }
     }
@@ -398,7 +417,7 @@ export class AoCanvas extends LitElementWw {
     handle: ResizeHandle,
   ): void {
     const item = this.doc.get(itemId);
-    if (!item || item.kind !== "node") return;
+    if (!item || (item.kind !== "node" && item.kind !== "image")) return;
 
     this._mode = {
       kind: "resize",
@@ -407,7 +426,12 @@ export class AoCanvas extends LitElementWw {
       startDimension: { ...item.dimension },
       handle,
       itemId,
+      aspectRatio: item.dimension.width / item.dimension.height,
+      lockByDefault: item.kind === "image",
     };
+
+    this.style.setProperty("--ao-resize-cursor", HANDLE_CURSORS[handle]);
+    this.classList.add("resizing");
   }
 
   beginDrawEdge(): void {
@@ -523,6 +547,7 @@ export class AoCanvas extends LitElementWw {
       return;
 
     this._pendingPointer = { x: e.clientX, y: e.clientY };
+    this._shiftKey = e.shiftKey;
 
     if (this._rafId === null) {
       this._rafId = requestAnimationFrame(() => {
@@ -544,12 +569,14 @@ export class AoCanvas extends LitElementWw {
         } else if (this._mode.kind === "resize") {
           const dx = (this._pendingPointer.x - this._mode.start.x) / scale;
           const dy = (this._pendingPointer.y - this._mode.start.y) / scale;
+          const locked = this._mode.lockByDefault !== this._shiftKey;
           const { newPos, newDim } = computeResize(
             this._mode.handle,
             this._mode.startPosition,
             this._mode.startDimension,
             dx,
             dy,
+            locked ? this._mode.aspectRatio : undefined,
           );
           this._applyResizeDom(this._mode.itemId, newPos, newDim);
         } else if (this._mode.kind === "reanchor-edge") {
@@ -597,7 +624,7 @@ export class AoCanvas extends LitElementWw {
     const translate = `translate(${newPos.x}, ${newPos.y})`;
 
     const nodeG = this.renderRoot.querySelector(
-      `g.node[data-item-id="${id}"]`,
+      `g.node[data-item-id="${id}"], g.image[data-item-id="${id}"]`,
     ) as SVGGElement | null;
     const selG = this.renderRoot.querySelector(
       `[data-selection-id="${id}"]`,
@@ -683,7 +710,7 @@ export class AoCanvas extends LitElementWw {
     this._applyDragDom(id, newPos);
 
     const shapeEl = this.renderRoot.querySelector(
-      `g.node[data-item-id="${id}"] g.shape > *`,
+      `g.node[data-item-id="${id}"] g.shape > *, g.image[data-item-id="${id}"] image`,
     ) as SVGElement | null;
     if (shapeEl) {
       applyResize(shapeEl, newDim);
@@ -700,12 +727,13 @@ export class AoCanvas extends LitElementWw {
       `.resize-handles[data-resize-id="${id}"]`,
     ) as SVGGElement | null;
     if (handlesG) {
+      const hs = HANDLE_SIZE / this._zoom;
       const handlePositions = getHandlePositions(newDim);
       for (const { handle, pos } of handlePositions) {
         const rect = handlesG.querySelector(`[data-handle="${handle}"]`);
         if (rect) {
-          rect.setAttribute("x", String(pos.x - HANDLE_SIZE / 2));
-          rect.setAttribute("y", String(pos.y - HANDLE_SIZE / 2));
+          rect.setAttribute("x", String(pos.x - hs / 2));
+          rect.setAttribute("y", String(pos.y - hs / 2));
         }
       }
     }
@@ -801,7 +829,9 @@ export class AoCanvas extends LitElementWw {
     return closest;
   }
 
-  private _onPointerUp(): void {
+  private _onPointerUp(e?: PointerEvent): void {
+    if (e) this._shiftKey = e.shiftKey;
+
     if (this._mode.kind === "draw-edge") {
       if (this._mode.source && this._pendingPointer) {
         const scale = this._zoomScale();
@@ -832,19 +862,21 @@ export class AoCanvas extends LitElementWw {
         for (const [id, startPos] of this._mode.startPositions) {
           finalPositions.set(id, { x: startPos.x + dx, y: startPos.y + dy });
         }
-        this.doc.moveNodes(finalPositions);
+        this.doc.moveItems(finalPositions);
       }
     } else if (this._mode.kind === "resize" && this._pendingPointer) {
       const dx = (this._pendingPointer.x - this._mode.start.x) / scale;
       const dy = (this._pendingPointer.y - this._mode.start.y) / scale;
+      const locked = this._mode.lockByDefault !== this._shiftKey;
       const { newPos, newDim } = computeResize(
         this._mode.handle,
         this._mode.startPosition,
         this._mode.startDimension,
         dx,
         dy,
+        locked ? this._mode.aspectRatio : undefined,
       );
-      this.doc.resizeNode(this._mode.itemId, newPos, newDim);
+      this.doc.resizeItem(this._mode.itemId, newPos, newDim);
     } else if (this._mode.kind === "reanchor-edge" && this._pendingPointer) {
       const dx = (this._pendingPointer.x - this._mode.start.x) / scale;
       const dy = (this._pendingPointer.y - this._mode.start.y) / scale;
@@ -906,6 +938,10 @@ export class AoCanvas extends LitElementWw {
   }
 
   private _resetMode(): void {
+    if (this._mode.kind === "resize") {
+      this.classList.remove("resizing");
+      this.style.removeProperty("--ao-resize-cursor");
+    }
     if (this._snapTarget) {
       this._setAnchorHighlight(this._snapTarget, false);
       this._snapTarget = null;
@@ -929,6 +965,7 @@ export class AoCanvas extends LitElementWw {
       if (el) {
         // Set text imperatively to avoid Lit issues with contenteditable
         const item = this.doc.get(this._editingId);
+        if (!item || (item.kind !== "node" && item.kind !== "edge")) return;
         el.textContent = item?.label?.text ?? "";
         el.focus();
         const range = document.createRange();

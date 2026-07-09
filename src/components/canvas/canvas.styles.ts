@@ -8,6 +8,11 @@ export const canvasStyles = css`
     height: 600px;
   }
 
+  :host(.resizing),
+  :host(.resizing) * {
+    cursor: var(--ao-resize-cursor, default) !important;
+  }
+
   svg:focus {
     outline: none;
   }

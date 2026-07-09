@@ -77,6 +77,8 @@ export interface Image {
 
 export type CanvasItem = Node | Edge | Image;
 
+export type BoxItem = Node | Image;
+
 export interface AdvanceOrganizer {
   readonly version: 1;
   readonly nodes: readonly Node[];

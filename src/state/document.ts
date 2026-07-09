@@ -1,9 +1,11 @@
 import {
+  CanvasItem,
   Dimension,
   Edge,
   EdgePosition,
   EdgeStyle,
   Id,
+  Image,
   Node,
   NodeStyle,
 } from "../model/types";
@@ -13,19 +15,21 @@ import { Observable } from "./observable";
 export class DocumentController extends Observable {
   private _nodes: Map<Id, Node> = new Map();
   private _edges: Map<Id, Edge> = new Map();
+  private _images: Map<Id, Image> = new Map();
 
-  load(nodes: Node[], edges: Edge[]): void {
+  load(nodes: Node[], edges: Edge[], images: Image[]): void {
     this._nodes = new Map(nodes.map((n) => [n.id, n]));
     this._edges = new Map(edges.map((e) => [e.id, e]));
+    this._images = new Map(images.map((i) => [i.id, i]));
     this.notify();
   }
 
   hasItem(id: Id): boolean {
-    return this._nodes.has(id) || this._edges.has(id);
+    return this._nodes.has(id) || this._edges.has(id) || this._images.has(id);
   }
 
-  get(id: Id): Node | Edge | undefined {
-    return this._nodes.get(id) ?? this._edges.get(id);
+  get(id: Id): CanvasItem | undefined {
+    return this._nodes.get(id) ?? this._edges.get(id) ?? this._images.get(id);
   }
 
   get nodes(): Node[] {
@@ -34,6 +38,10 @@ export class DocumentController extends Observable {
 
   get edges(): Edge[] {
     return [...this._edges.values()];
+  }
+
+  get images(): Image[] {
+    return [...this._images.values()];
   }
 
   addNode(node: Omit<Node, "id" | "kind">): Node {
@@ -72,10 +80,19 @@ export class DocumentController extends Observable {
     return newEdge;
   }
 
+  addImage(image: Omit<Image, "id" | "kind">): Image {
+    const id = crypto.randomUUID();
+    const newImage: Image = { ...image, id, kind: "image" };
+    this._images.set(id, newImage);
+    this.notify();
+    return newImage;
+  }
+
   removeItems(ids: Set<Id>): void {
     for (const id of ids) {
       this._nodes.delete(id);
       this._edges.delete(id);
+      this._images.delete(id);
     }
     for (const edge of this._edges.values()) {
       if (ids.has(edge.source) || ids.has(edge.target)) {
@@ -103,6 +120,17 @@ export class DocumentController extends Observable {
           id: newId,
           position: { x: node.position.x + 20, y: node.position.y + 20 },
         });
+      } else {
+        const image = this._images.get(id);
+        if (image) {
+          const newId = crypto.randomUUID();
+          newIds.add(newId);
+          this._images.set(newId, {
+            ...image,
+            id: newId,
+            position: { x: image.position.x + 20, y: image.position.y + 20 },
+          });
+        }
       }
     }
 
@@ -128,18 +156,30 @@ export class DocumentController extends Observable {
     return { newIds, nodeIdMap: duplicatedNodeIds };
   }
 
-  resizeNode(id: Id, position: Point, dimension: Dimension): void {
+  resizeItem(id: Id, position: Point, dimension: Dimension): void {
     const node = this._nodes.get(id);
-    if (!node) return;
-    this._nodes.set(id, { ...node, position, dimension });
+    if (node) {
+      this._nodes.set(id, { ...node, position, dimension });
+    } else {
+      const image = this._images.get(id);
+      if (image) {
+        this._images.set(id, { ...image, position, dimension });
+      }
+    }
     this.notify();
   }
 
-  moveNodes(positions: Map<Id, Point>): void {
+  moveItems(positions: Map<Id, Point>): void {
     for (const [id, position] of positions) {
       const node = this._nodes.get(id);
-      if (!node) continue;
-      this._nodes.set(id, { ...node, position });
+      if (node) {
+        this._nodes.set(id, { ...node, position });
+        continue;
+      }
+      const image = this._images.get(id);
+      if (image) {
+        this._images.set(id, { ...image, position });
+      }
     }
     this.notify();
   }

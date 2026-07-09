@@ -22,12 +22,50 @@ export function computeResize(
   startDim: Dimension,
   dx: number,
   dy: number,
+  aspectRatio?: number,
 ): { newPos: Point; newDim: Dimension } {
   const xSign = handle.includes("r") ? 1 : handle.includes("l") ? -1 : 0;
   const ySign = handle.includes("b") ? 1 : handle.includes("t") ? -1 : 0;
 
-  const newW = Math.max(MIN_NODE_SIZE, startDim.width + xSign * dx);
-  const newH = Math.max(MIN_NODE_SIZE, startDim.height + ySign * dy);
+  let newW: number;
+  let newH: number;
+
+  if (aspectRatio && aspectRatio > 0) {
+    if (xSign !== 0 && ySign !== 0) {
+      // Orthogonal projection of the cursor onto the aspect ratio line
+      const uW = startDim.width + xSign * dx;
+      const uH = startDim.height + ySign * dy;
+
+      const denom = aspectRatio * aspectRatio + 1;
+      let proj = (uW * aspectRatio + uH) / denom;
+
+      const minProj = Math.max(MIN_NODE_SIZE, MIN_NODE_SIZE / aspectRatio);
+      proj = Math.max(proj, minProj);
+
+      newW = proj * aspectRatio;
+      newH = proj;
+    } else if (xSign !== 0) {
+      // Height follows width
+      newW = Math.max(MIN_NODE_SIZE, startDim.width + xSign * dx);
+      newH = newW / aspectRatio;
+      if (newH < MIN_NODE_SIZE) {
+        newH = MIN_NODE_SIZE;
+        newW = newH * aspectRatio;
+      }
+    } else {
+      // Width follows height
+      newH = Math.max(MIN_NODE_SIZE, startDim.height + ySign * dy);
+      newW = newH * aspectRatio;
+      if (newW < MIN_NODE_SIZE) {
+        newW = MIN_NODE_SIZE;
+        newH = newW / aspectRatio;
+      }
+    }
+  } else {
+    newW = Math.max(MIN_NODE_SIZE, startDim.width + xSign * dx);
+    newH = Math.max(MIN_NODE_SIZE, startDim.height + ySign * dy);
+  }
+
   const actualDw = newW - startDim.width;
   const actualDh = newH - startDim.height;
 
@@ -46,7 +84,7 @@ export function computeResize(
 export function applyResize(el: SVGElement, newDim: Dimension): void {
   const { width: w, height: h } = newDim;
   const tag = el.tagName.toLowerCase();
-  if (tag === "rect" || tag === "foreignobject") {
+  if (tag === "rect" || tag === "foreignobject" || tag === "image") {
     el.setAttribute("x", String(-w / 2));
     el.setAttribute("y", String(-h / 2));
     el.setAttribute("width", String(w));
@@ -59,21 +97,34 @@ export function applyResize(el: SVGElement, newDim: Dimension): void {
   }
 }
 
+export const HANDLE_CURSORS: Record<ResizeHandle, string> = {
+  tl: "nwse-resize",
+  t: "ns-resize",
+  tr: "nesw-resize",
+  r: "ew-resize",
+  br: "nwse-resize",
+  b: "ns-resize",
+  bl: "nesw-resize",
+  l: "ew-resize",
+};
+
 export function getHandlePositions(
   dim: Dimension,
 ): ReadonlyArray<{ handle: ResizeHandle; pos: Point; cursor: string }> {
   const { width: w, height: h } = dim;
 
-  return [
-    { handle: "tl", pos: { x: -w / 2, y: -h / 2 }, cursor: "nwse-resize" },
-    { handle: "t", pos: { x: 0, y: -h / 2 }, cursor: "ns-resize" },
-    { handle: "tr", pos: { x: w / 2, y: -h / 2 }, cursor: "nesw-resize" },
-    { handle: "r", pos: { x: w / 2, y: 0 }, cursor: "ew-resize" },
-    { handle: "br", pos: { x: w / 2, y: h / 2 }, cursor: "nwse-resize" },
-    { handle: "b", pos: { x: 0, y: h / 2 }, cursor: "ns-resize" },
-    { handle: "bl", pos: { x: -w / 2, y: h / 2 }, cursor: "nesw-resize" },
-    { handle: "l", pos: { x: -w / 2, y: 0 }, cursor: "ew-resize" },
-  ];
+  return (
+    [
+      { handle: "tl", pos: { x: -w / 2, y: -h / 2 } },
+      { handle: "t", pos: { x: 0, y: -h / 2 } },
+      { handle: "tr", pos: { x: w / 2, y: -h / 2 } },
+      { handle: "r", pos: { x: w / 2, y: 0 } },
+      { handle: "br", pos: { x: w / 2, y: h / 2 } },
+      { handle: "b", pos: { x: 0, y: h / 2 } },
+      { handle: "bl", pos: { x: -w / 2, y: h / 2 } },
+      { handle: "l", pos: { x: -w / 2, y: 0 } },
+    ] as const
+  ).map((h) => ({ ...h, cursor: HANDLE_CURSORS[h.handle] }));
 }
 
 export function getStrokeDashArray(

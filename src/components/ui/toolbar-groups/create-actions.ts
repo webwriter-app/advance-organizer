@@ -7,6 +7,7 @@ import { SubscribeController } from "../../../state/subscribe";
 import { actionsStyles } from "./toolbar-actions.styles";
 import { SelectionController } from "../../../state/selection";
 import { Id } from "../../../model/types";
+import { query } from "lit/decorators.js";
 
 import SlButton from "@shoelace-style/shoelace/dist/components/button/button.component.js";
 import SlButtonGroup from "@shoelace-style/shoelace/dist/components/button-group/button-group.component.js";
@@ -15,6 +16,9 @@ import SlTooltip from "@shoelace-style/shoelace/dist/components/tooltip/tooltip.
 
 import iconAddNode from "@tabler/icons/outline/square-plus-2.svg";
 import iconAddEdge from "@tabler/icons/outline/link-plus.svg";
+import iconAddImage from "@tabler/icons/outline/photo-plus.svg";
+
+const MIN_IMAGE_SIDE = 200;
 
 export class AoCreateActionsGroup extends LitElementWw {
   @consume({ context: documentContext })
@@ -22,6 +26,9 @@ export class AoCreateActionsGroup extends LitElementWw {
 
   @consume({ context: selectionContext })
   accessor selection!: SelectionController;
+
+  @query("#file-input")
+  private accessor _fileInput!: HTMLInputElement;
 
   static override scopedElements = {
     "sl-button": SlButton,
@@ -39,17 +46,28 @@ export class AoCreateActionsGroup extends LitElementWw {
 
   protected override render(): TemplateResult {
     return html`<sl-button-group label="Add elements">
-      <sl-tooltip content="Add node">
-        <sl-button @click=${this._handleAddNodeClick}>
-          <sl-icon src=${iconAddNode}></sl-icon>
-        </sl-button>
-      </sl-tooltip>
-      <sl-tooltip content="Add edge">
-        <sl-button @click=${this._handleAddEdgeClick}>
-          <sl-icon src=${iconAddEdge}></sl-icon>
-        </sl-button>
-      </sl-tooltip>
-    </sl-button-group>`;
+        <sl-tooltip content="Add node">
+          <sl-button @click=${this._handleAddNodeClick}>
+            <sl-icon src=${iconAddNode}></sl-icon>
+          </sl-button>
+        </sl-tooltip>
+        <sl-tooltip content="Add edge">
+          <sl-button @click=${this._handleAddEdgeClick}>
+            <sl-icon src=${iconAddEdge}></sl-icon>
+          </sl-button>
+        </sl-tooltip>
+        <sl-tooltip content="Add picture">
+          <sl-button @click=${this._handleAddImageClick}>
+            <sl-icon src=${iconAddImage}></sl-icon>
+          </sl-button>
+        </sl-tooltip>
+      </sl-button-group>
+      <input
+        id="file-input"
+        type="file"
+        accept="image/*"
+        style="display: none"
+        @change=${this._handleFileInputChange} />`;
   }
 
   private _handleAddNodeClick(): void {
@@ -74,5 +92,37 @@ export class AoCreateActionsGroup extends LitElementWw {
         composed: true,
       }),
     );
+  }
+
+  private _handleAddImageClick(): void {
+    this._fileInput.click();
+  }
+
+  private _handleFileInputChange(e: Event): void {
+    const input = e.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) return;
+
+    const file = input.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const imageDataUrl = reader.result as string;
+      const probe = new Image();
+      probe.onload = () => {
+        const scale = MIN_IMAGE_SIDE / Math.min(probe.naturalWidth, probe.naturalHeight);
+        const newImage = this.doc.addImage({
+          dimension: {
+            width: Math.round(probe.naturalWidth * scale),
+            height: Math.round(probe.naturalHeight * scale),
+          },
+          position: { x: 100, y: 100 },
+          src: imageDataUrl,
+        });
+        this.selection.select(new Set<Id>([newImage.id]));
+      };
+      probe.src = imageDataUrl;
+    };
+    reader.readAsDataURL(file);
   }
 }

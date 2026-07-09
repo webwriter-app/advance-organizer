@@ -18,7 +18,7 @@ import {
 } from "../state/contexts";
 import { DocumentController } from "../state/document";
 import { SelectionController } from "../state/selection";
-import { Edge, Id, Node } from "../model/types";
+import { Edge, Id, Image, Node } from "../model/types";
 import { AoPageEditActionsGroup } from "../components/ui/toolbar-groups/page-edit-actions";
 import { PageController } from "../state/page";
 import { AoCreateActionsGroup } from "../components/ui/toolbar-groups/create-actions";
@@ -149,6 +149,9 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
     },
   ];
 
+  @property({ type: Array, reflect: true })
+  accessor images: Image[] = [];
+
   @state()
   private accessor _openPage: Id | null = null;
 
@@ -195,18 +198,24 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
     this.doc.subscribe(() => {
       this.nodes = this.doc.nodes;
       this.edges = this.doc.edges;
+      this.images = this.doc.images;
     });
   }
 
   protected override willUpdate(changedProperties: PropertyValues): void {
     super.willUpdate(changedProperties);
-    if (changedProperties.has("nodes") || changedProperties.has("edges")) {
+    if (
+      changedProperties.has("nodes") ||
+      changedProperties.has("edges") ||
+      changedProperties.has("images")
+    ) {
       // TODO: Check if this check is really necessary or if we can always call load
       if (
         JSON.stringify(this.nodes) !== JSON.stringify(this.doc.nodes) ||
-        JSON.stringify(this.edges) !== JSON.stringify(this.doc.edges)
+        JSON.stringify(this.edges) !== JSON.stringify(this.doc.edges) ||
+        JSON.stringify(this.images) !== JSON.stringify(this.doc.images)
       ) {
-        this.doc.load(this.nodes, this.edges);
+        this.doc.load(this.nodes, this.edges, this.images);
       }
     }
   }

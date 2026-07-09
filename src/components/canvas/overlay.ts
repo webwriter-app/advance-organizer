@@ -12,6 +12,7 @@ import {
 export function renderOverlay(
   selection: SelectionController,
   doc: DocumentController,
+  zoom: number,
   anchorRendering: AnchorRendering,
 ): TemplateResult {
   return svg`
@@ -20,8 +21,8 @@ export function renderOverlay(
       pointer-events="none"
     >
     ${[...selection.entries].map((e) => renderSelectionIndicator(e, doc))}
-    ${selection.size === 1 ? renderResizeHandles([...selection.entries][0]!, doc) : svg``}
-    ${anchorRendering.active ? renderAnchorPoints(doc, anchorRendering) : svg``}
+    ${selection.size === 1 ? renderResizeHandles([...selection.entries][0]!, doc, zoom) : svg``}
+    ${anchorRendering.active ? renderAnchorPoints(doc, anchorRendering, zoom) : svg``}
   </g>`;
 }
 
@@ -32,7 +33,7 @@ function renderSelectionIndicator(
   const item = doc.get(entryId);
   if (!item) return svg``;
 
-  if (item.kind === "node") {
+  if (item.kind === "node" || item.kind === "image") {
     return svg`
       <g
         data-selection-id=${entryId}
@@ -86,11 +87,14 @@ function renderSelectionIndicator(
 function renderResizeHandles(
   entryId: Id,
   doc: DocumentController,
+  zoom: number,
 ): TemplateResult {
   const item = doc.get(entryId);
   if (!item) return svg``;
 
-  if (item.kind === "node") {
+  const hs = HANDLE_SIZE / zoom;
+
+  if (item.kind === "node" || item.kind === "image") {
     const {
       position: { x, y },
       dimension,
@@ -106,16 +110,18 @@ function renderResizeHandles(
         fill="white"
         stroke="var(--ao-selection-color, #3b82f6)"
         stroke-width="1.5"
+        vector-effect="non-scaling-stroke"
       >
         ${handles.map(
           (h) => svg`
-          <rect 
+          <rect
             class="resize-handle"
-            x=${h.pos.x - HANDLE_SIZE / 2}
-            y=${h.pos.y - HANDLE_SIZE / 2}
-            width=${HANDLE_SIZE}
-            height=${HANDLE_SIZE}
+            x=${h.pos.x - hs / 2}
+            y=${h.pos.y - hs / 2}
+            width=${hs}
+            height=${hs}
             style="cursor: ${h.cursor}"
+            vector-effect="non-scaling-stroke"
             data-handle=${h.handle}
           />
         `,
@@ -144,23 +150,26 @@ function renderResizeHandles(
         fill="white"
         stroke="var(--ao-selection-color, #3b82f6)"
         stroke-width="1.5"
+        vector-effect="non-scaling-stroke"
       >
         <rect
           class="resize-handle"
-          x=${start.x - HANDLE_SIZE / 2}
-          y=${start.y - HANDLE_SIZE / 2}
-          width=${HANDLE_SIZE}
-          height=${HANDLE_SIZE}
+          x=${start.x - hs / 2}
+          y=${start.y - hs / 2}
+          width=${hs}
+          height=${hs}
           style="cursor: grab"
+          vector-effect="non-scaling-stroke"
           data-handle="source"
         />
         <rect
           class="resize-handle"
-          x=${end.x - HANDLE_SIZE / 2}
-          y=${end.y - HANDLE_SIZE / 2}
-          width=${HANDLE_SIZE}
-          height=${HANDLE_SIZE}
+          x=${end.x - hs / 2}
+          y=${end.y - hs / 2}
+          width=${hs}
+          height=${hs}
           style="cursor: grab"
+          vector-effect="non-scaling-stroke"
           data-handle="target"
         />
       </g>
@@ -173,7 +182,10 @@ function renderResizeHandles(
 function renderAnchorPoints(
   doc: DocumentController,
   anchorRendering: AnchorRendering,
+  zoom: number,
 ): TemplateResult {
+  const r = HANDLE_SIZE / zoom;
+
   return svg`
     ${doc.nodes.map((node) => {
       if (node.id === anchorRendering.skipNodeId) {
@@ -188,6 +200,7 @@ function renderAnchorPoints(
           fill="white"
           stroke="var(--ao-anchor-color, #7d828a)"
           stroke-width="1.5"
+          vector-effect="non-scaling-stroke"
         >
           ${Object.entries(anchors).map(([pos, point]) => {
             return svg`
@@ -195,8 +208,9 @@ function renderAnchorPoints(
                 class="anchor-point"
                 cx=${point.x}
                 cy=${point.y}
-                r=${HANDLE_SIZE}
+                r=${r}
                 style="cursor: crosshair"
+                vector-effect="non-scaling-stroke"
                 data-anchor-position=${pos}
               />
             `;
