@@ -8,6 +8,11 @@ import { actionsStyles } from "./toolbar-actions.styles";
 import { SelectionController } from "../../../state/selection";
 import { Id } from "../../../model/types";
 import { query } from "lit/decorators.js";
+import {
+  importImage,
+  displayDimension,
+  type ImportedImage,
+} from "../../../utils/image-import";
 
 import SlButton from "@shoelace-style/shoelace/dist/components/button/button.component.js";
 import SlButtonGroup from "@shoelace-style/shoelace/dist/components/button-group/button-group.component.js";
@@ -17,8 +22,6 @@ import SlTooltip from "@shoelace-style/shoelace/dist/components/tooltip/tooltip.
 import iconAddNode from "@tabler/icons/outline/square-plus-2.svg";
 import iconAddEdge from "@tabler/icons/outline/link-plus.svg";
 import iconAddImage from "@tabler/icons/outline/photo-plus.svg";
-
-const MIN_IMAGE_SIDE = 200;
 
 export class AoCreateActionsGroup extends LitElementWw {
   @consume({ context: documentContext })
@@ -98,31 +101,26 @@ export class AoCreateActionsGroup extends LitElementWw {
     this._fileInput.click();
   }
 
-  private _handleFileInputChange(e: Event): void {
+  private async _handleFileInputChange(e: Event): Promise<void> {
     const input = e.target as HTMLInputElement;
-    if (!input.files || input.files.length === 0) return;
-
-    const file = input.files[0];
+    const file = input.files?.[0];
+    input.value = "";
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      const imageDataUrl = reader.result as string;
-      const probe = new Image();
-      probe.onload = () => {
-        const scale = MIN_IMAGE_SIDE / Math.min(probe.naturalWidth, probe.naturalHeight);
-        const newImage = this.doc.addImage({
-          dimension: {
-            width: Math.round(probe.naturalWidth * scale),
-            height: Math.round(probe.naturalHeight * scale),
-          },
-          position: { x: 100, y: 100 },
-          src: imageDataUrl,
-        });
-        this.selection.select(new Set<Id>([newImage.id]));
-      };
-      probe.src = imageDataUrl;
-    };
-    reader.readAsDataURL(file);
+    let imported: ImportedImage;
+    try {
+      imported = await importImage(file);
+    } catch (error) {
+      console.error("Could not insert image", error);
+      return;
+    }
+
+    const newImage = this.doc.addImage({
+      dimension: displayDimension(imported),
+      position: { x: 100, y: 100 },
+      src: imported.src,
+    });
+
+    this.selection.select(new Set<Id>([newImage.id]));
   }
 }
