@@ -5,8 +5,13 @@ import { canvasStyles } from "./canvas.styles";
 import { renderNode } from "./node";
 import { renderEdge, renderEdgePreview } from "./edge";
 import { consume } from "@lit/context";
-import { documentContext, selectionContext } from "../../state/contexts";
+import {
+  documentContext,
+  pageContext,
+  selectionContext,
+} from "../../state/contexts";
 import { SelectionController } from "../../state/selection";
+import { PageController } from "../../state/page";
 import { renderOverlay } from "./overlay";
 import { DocumentController } from "../../state/document";
 import { SubscribeController } from "../../state/subscribe";
@@ -23,6 +28,7 @@ import {
 import { query, state } from "lit/decorators.js";
 import {
   applyResize,
+  computeBounds,
   computeEdgePoints,
   computeEdgeLabelLayout,
   computeResize,
@@ -32,7 +38,14 @@ import {
   HANDLE_SIZE,
   SNAP_RADIUS,
   INTERACTIVE_SELECTOR,
+  INSERT_GAP,
 } from "./helper";
+import {
+  ClipboardPayload,
+  createPayload,
+  readPayload,
+  writePayload,
+} from "../../utils/clipboard";
 import { AoZoomControls } from "../ui/zoom-controls";
 import { renderImage } from "./image";
 import {
@@ -94,6 +107,9 @@ export class AoCanvas extends LitElementWw {
   @consume({ context: selectionContext })
   accessor selection!: SelectionController;
 
+  @consume({ context: pageContext })
+  accessor pages!: PageController;
+
   @state()
   private accessor _mode: InteractionMode = { kind: "idle" };
 
@@ -122,7 +138,6 @@ export class AoCanvas extends LitElementWw {
   private static readonly MAX_ZOOM = 4;
   private static readonly ZOOM_STEP = 1.3;
   private static readonly FIT_PADDING = 32;
-  private static readonly INSERT_GAP = 24;
 
   protected override firstUpdated(_changedProperties: PropertyValues): void {
     new SubscribeController(this, this.doc);
@@ -162,6 +177,8 @@ export class AoCanvas extends LitElementWw {
         @dragover=${this._onDragOver}
         @dragleave=${this._onDragLeave}
         @drop=${this._onDrop}
+        @copy=${this._onCopy}
+        @cut=${this._onCut}
         @paste=${this._onPaste}>
         <defs>
           <marker
@@ -313,40 +330,24 @@ export class AoCanvas extends LitElementWw {
     const { width, height } = this._viewportSize();
     if (width === 0 || height === 0) return;
 
-    const nodes = this.doc.nodes;
-    const images = this.doc.images;
-    const boxItems: BoxItem[] = [...nodes, ...images];
-    if (boxItems.length === 0) {
+    const boxItems: BoxItem[] = [...this.doc.nodes, ...this.doc.images];
+    const bounds = computeBounds(boxItems);
+    if (!bounds) {
       this._zoomTo(1, width / 2, height / 2);
       return;
     }
 
-    let minX = Infinity;
-    let minY = Infinity;
-    let maxX = -Infinity;
-    let maxY = -Infinity;
-    for (const b of boxItems) {
-      minX = Math.min(minX, b.position.x - b.dimension.width / 2);
-      minY = Math.min(minY, b.position.y - b.dimension.height / 2);
-      maxX = Math.max(maxX, b.position.x + b.dimension.width / 2);
-      maxY = Math.max(maxY, b.position.y + b.dimension.height / 2);
-    }
-
-    const bboxWidth = maxX - minX;
-    const bboxHeight = maxY - minY;
     const scale = this._clampZoom(
       Math.min(
-        (width - 2 * AoCanvas.FIT_PADDING) / bboxWidth,
-        (height - 2 * AoCanvas.FIT_PADDING) / bboxHeight,
+        (width - 2 * AoCanvas.FIT_PADDING) / bounds.dimension.width,
+        (height - 2 * AoCanvas.FIT_PADDING) / bounds.dimension.height,
       ),
     );
 
-    const centerX = minX + bboxWidth / 2;
-    const centerY = minY + bboxHeight / 2;
     this._zoomTo(
       scale,
-      width / 2 - centerX * scale,
-      height / 2 - centerY * scale,
+      width / 2 - bounds.position.x * scale,
+      height / 2 - bounds.position.y * scale,
     );
   };
 
@@ -398,12 +399,57 @@ export class AoCanvas extends LitElementWw {
     this._insertImages(files, this._clientToScene(e.clientX, e.clientY));
   }
 
+  private _copySelection(e: ClipboardEvent): boolean {
+    if (this._editingId || !e.clipboardData) return false;
+
+    const items = this.doc.collectItems(this.selection.entries);
+    if (items.nodes.length === 0 && items.images.length === 0) return false;
+
+    const pages: Record<Id, string> = {};
+    for (const node of items.nodes) {
+      const content = this.pages.getPageContent(node.id);
+      if (content) pages[node.id] = content;
+    }
+
+    e.preventDefault();
+    writePayload(e.clipboardData, createPayload({ ...items, pages }));
+    return true;
+  }
+
+  private _onCopy(e: ClipboardEvent): void {
+    this._copySelection(e);
+  }
+
+  private _onCut(e: ClipboardEvent): void {
+    if (!this._copySelection(e)) return;
+    this.doc.removeItems(new Set(this.selection.entries));
+  }
+
   private _onPaste(e: ClipboardEvent): void {
     if (this._editingId) return;
+
+    const payload = readPayload(e.clipboardData);
+    if (payload) {
+      e.preventDefault();
+      this._insertPayload(payload);
+      return;
+    }
+
     const files = filterImageFiles(e.clipboardData?.files);
     if (files.length === 0) return;
     e.preventDefault();
     this._insertImages(files, this._viewportCenter());
+  }
+
+  private _insertPayload(payload: ClipboardPayload): void {
+    const { newIds, nodeIdMap } = this.doc.insertItems(payload);
+
+    for (const [oldId, newId] of nodeIdMap) {
+      const content = payload.pages[oldId];
+      if (content) this.pages.addPage(newId, content);
+    }
+
+    this.selection.select(newIds);
   }
 
   private async _insertImages(files: File[], position: Point): Promise<void> {
@@ -419,7 +465,7 @@ export class AoCanvas extends LitElementWw {
           src: imported.src,
         });
         inserted.add(image.id);
-        offset += AoCanvas.INSERT_GAP;
+        offset += INSERT_GAP;
       } catch (error) {
         console.error(`Could not insert ${file.name}`, error);
       }
@@ -491,7 +537,9 @@ export class AoCanvas extends LitElementWw {
       this.selection.clear();
     }
 
-    (e.currentTarget as SVGElement).setPointerCapture(e.pointerId);
+    const svg = e.currentTarget as SVGSVGElement;
+    svg.focus({ preventScroll: true });
+    svg.setPointerCapture(e.pointerId);
   }
 
   private _beginDrag(e: PointerEvent): void {

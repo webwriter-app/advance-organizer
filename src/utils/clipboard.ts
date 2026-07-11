@@ -1,0 +1,122 @@
+import { Edge, Id, Image, Node } from "../model/types";
+
+const CLIPBOARD_MIME = "application/vnd.webwriter.advance-organizer+json";
+const PAYLOAD_TYPE = "webwriter/advance-organizer";
+
+export interface ClipboardPayload {
+  readonly type: typeof PAYLOAD_TYPE;
+  readonly nodes: Node[];
+  readonly edges: Edge[];
+  readonly images: Image[];
+  readonly pages: Record<Id, string>;
+}
+
+export function createPayload(
+  parts: Omit<ClipboardPayload, "type">,
+): ClipboardPayload {
+  return { type: PAYLOAD_TYPE, ...parts };
+}
+
+export function writePayload(
+  data: DataTransfer,
+  payload: ClipboardPayload,
+): void {
+  const serialized = JSON.stringify(payload);
+  data.setData(CLIPBOARD_MIME, serialized);
+  data.setData("text/plain", serialized);
+}
+
+export function readPayload(
+  data: DataTransfer | null | undefined,
+): ClipboardPayload | null {
+  if (!data) return null;
+  return (
+    parsePayload(data.getData(CLIPBOARD_MIME)) ??
+    parsePayload(data.getData("text/plain"))
+  );
+}
+
+function parsePayload(text: string): ClipboardPayload | null {
+  if (!text) return null;
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(text);
+  } catch {
+    return null;
+  }
+  if (!isRecord(parsed)) return null;
+  if (parsed["type"] !== PAYLOAD_TYPE) return null;
+
+  const nodes = asArray(parsed["nodes"]).filter(isNode);
+  const images = asArray(parsed["images"]).filter(isImage);
+  if (nodes.length === 0 && images.length === 0) return null;
+
+  const nodeIds = new Set(nodes.map((n) => n.id));
+  const edges = asArray(parsed["edges"])
+    .filter(isEdge)
+    .filter((e) => nodeIds.has(e.source) && nodeIds.has(e.target));
+
+  const pages: Record<Id, string> = {};
+  const rawPages = parsed["pages"];
+  if (isRecord(rawPages)) {
+    for (const id of nodeIds) {
+      const content = rawPages[id];
+      if (typeof content === "string") pages[id] = content;
+    }
+  }
+
+  return createPayload({ nodes, edges, images, pages });
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function asArray(value: unknown): unknown[] {
+  return Array.isArray(value) ? value : [];
+}
+
+function isBox(value: Record<string, unknown>): boolean {
+  const position = value["position"];
+  const dimension = value["dimension"];
+  return (
+    typeof value["id"] === "string" &&
+    isRecord(position) &&
+    Number.isFinite(position["x"]) &&
+    Number.isFinite(position["y"]) &&
+    isRecord(dimension) &&
+    Number.isFinite(dimension["width"]) &&
+    Number.isFinite(dimension["height"])
+  );
+}
+
+function isNode(value: unknown): value is Node {
+  return (
+    isRecord(value) &&
+    value["kind"] === "node" &&
+    isBox(value) &&
+    isRecord(value["style"]) &&
+    isRecord(value["label"])
+  );
+}
+
+function isImage(value: unknown): value is Image {
+  return (
+    isRecord(value) &&
+    value["kind"] === "image" &&
+    isBox(value) &&
+    typeof value["src"] === "string" &&
+    value["src"].startsWith("data:image/")
+  );
+}
+
+function isEdge(value: unknown): value is Edge {
+  return (
+    isRecord(value) &&
+    value["kind"] === "edge" &&
+    typeof value["id"] === "string" &&
+    typeof value["source"] === "string" &&
+    typeof value["target"] === "string" &&
+    isRecord(value["style"])
+  );
+}

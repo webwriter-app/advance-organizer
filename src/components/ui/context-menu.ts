@@ -73,7 +73,6 @@ export class WwContextMenu extends LitElementWw {
   }
 
   private _handleDelete(): void {
-    const selectedIds = this.selection.entries;
-    this.doc.removeItems(selectedIds);
+    this.doc.removeItems(new Set(this.selection.entries));
   }
 }

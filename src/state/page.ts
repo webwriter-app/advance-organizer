@@ -2,6 +2,7 @@ import { type ReactiveControllerHost } from "lit";
 import { Observable } from "./observable";
 import { DocumentController } from "./document";
 import { LitElementWw } from "@webwriter/lit";
+import DOMPurify from "dompurify";
 import { Id } from "../model/types";
 
 const PAGE_TAG = "webwriter-advance-organizer-page";
@@ -26,6 +27,10 @@ export class PageController extends Observable {
     return (this.host as LitElementWw).children.namedItem(id);
   }
 
+  getPageContent(id: Id): string | null {
+    return this.getPage(id)?.innerHTML ?? null;
+  }
+
   get pageIds(): Set<Id> {
     const ids = new Set<Id>();
     for (const child of (this.host as LitElementWw).children) {
@@ -36,9 +41,21 @@ export class PageController extends Observable {
     return ids;
   }
 
-  addPage(id: Id): Element {
+  addPage(id: Id, content?: string): Element {
     const page = document.createElement(PAGE_TAG);
     page.id = id;
+    if (content) {
+      // Once browser support is better, replace this with the HTML Sanitizer API
+      // https://developer.mozilla.org/en-US/docs/Web/API/HTML_Sanitizer_API
+      const sanitizedContent = DOMPurify.sanitize(content, {
+        CUSTOM_ELEMENT_HANDLING: {
+          tagNameCheck: () => true,
+          attributeNameCheck: () => true,
+          allowCustomizedBuiltInElements: false,
+        },
+      });
+      page.innerHTML = sanitizedContent;
+    }
     (this.host as LitElementWw).appendChild(page);
     this.notify();
     return page;

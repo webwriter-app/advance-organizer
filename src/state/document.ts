@@ -1,4 +1,5 @@
 import {
+  BoxItem,
   CanvasItem,
   Dimension,
   Edge,
@@ -11,6 +12,7 @@ import {
 } from "../model/types";
 import { Point } from "../model/types";
 import { Observable } from "./observable";
+import { INSERT_GAP } from "../components/canvas/helper";
 
 export class DocumentController extends Observable {
   private _nodes: Map<Id, Node> = new Map();
@@ -30,6 +32,16 @@ export class DocumentController extends Observable {
 
   get(id: Id): CanvasItem | undefined {
     return this._nodes.get(id) ?? this._edges.get(id) ?? this._images.get(id);
+  }
+
+  hasItemAt(position: Point): boolean {
+    const isAt = (item: BoxItem): boolean =>
+      Math.abs(item.position.x - position.x) < 1 &&
+      Math.abs(item.position.y - position.y) < 1;
+    return (
+      [...this._nodes.values()].some(isAt) ||
+      [...this._images.values()].some(isAt)
+    );
   }
 
   get nodes(): Node[] {
@@ -118,7 +130,10 @@ export class DocumentController extends Observable {
         this._nodes.set(newId, {
           ...node,
           id: newId,
-          position: { x: node.position.x + 20, y: node.position.y + 20 },
+          position: {
+            x: node.position.x + INSERT_GAP,
+            y: node.position.y + INSERT_GAP,
+          },
         });
       } else {
         const image = this._images.get(id);
@@ -154,6 +169,109 @@ export class DocumentController extends Observable {
     }
     this.notify();
     return { newIds, nodeIdMap: duplicatedNodeIds };
+  }
+
+  collectItems(ids: Set<Id>): {
+    nodes: Node[];
+    edges: Edge[];
+    images: Image[];
+  } {
+    const nodes: Node[] = [];
+    const images: Image[] = [];
+
+    for (const id of ids) {
+      const node = this._nodes.get(id);
+      if (node) {
+        nodes.push(node);
+        continue;
+      }
+      const image = this._images.get(id);
+      if (image) {
+        images.push(image);
+      }
+    }
+
+    const nodeIds = new Set(nodes.map((n) => n.id));
+    const edges = [...this._edges.values()].filter(
+      (e) => nodeIds.has(e.source) && nodeIds.has(e.target),
+    );
+
+    return { nodes, edges, images };
+  }
+
+  insertItems(items: { nodes: Node[]; edges: Edge[]; images: Image[] }): {
+    newIds: Set<Id>;
+    nodeIdMap: Map<Id, Id>;
+  } {
+    const boxItems: BoxItem[] = [...items.nodes, ...items.images];
+    if (boxItems.length === 0)
+      return { newIds: new Set(), nodeIdMap: new Map() };
+
+    const newIds: Set<Id> = new Set();
+    const nodeIdMap: Map<Id, Id> = new Map();
+
+    const offset = this._pasteOffset(boxItems);
+    const shift = (position: Point): Point => ({
+      x: position.x + offset,
+      y: position.y + offset,
+    });
+
+    for (const node of items.nodes) {
+      const newId = crypto.randomUUID();
+      nodeIdMap.set(node.id, newId);
+      newIds.add(newId);
+      this._nodes.set(newId, {
+        ...node,
+        id: newId,
+        kind: "node",
+        position: shift(node.position),
+      });
+    }
+
+    for (const image of items.images) {
+      const newId = crypto.randomUUID();
+      newIds.add(newId);
+      this._images.set(newId, {
+        ...image,
+        id: newId,
+        kind: "image",
+        position: shift(image.position),
+      });
+    }
+
+    for (const edge of items.edges) {
+      const source = nodeIdMap.get(edge.source);
+      const target = nodeIdMap.get(edge.target);
+      if (!source || !target) continue;
+      const newId = crypto.randomUUID();
+      newIds.add(newId);
+      this._edges.set(newId, {
+        ...edge,
+        id: newId,
+        kind: "edge",
+        source,
+        target,
+      });
+    }
+
+    this.notify();
+    return { newIds, nodeIdMap };
+  }
+
+  private _pasteOffset(items: readonly BoxItem[]): number {
+    let step = 0;
+    while (
+      step < 100 &&
+      items.some((item) =>
+        this.hasItemAt({
+          x: item.position.x + step * INSERT_GAP,
+          y: item.position.y + step * INSERT_GAP,
+        }),
+      )
+    ) {
+      step++;
+    }
+    return step * INSERT_GAP;
   }
 
   resizeItem(id: Id, position: Point, dimension: Dimension): void {

@@ -1,4 +1,5 @@
 import {
+  BoxItem,
   Dimension,
   Edge,
   EdgePosition,
@@ -12,6 +13,7 @@ export const HANDLE_SIZE = 8;
 export const MIN_TARGET_SIZE = 24;
 export const SNAP_RADIUS = 16;
 export const MIN_EDGE_LABEL_WIDTH = 80;
+export const INSERT_GAP = 24;
 
 export const INTERACTIVE_SELECTOR =
   "[data-item-id], [data-handle], [data-anchor-position], .label-editor";
@@ -125,6 +127,28 @@ export function getHandlePositions(
       { handle: "l", pos: { x: -w / 2, y: 0 } },
     ] as const
   ).map((h) => ({ ...h, cursor: HANDLE_CURSORS[h.handle] }));
+}
+
+export function computeBounds(
+  items: readonly BoxItem[],
+): { position: Point; dimension: Dimension } | null {
+  if (items.length === 0) return null;
+
+  let minX = Infinity;
+  let minY = Infinity;
+  let maxX = -Infinity;
+  let maxY = -Infinity;
+  for (const item of items) {
+    minX = Math.min(minX, item.position.x - item.dimension.width / 2);
+    minY = Math.min(minY, item.position.y - item.dimension.height / 2);
+    maxX = Math.max(maxX, item.position.x + item.dimension.width / 2);
+    maxY = Math.max(maxY, item.position.y + item.dimension.height / 2);
+  }
+
+  return {
+    position: { x: (minX + maxX) / 2, y: (minY + maxY) / 2 },
+    dimension: { width: maxX - minX, height: maxY - minY },
+  };
 }
 
 export function getStrokeDashArray(
