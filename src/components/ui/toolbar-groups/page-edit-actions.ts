@@ -40,6 +40,9 @@ export class AoPageEditActionsGroup extends LitElementWw {
       return html``;
     }
 
+    const node = this.openPageId ? this.doc.get(this.openPageId) : null;
+    const label = node?.kind === "node" ? node.label.text : null;
+
     return html`<sl-button-group label="Go back">
         <sl-tooltip content="Go back">
           <sl-button @click=${this._handleClosePageClick}>
@@ -47,11 +50,7 @@ export class AoPageEditActionsGroup extends LitElementWw {
           </sl-button>
         </sl-tooltip>
       </sl-button-group>
-      <p>
-        ${this.doc && this.openPageId !== null
-          ? this.doc.get(this.openPageId)?.label?.text
-          : null}
-      </p>`;
+      <p>${label}</p>`;
   }
 
   private _handleClosePageClick(): void {

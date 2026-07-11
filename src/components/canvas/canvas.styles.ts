@@ -23,10 +23,11 @@ export const canvasStyles = css`
   }
 
   ao-zoom-controls {
-    position: absolute;
-    top: var(--sl-spacing-medium);
-    right: var(--sl-spacing-medium);
     z-index: 10;
+  }
+
+  ao-drag-overlay {
+    z-index: 20;
   }
 
   .label-fo {

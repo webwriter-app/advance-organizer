@@ -77,6 +77,17 @@ function readAsDataUrl(blob: Blob): Promise<string> {
   });
 }
 
+export function filterImageFiles(files: FileList | undefined | null): File[] {
+  if (!files) return [];
+  return Array.from(files).filter((file) => file.type.startsWith("image/"));
+}
+
+export function countImageItems(items: DataTransferItemList): number {
+  return Array.from(items).filter(
+    (item) => item.kind === "file" && item.type.startsWith("image/"),
+  ).length;
+}
+
 export function displayDimension(size: Dimension): Dimension {
   const scale = MIN_IMAGE_SIDE / Math.min(size.width, size.height);
   return {

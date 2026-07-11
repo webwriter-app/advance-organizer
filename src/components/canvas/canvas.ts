@@ -1,5 +1,5 @@
 import { LitElementWw } from "@webwriter/lit";
-import { html, svg, PropertyValues, type TemplateResult } from "lit";
+import { html, svg, nothing, PropertyValues, type TemplateResult } from "lit";
 import createPanZoom, { type PanZoom } from "panzoom";
 import { canvasStyles } from "./canvas.styles";
 import { renderNode } from "./node";
@@ -35,6 +35,13 @@ import {
 } from "./helper";
 import { AoZoomControls } from "../ui/zoom-controls";
 import { renderImage } from "./image";
+import {
+  countImageItems,
+  displayDimension,
+  filterImageFiles,
+  importImage,
+} from "../../utils/image-import";
+import { AoDragOverlay } from "../ui/drag-overlay";
 
 type InteractionMode =
   | { kind: "idle" }
@@ -78,6 +85,7 @@ type InteractionMode =
 export class AoCanvas extends LitElementWw {
   static override scopedElements = {
     "ao-zoom-controls": AoZoomControls,
+    "ao-drag-overlay": AoDragOverlay,
   };
 
   @consume({ context: documentContext })
@@ -95,6 +103,9 @@ export class AoCanvas extends LitElementWw {
   @state()
   private accessor _zoom: number = 1;
 
+  @state()
+  private accessor _draggedImageCount: number | null = null;
+
   @query("ao-zoom-controls")
   private accessor _zoomControls!: AoZoomControls | null;
 
@@ -111,6 +122,7 @@ export class AoCanvas extends LitElementWw {
   private static readonly MAX_ZOOM = 4;
   private static readonly ZOOM_STEP = 1.3;
   private static readonly FIT_PADDING = 32;
+  private static readonly INSERT_GAP = 24;
 
   protected override firstUpdated(_changedProperties: PropertyValues): void {
     new SubscribeController(this, this.doc);
@@ -139,13 +151,18 @@ export class AoCanvas extends LitElementWw {
         style="touch-action: none"
         width="100%"
         height="100%"
+        tabindex="0"
         @pointerdown=${this._onPointerDown}
         @pointermove=${this._onPointerMove}
         @pointerup=${this._onPointerUp}
         @pointercancel=${this._onPointerUp}
         @keydown=${this._onEditKeydown}
         @focusout=${this._onEditFocusOut}
-        @contextmenu=${this._onContextMenu}>
+        @contextmenu=${this._onContextMenu}
+        @dragover=${this._onDragOver}
+        @dragleave=${this._onDragLeave}
+        @drop=${this._onDrop}
+        @paste=${this._onPaste}>
         <defs>
           <marker
             id="arrow"
@@ -199,7 +216,11 @@ export class AoCanvas extends LitElementWw {
         @zoom-in=${this._zoomIn}
         @zoom-out=${this._zoomOut}
         @center-view=${this._fitToContent}>
-      </ao-zoom-controls>`;
+      </ao-zoom-controls>
+      ${this._draggedImageCount === null
+        ? nothing
+        : html`<ao-drag-overlay .imageCount=${this._draggedImageCount}>
+          </ao-drag-overlay>`}`;
   }
 
   private _isInteractiveTarget(target: EventTarget | null): boolean {
@@ -328,6 +349,84 @@ export class AoCanvas extends LitElementWw {
       height / 2 - centerY * scale,
     );
   };
+
+  private _clientToScene(clientX: number, clientY: number): Point {
+    const rect = this.renderRoot
+      .querySelector<SVGSVGElement>("svg")
+      ?.getBoundingClientRect();
+    const t = this._panzoom?.getTransform();
+    const scale = t?.scale ?? 1;
+    return {
+      x: (clientX - (rect?.left ?? 0) - (t?.x ?? 0)) / scale,
+      y: (clientY - (rect?.top ?? 0) - (t?.y ?? 0)) / scale,
+    };
+  }
+
+  private _viewportCenter(): Point {
+    const { width, height } = this._viewportSize();
+    const t = this._panzoom?.getTransform();
+    const scale = t?.scale ?? 1;
+    return {
+      x: (width / 2 - (t?.x ?? 0)) / scale,
+      y: (height / 2 - (t?.y ?? 0)) / scale,
+    };
+  }
+
+  private _onDragOver(e: DragEvent): void {
+    if (!e.dataTransfer?.types.includes("Files")) return;
+    const imageCount = countImageItems(e.dataTransfer.items);
+    if (imageCount === 0) return;
+
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "copy";
+    this._draggedImageCount = imageCount;
+  }
+
+  private _onDragLeave(e: DragEvent): void {
+    const target = e.currentTarget as Element;
+    const related = e.relatedTarget as Element | null;
+    if (related && target.contains(related)) return;
+    this._draggedImageCount = null;
+  }
+
+  private _onDrop(e: DragEvent): void {
+    this._draggedImageCount = null;
+    const files = filterImageFiles(e.dataTransfer?.files);
+    e.preventDefault();
+    e.stopPropagation();
+    if (files.length === 0) return;
+    this._insertImages(files, this._clientToScene(e.clientX, e.clientY));
+  }
+
+  private _onPaste(e: ClipboardEvent): void {
+    if (this._editingId) return;
+    const files = filterImageFiles(e.clipboardData?.files);
+    if (files.length === 0) return;
+    e.preventDefault();
+    this._insertImages(files, this._viewportCenter());
+  }
+
+  private async _insertImages(files: File[], position: Point): Promise<void> {
+    const inserted = new Set<Id>();
+    let offset = 0;
+
+    for (const file of files) {
+      try {
+        const imported = await importImage(file);
+        const image = this.doc.addImage({
+          dimension: displayDimension(imported),
+          position: { x: position.x + offset, y: position.y + offset },
+          src: imported.src,
+        });
+        inserted.add(image.id);
+        offset += AoCanvas.INSERT_GAP;
+      } catch (error) {
+        console.error(`Could not insert ${file.name}`, error);
+      }
+    }
+
+    if (inserted.size > 0) this.selection.select(inserted);
+  }
 
   private _onPointerDown(e: PointerEvent): void {
     // Ignore clicks inside the label being edited, they are handled by the contenteditable div

@@ -4,6 +4,9 @@ export const zoomControlsStyles = css`
   :host {
     display: flex;
     align-items: center;
+    position: absolute;
+    top: var(--sl-spacing-medium);
+    right: var(--sl-spacing-medium);
     padding: var(--sl-spacing-3x-small);
 
     background-color: rgba(255, 255, 255, 0.9);
