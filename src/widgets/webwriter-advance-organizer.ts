@@ -23,6 +23,7 @@ import { AoPageEditActionsGroup } from "../components/ui/toolbar-groups/page-edi
 import { PageController } from "../state/page";
 import { AoCreateActionsGroup } from "../components/ui/toolbar-groups/create-actions";
 import { AoEdgeActionsGroup } from "../components/ui/toolbar-groups/edge-actions";
+import { ClipboardAction } from "../utils/clipboard";
 
 /* Optional LOCALIZATION: Uncomment this after first running `npm run localize` in the command line.
 import LOCALIZE from '../localization/generated'
@@ -286,6 +287,11 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
                   <ww-context-menu
                     style=${`left: ${this._contextMenu.x}px; top: ${this._contextMenu.y}px;`}
                     @pointerdown=${(e: Event) => e.stopPropagation()}
+                    @clipboard-action=${(
+                      e: CustomEvent<{ action: ClipboardAction }>,
+                    ) => {
+                      void this.canvas?.runClipboardAction(e.detail.action);
+                    }}
                     @close-context-menu=${() => {
                       this._contextMenu = null;
                     }}></ww-context-menu>

@@ -41,10 +41,14 @@ import {
   INSERT_GAP,
 } from "./helper";
 import {
+  ClipboardAction,
+  ClipboardContent,
   ClipboardPayload,
   createPayload,
+  readClipboard,
   readPayload,
   writePayload,
+  writePayloadToClipboard,
 } from "../../utils/clipboard";
 import { AoZoomControls } from "../ui/zoom-controls";
 import { renderImage } from "./image";
@@ -399,11 +403,11 @@ export class AoCanvas extends LitElementWw {
     this._insertImages(files, this._clientToScene(e.clientX, e.clientY));
   }
 
-  private _copySelection(e: ClipboardEvent): boolean {
-    if (this._editingId || !e.clipboardData) return false;
+  private _selectionPayload(): ClipboardPayload | null {
+    if (this._editingId) return null;
 
     const items = this.doc.collectItems(this.selection.entries);
-    if (items.nodes.length === 0 && items.images.length === 0) return false;
+    if (items.nodes.length === 0 && items.images.length === 0) return null;
 
     const pages: Record<Id, string> = {};
     for (const node of items.nodes) {
@@ -411,13 +415,59 @@ export class AoCanvas extends LitElementWw {
       if (content) pages[node.id] = content;
     }
 
+    return createPayload({ ...items, pages });
+  }
+
+  private _copySelection(e: ClipboardEvent): boolean {
+    const payload = this._selectionPayload();
+    if (!payload || !e.clipboardData) return false;
+
     e.preventDefault();
-    writePayload(e.clipboardData, createPayload({ ...items, pages }));
+    writePayload(e.clipboardData, payload);
     return true;
   }
 
   private _onCopy(e: ClipboardEvent): void {
     this._copySelection(e);
+  }
+
+  async runClipboardAction(action: ClipboardAction): Promise<void> {
+    if (this._editingId) return;
+
+    if (action === "paste") {
+      await this._pasteFromClipboard();
+      return;
+    }
+
+    const payload = this._selectionPayload();
+    if (!payload) return;
+
+    try {
+      await writePayloadToClipboard(payload);
+    } catch (error) {
+      console.error("Could not write to the clipboard", error);
+      return;
+    }
+
+    if (action === "cut") {
+      this.doc.removeItems(new Set(this.selection.entries));
+    }
+  }
+
+  private async _pasteFromClipboard(): Promise<void> {
+    let content: ClipboardContent;
+    try {
+      content = await readClipboard();
+    } catch (error) {
+      console.error("Could not read the clipboard", error);
+      return;
+    }
+
+    if (content.payload) {
+      this._insertPayload(content.payload);
+    } else if (content.images.length > 0) {
+      await this._insertImages(content.images, this._viewportCenter());
+    }
   }
 
   private _onCut(e: ClipboardEvent): void {
@@ -1175,9 +1225,9 @@ export class AoCanvas extends LitElementWw {
     const target = e.target as Element;
     const itemEl = target.closest<SVGElement>("[data-item-id]");
 
-    if (!itemEl) return;
-
-    if (!this.selection.has(itemEl.dataset["itemId"]!)) {
+    if (!itemEl) {
+      this.selection.clear();
+    } else if (!this.selection.has(itemEl.dataset["itemId"]!)) {
       this.selection.select(new Set<Id>([itemEl.dataset["itemId"]!]));
     }
 

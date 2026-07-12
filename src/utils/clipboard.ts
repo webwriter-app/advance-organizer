@@ -1,7 +1,15 @@
 import { Edge, Id, Image, Node } from "../model/types";
 
 const CLIPBOARD_MIME = "application/vnd.webwriter.advance-organizer+json";
+const CLIPBOARD_WEB_MIME = `web ${CLIPBOARD_MIME}`;
 const PAYLOAD_TYPE = "webwriter/advance-organizer";
+
+export type ClipboardAction = "cut" | "copy" | "paste";
+
+export interface ClipboardContent {
+  readonly payload: ClipboardPayload | null;
+  readonly images: File[];
+}
 
 export interface ClipboardPayload {
   readonly type: typeof PAYLOAD_TYPE;
@@ -34,6 +42,48 @@ export function readPayload(
     parsePayload(data.getData(CLIPBOARD_MIME)) ??
     parsePayload(data.getData("text/plain"))
   );
+}
+
+export async function writePayloadToClipboard(
+  payload: ClipboardPayload,
+): Promise<void> {
+  const serialized = JSON.stringify(payload);
+  try {
+    await navigator.clipboard.write([
+      new ClipboardItem({
+        [CLIPBOARD_WEB_MIME]: new Blob([serialized], { type: CLIPBOARD_MIME }),
+        "text/plain": new Blob([serialized], { type: "text/plain" }),
+      }),
+    ]);
+  } catch {
+    await navigator.clipboard.writeText(serialized);
+  }
+}
+
+export async function readClipboard(): Promise<ClipboardContent> {
+  let items: ClipboardItem[];
+  try {
+    items = [...(await navigator.clipboard.read())];
+  } catch {
+    const text = await navigator.clipboard.readText();
+    return { payload: parsePayload(text), images: [] };
+  }
+
+  const images: File[] = [];
+  for (const item of items) {
+    for (const type of [CLIPBOARD_WEB_MIME, "text/plain"]) {
+      if (!item.types.includes(type)) continue;
+      const payload = parsePayload(await (await item.getType(type)).text());
+      if (payload) return { payload, images: [] };
+    }
+
+    const imageType = item.types.find((type) => type.startsWith("image/"));
+    if (!imageType) continue;
+    const blob = await item.getType(imageType);
+    images.push(new File([blob], "clipboard-image", { type: imageType }));
+  }
+
+  return { payload: null, images };
 }
 
 function parsePayload(text: string): ClipboardPayload | null {
