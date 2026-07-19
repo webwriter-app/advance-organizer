@@ -1,4 +1,5 @@
 import {
+  Bounds,
   BoxItem,
   Dimension,
   Edge,
@@ -129,9 +130,24 @@ export function getHandlePositions(
   ).map((h) => ({ ...h, cursor: HANDLE_CURSORS[h.handle] }));
 }
 
-export function computeBounds(
-  items: readonly BoxItem[],
-): { position: Point; dimension: Dimension } | null {
+export function boundsFromCorners(a: Point, b: Point): Bounds {
+  return {
+    position: { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 },
+    dimension: { width: Math.abs(a.x - b.x), height: Math.abs(a.y - b.y) },
+  };
+}
+
+export function boundsWithin(outer: Bounds, inner: Bounds): boolean {
+  return (
+    Math.abs(outer.position.x - inner.position.x) * 2 + inner.dimension.width <=
+      outer.dimension.width &&
+    Math.abs(outer.position.y - inner.position.y) * 2 +
+      inner.dimension.height <=
+      outer.dimension.height
+  );
+}
+
+export function computeBounds(items: readonly BoxItem[]): Bounds | null {
   if (items.length === 0) return null;
 
   let minX = Infinity;
@@ -189,10 +205,7 @@ export function computeEdgePoints(
   return { start: startPoint, end: endPoint };
 }
 
-export function computeEdgeLabelLayout(
-  start: Point,
-  end: Point,
-): { position: Point; dimension: Dimension } {
+export function computeEdgeLabelLayout(start: Point, end: Point): Bounds {
   const dimension = {
     width: Math.max(Math.abs(start.x - end.x), MIN_EDGE_LABEL_WIDTH),
     height: Math.abs(start.y - end.y),

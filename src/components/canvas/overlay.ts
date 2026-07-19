@@ -1,6 +1,6 @@
-import { svg, type TemplateResult } from "lit";
+import { svg, nothing, type TemplateResult } from "lit";
 import { SelectionController } from "../../state/selection";
-import { AnchorRendering, Id } from "../../model/types";
+import { AnchorRendering, Id, Point } from "../../model/types";
 import { DocumentController } from "../../state/document";
 import {
   computeEdgePoints,
@@ -14,21 +14,60 @@ export function renderOverlay(
   doc: DocumentController,
   zoom: number,
   anchorRendering: AnchorRendering,
+  rectangleSelection: Point | null,
 ): TemplateResult {
   return svg`
     <g 
       class="overlay"
       pointer-events="none"
     >
+    ${rectangleSelection ? renderRectangleSelection(rectangleSelection) : nothing}
+    ${rectangleSelection ? renderSelectionPreview(selection, doc) : nothing}
     ${[...selection.entries].map((e) => renderSelectionIndicator(e, doc))}
-    ${selection.size === 1 ? renderResizeHandles([...selection.entries][0]!, doc, zoom) : svg``}
-    ${anchorRendering.active ? renderAnchorPoints(doc, anchorRendering, zoom) : svg``}
+    ${selection.size === 1 ? renderResizeHandles([...selection.entries][0]!, doc, zoom) : nothing}
+    ${anchorRendering.active ? renderAnchorPoints(doc, anchorRendering, zoom) : nothing}
   </g>`;
+}
+
+function renderRectangleSelection(point: Point): TemplateResult {
+  return svg`
+    <g
+      class="rectangle-selection-group"
+      pointer-events="none"
+      transform="translate(${point.x}, ${point.y})"
+    >
+      <rect
+        class="rectangle-selection"
+        x=${0}
+        y=${0}
+        width=${0}
+        height=${0}
+        fill="var(--ao-selection-color, #3b82f6)"
+        fill-opacity="0.2"
+        stroke="var(--ao-selection-color, #3b82f6)"
+        stroke-width="1"
+        vector-effect="non-scaling-stroke"
+      />
+    </g>
+  `;
+}
+
+function renderSelectionPreview(
+  selection: SelectionController,
+  doc: DocumentController,
+): TemplateResult {
+  const items = [...doc.nodes, ...doc.images, ...doc.edges];
+  return svg`
+    ${items
+      .filter((item) => !selection.has(item.id))
+      .map((item) => renderSelectionIndicator(item.id, doc, true))}
+  `;
 }
 
 function renderSelectionIndicator(
   entryId: Id,
   doc: DocumentController,
+  preview = false,
 ): TemplateResult {
   const item = doc.get(entryId);
   if (!item) return svg``;
@@ -36,7 +75,9 @@ function renderSelectionIndicator(
   if (item.kind === "node" || item.kind === "image") {
     return svg`
       <g
-        data-selection-id=${entryId}
+        data-selection-id=${preview ? nothing : entryId}
+        data-preview-id=${preview ? entryId : nothing}
+        visibility=${preview ? "hidden" : nothing}
         transform="translate(${item.position.x}, ${item.position.y})"
         pointer-events="none"
       >
@@ -68,7 +109,9 @@ function renderSelectionIndicator(
 
     return svg`
       <line
-        data-selection-id=${entryId}
+        data-selection-id=${preview ? nothing : entryId}
+        data-preview-id=${preview ? entryId : nothing}
+        visibility=${preview ? "hidden" : nothing}
         x1="${start.x}"
         y1="${start.y}"
         x2="${end.x}"

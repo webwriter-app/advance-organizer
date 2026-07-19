@@ -10,6 +10,11 @@ export interface Dimension {
   readonly height: number;
 }
 
+export interface Bounds {
+  readonly position: Point;
+  readonly dimension: Dimension;
+}
+
 export interface Label {
   readonly text: string;
   readonly bold?: boolean;

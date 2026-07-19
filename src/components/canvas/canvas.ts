@@ -1,5 +1,5 @@
 import { LitElementWw } from "@webwriter/lit";
-import { html, svg, nothing, PropertyValues, type TemplateResult } from "lit";
+import { html, nothing, PropertyValues, type TemplateResult } from "lit";
 import createPanZoom, { type PanZoom } from "panzoom";
 import { canvasStyles } from "./canvas.styles";
 import { renderNode } from "./node";
@@ -17,6 +17,7 @@ import { DocumentController } from "../../state/document";
 import { SubscribeController } from "../../state/subscribe";
 import { repeat } from "lit/directives/repeat.js";
 import {
+  Bounds,
   BoxItem,
   Dimension,
   EdgePosition,
@@ -28,6 +29,8 @@ import {
 import { query, state } from "lit/decorators.js";
 import {
   applyResize,
+  boundsFromCorners,
+  boundsWithin,
   computeBounds,
   computeEdgePoints,
   computeEdgeLabelLayout,
@@ -63,7 +66,7 @@ import { AoDragOverlay } from "../ui/drag-overlay";
 type InteractionMode =
   | { kind: "idle" }
   | { kind: "pan"; start: Point }
-  | { kind: "lasso"; start: Point; current: Point }
+  | { kind: "rectangle-select"; start: Point }
   | {
       kind: "drag";
       start: Point;
@@ -151,11 +154,13 @@ export class AoCanvas extends LitElementWw {
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();
-    this.renderRoot
-      ?.querySelector<SVGSVGElement>("svg")
-      ?.removeEventListener("touchstart", this._onTouchStartCapture, {
-        capture: true,
-      });
+    const svg = this.renderRoot?.querySelector<SVGSVGElement>("svg");
+    svg?.removeEventListener("touchstart", this._onTouchStartCapture, {
+      capture: true,
+    });
+    svg?.removeEventListener("mousedown", this._onMouseDownCapture, {
+      capture: true,
+    });
     this._panzoom?.off("zoom", this._syncZoomLevel);
     this._panzoom?.dispose();
     this._panzoom = null;
@@ -217,17 +222,23 @@ export class AoCanvas extends LitElementWw {
             )}
           </g>
           <g class="overlays">
-            ${renderOverlay(this.selection, this.doc, this._zoom, {
-              active:
-                this._mode.kind === "reanchor-edge" ||
-                this._mode.kind === "draw-edge",
-              skipNodeId:
-                this._mode.kind === "reanchor-edge"
-                  ? this._mode.otherNodeId
-                  : this._mode.kind === "draw-edge"
-                    ? (this._mode.source?.nodeId ?? undefined)
-                    : undefined,
-            })}
+            ${renderOverlay(
+              this.selection,
+              this.doc,
+              this._zoom,
+              {
+                active:
+                  this._mode.kind === "reanchor-edge" ||
+                  this._mode.kind === "draw-edge",
+                skipNodeId:
+                  this._mode.kind === "reanchor-edge"
+                    ? this._mode.otherNodeId
+                    : this._mode.kind === "draw-edge"
+                      ? (this._mode.source?.nodeId ?? undefined)
+                      : undefined,
+              },
+              this._mode.kind === "rectangle-select" ? this._mode.start : null,
+            )}
           </g>
         </g>
       </svg>
@@ -257,13 +268,16 @@ export class AoCanvas extends LitElementWw {
       minZoom: AoCanvas.MIN_ZOOM,
       maxZoom: AoCanvas.MAX_ZOOM,
       zoomDoubleClickSpeed: 1, // disable double-click to zoom
-      beforeMouseDown: (e) => this._isInteractiveTarget(e.target),
+      beforeMouseDown: (e) => e.button !== 1, // only allow middle-click to pan
     });
     this._panzoom.on("zoom", this._syncZoomLevel);
     this._syncZoomLevel();
     svg.addEventListener("touchstart", this._onTouchStartCapture, {
       capture: true,
       passive: true,
+    });
+    svg.addEventListener("mousedown", this._onMouseDownCapture, {
+      capture: true,
     });
   }
 
@@ -280,6 +294,10 @@ export class AoCanvas extends LitElementWw {
     if (this._isInteractiveTarget(e.target)) {
       e.stopPropagation();
     }
+  };
+
+  private _onMouseDownCapture = (e: MouseEvent): void => {
+    if (e.button === 1) e.preventDefault();
   };
 
   private _zoomScale(): number {
@@ -583,8 +601,14 @@ export class AoCanvas extends LitElementWw {
       }
 
       this._beginDrag(e);
-    } else if (!additive) {
-      this.selection.clear();
+    } else {
+      if (!additive) this.selection.clear();
+      if (e.pointerType !== "touch") {
+        this._mode = {
+          kind: "rectangle-select",
+          start: this._clientToScene(e.clientX, e.clientY),
+        };
+      }
     }
 
     const svg = e.currentTarget as SVGSVGElement;
@@ -717,10 +741,10 @@ export class AoCanvas extends LitElementWw {
     });
   }
 
-  private _renderDrawEdgePreview(): TemplateResult {
-    if (this._mode.kind !== "draw-edge" || !this._mode.source) return svg``;
+  private _renderDrawEdgePreview(): TemplateResult | typeof nothing {
+    if (this._mode.kind !== "draw-edge" || !this._mode.source) return nothing;
     const node = this.doc.get(this._mode.source.nodeId);
-    if (!node || node.kind !== "node") return svg``;
+    if (!node || node.kind !== "node") return nothing;
     const start = this._mode.source.startEndpointPos;
     return renderEdgePreview(start);
   }
@@ -739,6 +763,7 @@ export class AoCanvas extends LitElementWw {
       this._mode.kind !== "drag" &&
       this._mode.kind !== "resize" &&
       this._mode.kind !== "reanchor-edge" &&
+      this._mode.kind !== "rectangle-select" &&
       !(this._mode.kind === "draw-edge" && this._mode.source !== null)
     )
       return;
@@ -776,6 +801,13 @@ export class AoCanvas extends LitElementWw {
             locked ? this._mode.aspectRatio : undefined,
           );
           this._applyResizeDom(this._mode.itemId, newPos, newDim);
+        } else if (this._mode.kind === "rectangle-select") {
+          const bounds = boundsFromCorners(
+            this._mode.start,
+            this._clientToScene(this._pendingPointer.x, this._pendingPointer.y),
+          );
+          this._applyRectangleSelectDom(bounds);
+          this._applySelectionPreviewDom(this._itemsInBounds(bounds));
         } else if (this._mode.kind === "reanchor-edge") {
           const dx = (this._pendingPointer.x - this._mode.start.x) / scale;
           const dy = (this._pendingPointer.y - this._mode.start.y) / scale;
@@ -901,6 +933,42 @@ export class AoCanvas extends LitElementWw {
     )) {
       _applyEdge(gEl, false);
     }
+  }
+
+  private _applyRectangleSelectDom(bounds: Bounds): void {
+    const groupEl = this.renderRoot.querySelector<SVGGElement>(
+      "g.rectangle-selection-group",
+    );
+    const rectEl = groupEl?.querySelector<SVGRectElement>(
+      "rect.rectangle-selection",
+    );
+    if (!groupEl || !rectEl) return;
+
+    groupEl.setAttribute(
+      "transform",
+      `translate(${bounds.position.x}, ${bounds.position.y})`,
+    );
+    applyResize(rectEl, bounds.dimension);
+  }
+
+  private _applySelectionPreviewDom(ids: Set<Id>): void {
+    for (const el of this.renderRoot.querySelectorAll<SVGElement>(
+      "[data-preview-id]",
+    )) {
+      const id = el.dataset["previewId"];
+      el.setAttribute("visibility", id && ids.has(id) ? "visible" : "hidden");
+    }
+  }
+
+  private _itemsInBounds(bounds: Bounds): Set<Id> {
+    const ids = new Set<Id>();
+    for (const item of [...this.doc.nodes, ...this.doc.images]) {
+      if (boundsWithin(bounds, item)) ids.add(item.id);
+    }
+    for (const edge of this.doc.edges) {
+      if (ids.has(edge.source) && ids.has(edge.target)) ids.add(edge.id);
+    }
+    return ids;
   }
 
   private _applyResizeDom(id: Id, newPos: Point, newDim: Dimension): void {
@@ -1074,6 +1142,14 @@ export class AoCanvas extends LitElementWw {
         locked ? this._mode.aspectRatio : undefined,
       );
       this.doc.resizeItem(this._mode.itemId, newPos, newDim);
+    } else if (this._mode.kind === "rectangle-select" && this._pendingPointer) {
+      const bounds = boundsFromCorners(
+        this._mode.start,
+        this._clientToScene(this._pendingPointer.x, this._pendingPointer.y),
+      );
+      this.selection.select(
+        new Set([...this.selection.entries, ...this._itemsInBounds(bounds)]),
+      );
     } else if (this._mode.kind === "reanchor-edge" && this._pendingPointer) {
       const dx = (this._pendingPointer.x - this._mode.start.x) / scale;
       const dy = (this._pendingPointer.y - this._mode.start.y) / scale;
