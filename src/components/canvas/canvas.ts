@@ -1,6 +1,5 @@
 import { LitElementWw } from "@webwriter/lit";
 import { html, nothing, PropertyValues, type TemplateResult } from "lit";
-import createPanZoom, { type PanZoom } from "panzoom";
 import { canvasStyles } from "./canvas.styles";
 import { renderNode } from "./node";
 import { renderEdge, renderEdgePreview } from "./edge";
@@ -18,7 +17,6 @@ import { SubscribeController } from "../../state/subscribe";
 import { repeat } from "lit/directives/repeat.js";
 import {
   Bounds,
-  BoxItem,
   Dimension,
   EdgePosition,
   Id,
@@ -26,12 +24,11 @@ import {
   Point,
   ResizeHandle,
 } from "../../model/types";
-import { query, state } from "lit/decorators.js";
+import { state } from "lit/decorators.js";
 import {
   applyResize,
   boundsFromCorners,
   boundsWithin,
-  computeBounds,
   computeEdgePoints,
   computeEdgeLabelLayout,
   computeResize,
@@ -54,6 +51,7 @@ import {
   writePayloadToClipboard,
 } from "../../utils/clipboard";
 import { AoZoomControls } from "../ui/zoom-controls";
+import { ZoomController } from "./zoom";
 import { renderImage } from "./image";
 import {
   countImageItems,
@@ -124,15 +122,8 @@ export class AoCanvas extends LitElementWw {
   private accessor _editingId: Id | null = null;
 
   @state()
-  private accessor _zoom: number = 1;
-
-  @state()
   private accessor _draggedImageCount: number | null = null;
 
-  @query("ao-zoom-controls")
-  private accessor _zoomControls!: AoZoomControls | null;
-
-  private _panzoom: PanZoom | null = null;
   private _rafId: number | null = null;
   private _pendingPointer: Point | null = null;
   private _snapTarget: { nodeId: Id; position: EdgePosition } | null = null;
@@ -143,13 +134,29 @@ export class AoCanvas extends LitElementWw {
   private static readonly DOUBLE_CLICK_MS = 400;
   private static readonly MIN_ZOOM = 0.25;
   private static readonly MAX_ZOOM = 4;
-  private static readonly ZOOM_STEP = 1.3;
-  private static readonly FIT_PADDING = 32;
+
+  private readonly _zoomController = new ZoomController(
+    this,
+    AoCanvas.MIN_ZOOM,
+    AoCanvas.MAX_ZOOM,
+  );
 
   protected override firstUpdated(_changedProperties: PropertyValues): void {
     new SubscribeController(this, this.doc);
     new SubscribeController(this, this.selection);
-    this._initPanZoom();
+
+    const viewport = this.renderRoot.querySelector<SVGGElement>("g.viewport");
+    const svg = this.renderRoot.querySelector<SVGSVGElement>("svg");
+    if (!viewport || !svg) return;
+
+    this._zoomController.init(viewport);
+    svg.addEventListener("touchstart", this._onTouchStartCapture, {
+      capture: true,
+      passive: true,
+    });
+    svg.addEventListener("mousedown", this._onMouseDownCapture, {
+      capture: true,
+    });
   }
 
   override disconnectedCallback(): void {
@@ -161,9 +168,6 @@ export class AoCanvas extends LitElementWw {
     svg?.removeEventListener("mousedown", this._onMouseDownCapture, {
       capture: true,
     });
-    this._panzoom?.off("zoom", this._syncZoomLevel);
-    this._panzoom?.dispose();
-    this._panzoom = null;
   }
 
   static override styles = canvasStyles;
@@ -225,7 +229,7 @@ export class AoCanvas extends LitElementWw {
             ${renderOverlay(
               this.selection,
               this.doc,
-              this._zoom,
+              this._zoomController.scale,
               {
                 active:
                   this._mode.kind === "reanchor-edge" ||
@@ -245,50 +249,26 @@ export class AoCanvas extends LitElementWw {
       <ao-zoom-controls
         minZoom=${AoCanvas.MIN_ZOOM}
         maxZoom=${AoCanvas.MAX_ZOOM}
-        @zoom-in=${this._zoomIn}
-        @zoom-out=${this._zoomOut}
-        @center-view=${this._fitToContent}>
+        .zoomLevel=${this._zoomController.scale}
+        @zoom-in=${() => this._zoomController.zoomIn()}
+        @zoom-out=${() => this._zoomController.zoomOut()}
+        @center-view=${() =>
+          this._zoomController.fitToContent([
+            ...this.doc.nodes,
+            ...this.doc.images,
+          ])}>
       </ao-zoom-controls>
-      ${this._draggedImageCount === null
-        ? nothing
-        : html`<ao-drag-overlay .imageCount=${this._draggedImageCount}>
-          </ao-drag-overlay>`}`;
+      ${
+        this._draggedImageCount === null
+          ? nothing
+          : html`<ao-drag-overlay .imageCount=${this._draggedImageCount}>
+            </ao-drag-overlay>`
+      }`;
   }
 
   private _isInteractiveTarget(target: EventTarget | null): boolean {
     return !!(target as Element | null)?.closest(INTERACTIVE_SELECTOR);
   }
-
-  private _initPanZoom(): void {
-    const viewport = this.renderRoot.querySelector<SVGGElement>("g.viewport");
-    const svg = this.renderRoot.querySelector<SVGSVGElement>("svg");
-    if (!viewport || !svg) return;
-
-    this._panzoom = createPanZoom(viewport, {
-      minZoom: AoCanvas.MIN_ZOOM,
-      maxZoom: AoCanvas.MAX_ZOOM,
-      zoomDoubleClickSpeed: 1, // disable double-click to zoom
-      beforeMouseDown: (e) => e.button !== 1, // only allow middle-click to pan
-    });
-    this._panzoom.on("zoom", this._syncZoomLevel);
-    this._syncZoomLevel();
-    svg.addEventListener("touchstart", this._onTouchStartCapture, {
-      capture: true,
-      passive: true,
-    });
-    svg.addEventListener("mousedown", this._onMouseDownCapture, {
-      capture: true,
-    });
-  }
-
-  private _syncZoomLevel = (): void => {
-    if (!this._panzoom) return;
-    const scale = this._panzoom.getTransform().scale;
-    this._zoom = scale;
-    if (this._zoomControls) {
-      this._zoomControls.zoomLevel = scale;
-    }
-  };
 
   private _onTouchStartCapture = (e: TouchEvent): void => {
     if (this._isInteractiveTarget(e.target)) {
@@ -299,101 +279,6 @@ export class AoCanvas extends LitElementWw {
   private _onMouseDownCapture = (e: MouseEvent): void => {
     if (e.button === 1) e.preventDefault();
   };
-
-  private _zoomScale(): number {
-    return this._panzoom?.getTransform().scale ?? 1;
-  }
-
-  private _viewportSize(): { width: number; height: number } {
-    const rect = this.renderRoot
-      .querySelector<SVGSVGElement>("svg")
-      ?.getBoundingClientRect();
-    return { width: rect?.width ?? 0, height: rect?.height ?? 0 };
-  }
-
-  private _clampZoom(scale: number): number {
-    return Math.min(AoCanvas.MAX_ZOOM, Math.max(AoCanvas.MIN_ZOOM, scale));
-  }
-
-  private _zoomTo(scale: number, x: number, y: number): void {
-    if (!this._panzoom) return;
-    const current = this._panzoom.getTransform().scale;
-    this._panzoom.zoomTo(0, 0, scale / current);
-    this._panzoom.moveTo(x, y);
-  }
-
-  private _zoomIn(): void {
-    this._zoomBy(AoCanvas.ZOOM_STEP);
-  }
-  private _zoomOut(): void {
-    this._zoomBy(1 / AoCanvas.ZOOM_STEP);
-  }
-
-  private _zoomBy(factor: number): void {
-    if (!this._panzoom) return;
-    const { width, height } = this._viewportSize();
-    const t = this._panzoom.getTransform();
-    const targetScale = this._clampZoom(t.scale * factor);
-    if (targetScale === t.scale) return;
-
-    const cx = width / 2;
-    const cy = height / 2;
-    const sceneX = (cx - t.x) / t.scale;
-    const sceneY = (cy - t.y) / t.scale;
-    this._zoomTo(
-      targetScale,
-      cx - sceneX * targetScale,
-      cy - sceneY * targetScale,
-    );
-  }
-
-  private _fitToContent = (): void => {
-    if (!this._panzoom) return;
-    const { width, height } = this._viewportSize();
-    if (width === 0 || height === 0) return;
-
-    const boxItems: BoxItem[] = [...this.doc.nodes, ...this.doc.images];
-    const bounds = computeBounds(boxItems);
-    if (!bounds) {
-      this._zoomTo(1, width / 2, height / 2);
-      return;
-    }
-
-    const scale = this._clampZoom(
-      Math.min(
-        (width - 2 * AoCanvas.FIT_PADDING) / bounds.dimension.width,
-        (height - 2 * AoCanvas.FIT_PADDING) / bounds.dimension.height,
-      ),
-    );
-
-    this._zoomTo(
-      scale,
-      width / 2 - bounds.position.x * scale,
-      height / 2 - bounds.position.y * scale,
-    );
-  };
-
-  private _clientToScene(clientX: number, clientY: number): Point {
-    const rect = this.renderRoot
-      .querySelector<SVGSVGElement>("svg")
-      ?.getBoundingClientRect();
-    const t = this._panzoom?.getTransform();
-    const scale = t?.scale ?? 1;
-    return {
-      x: (clientX - (rect?.left ?? 0) - (t?.x ?? 0)) / scale,
-      y: (clientY - (rect?.top ?? 0) - (t?.y ?? 0)) / scale,
-    };
-  }
-
-  private _viewportCenter(): Point {
-    const { width, height } = this._viewportSize();
-    const t = this._panzoom?.getTransform();
-    const scale = t?.scale ?? 1;
-    return {
-      x: (width / 2 - (t?.x ?? 0)) / scale,
-      y: (height / 2 - (t?.y ?? 0)) / scale,
-    };
-  }
 
   private _onDragOver(e: DragEvent): void {
     if (!e.dataTransfer?.types.includes("Files")) return;
@@ -418,7 +303,10 @@ export class AoCanvas extends LitElementWw {
     e.preventDefault();
     e.stopPropagation();
     if (files.length === 0) return;
-    this._insertImages(files, this._clientToScene(e.clientX, e.clientY));
+    this._insertImages(
+      files,
+      this._zoomController.clientToScene(e.clientX, e.clientY),
+    );
   }
 
   private _selectionPayload(): ClipboardPayload | null {
@@ -484,7 +372,10 @@ export class AoCanvas extends LitElementWw {
     if (content.payload) {
       this._insertPayload(content.payload);
     } else if (content.images.length > 0) {
-      await this._insertImages(content.images, this._viewportCenter());
+      await this._insertImages(
+        content.images,
+        this._zoomController.viewportCenter(),
+      );
     }
   }
 
@@ -506,7 +397,7 @@ export class AoCanvas extends LitElementWw {
     const files = filterImageFiles(e.clipboardData?.files);
     if (files.length === 0) return;
     e.preventDefault();
-    this._insertImages(files, this._viewportCenter());
+    this._insertImages(files, this._zoomController.viewportCenter());
   }
 
   private _insertPayload(payload: ClipboardPayload): void {
@@ -606,7 +497,7 @@ export class AoCanvas extends LitElementWw {
       if (e.pointerType !== "touch") {
         this._mode = {
           kind: "rectangle-select",
-          start: this._clientToScene(e.clientX, e.clientY),
+          start: this._zoomController.clientToScene(e.clientX, e.clientY),
         };
       }
     }
@@ -776,7 +667,7 @@ export class AoCanvas extends LitElementWw {
         this._rafId = null;
         if (!this._pendingPointer) return;
 
-        const scale = this._zoomScale();
+        const scale = this._zoomController.scale;
         if (this._mode.kind === "drag") {
           const dx = (this._pendingPointer.x - this._mode.start.x) / scale;
           const dy = (this._pendingPointer.y - this._mode.start.y) / scale;
@@ -804,7 +695,10 @@ export class AoCanvas extends LitElementWw {
         } else if (this._mode.kind === "rectangle-select") {
           const bounds = boundsFromCorners(
             this._mode.start,
-            this._clientToScene(this._pendingPointer.x, this._pendingPointer.y),
+            this._zoomController.clientToScene(
+              this._pendingPointer.x,
+              this._pendingPointer.y,
+            ),
           );
           this._applyRectangleSelectDom(bounds);
           this._applySelectionPreviewDom(this._itemsInBounds(bounds));
@@ -992,7 +886,7 @@ export class AoCanvas extends LitElementWw {
       `.resize-handles[data-resize-id="${id}"]`,
     ) as SVGGElement | null;
     if (handlesG) {
-      const hs = HANDLE_SIZE / this._zoom;
+      const hs = HANDLE_SIZE / this._zoomController.scale;
       const handlePositions = getHandlePositions(newDim);
       for (const { handle, pos } of handlePositions) {
         const rect = handlesG.querySelector(`[data-handle="${handle}"]`);
@@ -1099,7 +993,7 @@ export class AoCanvas extends LitElementWw {
 
     if (this._mode.kind === "draw-edge") {
       if (this._mode.source && this._pendingPointer) {
-        const scale = this._zoomScale();
+        const scale = this._zoomController.scale;
         const dx = (this._pendingPointer.x - this._mode.source.start.x) / scale;
         const dy = (this._pendingPointer.y - this._mode.source.start.y) / scale;
         const pos = {
@@ -1117,7 +1011,7 @@ export class AoCanvas extends LitElementWw {
       return;
     }
 
-    const scale = this._zoomScale();
+    const scale = this._zoomController.scale;
     if (this._mode.kind === "drag" && this._pendingPointer) {
       const dx = (this._pendingPointer.x - this._mode.start.x) / scale;
       const dy = (this._pendingPointer.y - this._mode.start.y) / scale;
@@ -1145,7 +1039,10 @@ export class AoCanvas extends LitElementWw {
     } else if (this._mode.kind === "rectangle-select" && this._pendingPointer) {
       const bounds = boundsFromCorners(
         this._mode.start,
-        this._clientToScene(this._pendingPointer.x, this._pendingPointer.y),
+        this._zoomController.clientToScene(
+          this._pendingPointer.x,
+          this._pendingPointer.y,
+        ),
       );
       this.selection.select(
         new Set([...this.selection.entries, ...this._itemsInBounds(bounds)]),
