@@ -42,6 +42,7 @@ import {
   renderDrawEdgePreview,
 } from "./modes/draw-edge";
 import { SnapHighlighter } from "./snap";
+import { LabelEditController, EDITOR_CLASS } from "./label-edit";
 
 export class AoCanvas extends LitElementWw {
   static override scopedElements = {
@@ -61,16 +62,14 @@ export class AoCanvas extends LitElementWw {
   @state()
   private accessor _mode: InteractionMode = { kind: "idle" };
 
-  @state()
-  private accessor _editingId: Id | null = null;
+  private readonly _labelEdit = new LabelEditController(this);
 
   get editingId(): Id | null {
-    return this._editingId;
+    return this._labelEdit.editingId;
   }
 
   private _rafId: number | null = null;
   private _pendingPointer: Point | null = null;
-  private _editFocusPending: boolean = false;
   private _lastItemClick: { id: Id; time: number } | null = null;
   private _shiftKey: boolean = false;
 
@@ -153,8 +152,8 @@ export class AoCanvas extends LitElementWw {
         @pointermove=${this._onPointerMove}
         @pointerup=${this._onPointerUp}
         @pointercancel=${this._onPointerUp}
-        @keydown=${this._onEditKeydown}
-        @focusout=${this._onEditFocusOut}
+        @keydown=${(e: KeyboardEvent) => this._labelEdit.onKeydown(e)}
+        @focusout=${(e: FocusEvent) => this._labelEdit.onFocusOut(e)}
         @contextmenu=${this._onContextMenu}
         @dragover=${this._dropController.onDragOver}
         @dragleave=${this._dropController.onDragLeave}
@@ -183,7 +182,7 @@ export class AoCanvas extends LitElementWw {
             ${repeat(
               this.doc.edges,
               (e) => e.id,
-              (e) => renderEdge(e, this.doc, this._editingId === e.id),
+              (e) => renderEdge(e, this.doc, this._labelEdit.isEditing(e.id)),
             )}
             ${renderDrawEdgePreview(this._mode, this.doc)}
           </g>
@@ -191,7 +190,7 @@ export class AoCanvas extends LitElementWw {
             ${repeat(
               this.doc.nodes,
               (n) => n.id,
-              (n) => renderNode(n, this._editingId === n.id),
+              (n) => renderNode(n, this._labelEdit.isEditing(n.id)),
             )}
           </g>
           <g class="overlays">
@@ -269,7 +268,7 @@ export class AoCanvas extends LitElementWw {
 
   private _onPointerDown(e: PointerEvent): void {
     // Ignore clicks inside the label being edited, they are handled by the contenteditable div
-    if ((e.target as Element).closest(".label-editor")) return;
+    if ((e.target as Element).closest(`.${EDITOR_CLASS}`)) return;
 
     if (e.button !== 0) return; // ignore non-left clicks
 
@@ -326,7 +325,7 @@ export class AoCanvas extends LitElementWw {
         // Suppress browser focus handling
         e.preventDefault();
         this._lastItemClick = null;
-        this._startEditing(id);
+        this._labelEdit.start(id);
         return;
       }
 
@@ -391,69 +390,6 @@ export class AoCanvas extends LitElementWw {
     if (this._mode.kind !== "idle") {
       this._mode = { kind: "idle" };
     }
-  }
-
-  protected override updated(): void {
-    if (this._editFocusPending && this._editingId) {
-      this._editFocusPending = false;
-      const el = this.renderRoot.querySelector<HTMLElement>(
-        `.label-editor[data-edit-id="${this._editingId}"]`,
-      );
-      if (el) {
-        // Set text imperatively to avoid Lit issues with contenteditable
-        const item = this.doc.get(this._editingId);
-        if (!item || (item.kind !== "node" && item.kind !== "edge")) return;
-        el.textContent = item?.label?.text ?? "";
-        el.focus();
-        const range = document.createRange();
-        range.selectNodeContents(el);
-        const sel = window.getSelection();
-        sel?.removeAllRanges();
-        sel?.addRange(range);
-      }
-    }
-  }
-
-  private _startEditing(id: Id): void {
-    this._editingId = id;
-    this._editFocusPending = true;
-  }
-
-  private _onEditKeydown(e: KeyboardEvent): void {
-    if (!this._editingId) return;
-    const el = e.target as HTMLElement;
-    if (!el.classList?.contains("label-editor")) return;
-
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      this._commitEdit();
-    } else if (e.key === "Escape") {
-      e.preventDefault();
-      this._cancelEdit();
-    }
-    e.stopPropagation();
-  }
-
-  private _onEditFocusOut(e: FocusEvent): void {
-    const el = e.target as HTMLElement;
-    if (!el.classList?.contains("label-editor")) return;
-    this._commitEdit();
-  }
-
-  private _commitEdit(): void {
-    if (!this._editingId) return;
-    const id = this._editingId;
-    const el = this.renderRoot.querySelector<HTMLElement>(
-      `.label-editor[data-edit-id="${id}"]`,
-    );
-    const text = (el?.innerText ?? "").trim();
-    this._editingId = null;
-    this.doc.updateLabelText(id, text);
-  }
-
-  private _cancelEdit(): void {
-    // Triggers re-render to restore previous label text
-    this._editingId = null;
   }
 
   private _onContextMenu(e: PointerEvent): void {
