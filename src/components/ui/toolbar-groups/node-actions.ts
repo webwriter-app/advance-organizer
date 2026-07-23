@@ -126,7 +126,6 @@ export class AoNodeActionsGroup extends LitElementWw {
             <sl-menu-label>Border color</sl-menu-label>
             <sl-color-picker
               .value=${stroke}
-              opacity
               inline
               @sl-input=${(e: CustomEvent) => {
                 if (e.target instanceof SlColorPicker) {

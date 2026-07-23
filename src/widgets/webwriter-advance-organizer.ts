@@ -1,4 +1,4 @@
-import { html, PropertyValues, TemplateResult } from "lit";
+import { html, nothing, PropertyValues, TemplateResult } from "lit";
 import { LitElementWw } from "@webwriter/lit";
 import { customElement, property, query, state } from "lit/decorators.js";
 import { styles } from "./webwriter-advance-organizer.styles";
@@ -240,65 +240,79 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
     }
   }
 
-  protected override render(): TemplateResult {
+  private _openPageForNode(pageId: Id | null): void {
+    if (pageId === null) {
+      return;
+    }
+    if (!this.pages.hasPage(pageId)) {
+      if (!this.isContentEditable) {
+        return;
+      }
+      this.pages.addPage(pageId);
+    }
+    this._openPage = pageId;
+  }
+
+  private _renderToolbar(): TemplateResult | typeof nothing {
+    if (this._openPage === null && !this.isContentEditable) {
+      return nothing;
+    }
+
     return html`<ww-toolbar>
-        ${this._openPage === null
-          ? html`<ao-create-actions
-                @start-draw-edge=${() =>
-                  this.canvas?.beginDrawEdge()}></ao-create-actions>
-              <div class="spacer"></div>
-              <ao-node-actions></ao-node-actions>
-              <ao-edge-actions></ao-edge-actions>
-              <ao-page-actions
-                @open-page=${(e: CustomEvent<{ pageId: Id | null }>) => {
-                  const pageToOpen = e.detail.pageId;
-                  if (pageToOpen === null) {
-                    return;
-                  }
-                  if (!this.pages.hasPage(pageToOpen)) {
-                    this.pages.addPage(pageToOpen);
-                  }
-                  this._openPage = pageToOpen;
-                }}></ao-page-actions>`
-          : html`<ao-page-edit-actions
-              .openPageId=${this._openPage}
-              @close-page=${() => {
-                this._openPage = null;
-              }}></ao-page-edit-actions>`}
-      </ww-toolbar>
       ${this._openPage === null
-        ? html`<ao-canvas
-              @open-context-menu=${(
-                e: CustomEvent<{ x: number; y: number }>,
-              ) => {
-                const rect = this.getBoundingClientRect();
-                this._contextMenu = {
-                  x: e.detail.x - rect.left,
-                  y: e.detail.y - rect.top,
-                };
-              }}></ao-canvas>
-            ${this._contextMenu
-              ? html`<div
-                  class="context-menu-backdrop"
-                  @pointerdown=${() => {
-                    this._contextMenu = null;
+        ? html`<ao-create-actions
+              @start-draw-edge=${() =>
+                this.canvas?.beginDrawEdge()}></ao-create-actions>
+            <div class="spacer"></div>
+            <ao-node-actions></ao-node-actions>
+            <ao-edge-actions></ao-edge-actions>
+            <ao-page-actions
+              @open-page=${(e: CustomEvent<{ pageId: Id | null }>) =>
+                this._openPageForNode(e.detail.pageId)}></ao-page-actions>`
+        : html`<ao-page-edit-actions
+            .openPageId=${this._openPage}
+            @close-page=${() => {
+              this._openPage = null;
+            }}></ao-page-edit-actions>`}
+    </ww-toolbar>`;
+  }
+
+  protected override render(): TemplateResult {
+    return html`${this._renderToolbar()}
+    ${this._openPage === null
+      ? html`<ao-canvas
+            .editable=${this.isContentEditable}
+            @open-page=${(e: CustomEvent<{ pageId: Id | null }>) =>
+              this._openPageForNode(e.detail.pageId)}
+            @open-context-menu=${(e: CustomEvent<{ x: number; y: number }>) => {
+              const rect = this.getBoundingClientRect();
+              this._contextMenu = {
+                x: e.detail.x - rect.left,
+                y: e.detail.y - rect.top,
+              };
+            }}></ao-canvas>
+          ${this._contextMenu
+            ? html`<div
+                class="context-menu-backdrop"
+                @pointerdown=${() => {
+                  this._contextMenu = null;
+                }}
+                @contextmenu=${(e: Event) => e.preventDefault()}>
+                <ww-context-menu
+                  style=${`left: ${this._contextMenu.x}px; top: ${this._contextMenu.y}px;`}
+                  @pointerdown=${(e: Event) => e.stopPropagation()}
+                  @clipboard-action=${(
+                    e: CustomEvent<{ action: ClipboardAction }>,
+                  ) => {
+                    void this.canvas?.runClipboardAction(e.detail.action);
                   }}
-                  @contextmenu=${(e: Event) => e.preventDefault()}>
-                  <ww-context-menu
-                    style=${`left: ${this._contextMenu.x}px; top: ${this._contextMenu.y}px;`}
-                    @pointerdown=${(e: Event) => e.stopPropagation()}
-                    @clipboard-action=${(
-                      e: CustomEvent<{ action: ClipboardAction }>,
-                    ) => {
-                      void this.canvas?.runClipboardAction(e.detail.action);
-                    }}
-                    @close-context-menu=${() => {
-                      this._contextMenu = null;
-                    }}></ww-context-menu>
-                </div>`
-              : html``}`
-        : html`<div class="page-container">
-            <slot id="page-slot"></slot>
-          </div>`}`;
+                  @close-context-menu=${() => {
+                    this._contextMenu = null;
+                  }}></ww-context-menu>
+              </div>`
+            : nothing}`
+      : html`<div class="page-container">
+          <slot id="page-slot"></slot>
+        </div>`}`;
   }
 }

@@ -2,7 +2,7 @@ import { consume } from "@lit/context";
 import { LitElementWw } from "@webwriter/lit";
 import { documentContext } from "../../../state/contexts";
 import { DocumentController } from "../../../state/document";
-import { html, PropertyValues, type TemplateResult } from "lit";
+import { html, nothing, PropertyValues, type TemplateResult } from "lit";
 import { SubscribeController } from "../../../state/subscribe";
 import { actionsStyles } from "./toolbar-actions.styles";
 
@@ -35,9 +35,9 @@ export class AoPageEditActionsGroup extends LitElementWw {
 
   static override styles = actionsStyles;
 
-  protected override render(): TemplateResult {
+  protected override render(): TemplateResult | typeof nothing {
     if (!this.doc) {
-      return html``;
+      return nothing;
     }
 
     const node = this.openPageId ? this.doc.get(this.openPageId) : null;

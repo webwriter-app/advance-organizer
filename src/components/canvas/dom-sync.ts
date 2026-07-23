@@ -14,6 +14,7 @@ import {
   getHandlePositions,
   HANDLE_SIZE,
 } from "./helper";
+import { getBadgePosition } from "./node";
 
 export function applyDragDom(
   root: ParentNode,
@@ -85,6 +86,19 @@ export function applyResizeDom(
   ) as SVGForeignObjectElement | null;
   if (labelFo) {
     applyResize(labelFo, newDim);
+  }
+
+  const badgeG = root.querySelector(
+    `g.node[data-item-id="${id}"] g.badge`,
+  ) as SVGGElement | null;
+  if (badgeG) {
+    const node = doc.get(id);
+    const shape = node?.kind === "node" ? node.style.shape : undefined;
+    const badgePos = getBadgePosition(shape, newDim);
+    badgeG.setAttribute(
+      "transform",
+      `translate(${badgePos.x}, ${badgePos.y})`,
+    );
   }
 
   updateConnectedEdgesDom(root, doc, id, newPos, newDim);

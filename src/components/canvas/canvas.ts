@@ -16,7 +16,7 @@ import { DocumentController } from "../../state/document";
 import { SubscribeController } from "../../state/subscribe";
 import { repeat } from "lit/directives/repeat.js";
 import { Id, Point, ResizeHandle } from "../../model/types";
-import { state } from "lit/decorators.js";
+import { property, state } from "lit/decorators.js";
 import { INTERACTIVE_SELECTOR } from "./helper";
 import { ClipboardAction } from "../../utils/clipboard";
 import { AoZoomControls } from "../ui/zoom-controls";
@@ -58,6 +58,9 @@ export class AoCanvas extends LitElementWw {
 
   @consume({ context: pageContext })
   accessor pages!: PageController;
+
+  @property({ type: Boolean, reflect: true })
+  accessor editable = true;
 
   @state()
   private accessor _mode: InteractionMode = { kind: "idle" };
@@ -107,6 +110,13 @@ export class AoCanvas extends LitElementWw {
       },
       resetMode: () => this._resetMode(),
     });
+  }
+
+  protected override willUpdate(changedProperties: PropertyValues): void {
+    if (changedProperties.has("editable") && !this.editable) {
+      this.selection?.clear();
+      this._resetMode();
+    }
   }
 
   protected override firstUpdated(_changedProperties: PropertyValues): void {
@@ -190,7 +200,12 @@ export class AoCanvas extends LitElementWw {
             ${repeat(
               this.doc.nodes,
               (n) => n.id,
-              (n) => renderNode(n, this._labelEdit.isEditing(n.id)),
+              (n) =>
+                renderNode(
+                  n,
+                  this.pages.hasPage(n.id),
+                  this._labelEdit.isEditing(n.id),
+                ),
             )}
           </g>
           <g class="overlays">
@@ -251,14 +266,17 @@ export class AoCanvas extends LitElementWw {
   }
 
   private _onCut(e: ClipboardEvent): void {
+    if (!this.editable) return;
     cutSelection(e, this);
   }
 
   private _onPaste(e: ClipboardEvent): void {
+    if (!this.editable) return;
     pasteFromEvent(e, this._zoomController.viewportCenter(), this);
   }
 
   async runClipboardAction(action: ClipboardAction): Promise<void> {
+    if (!this.editable) return;
     await performClipboardAction(
       action,
       this._zoomController.viewportCenter(),
@@ -272,6 +290,18 @@ export class AoCanvas extends LitElementWw {
 
     if (e.button !== 0) return; // ignore non-left clicks
 
+    // In student mode, clicking on a node opens the page for that node instead of selecting it
+    if (!this.editable) {
+      const itemEl = (e.target as Element).closest<SVGElement>(
+        "[data-item-id]",
+      );
+      const id = itemEl?.dataset["itemId"];
+      if (id && this.doc.get(id)?.kind === "node") {
+        this._openPage(id);
+      }
+      return;
+    }
+
     if (this._mode.kind === "draw-edge") {
       handleDrawEdgeClick(e, this._mode, this._modeContext);
       return;
@@ -280,6 +310,19 @@ export class AoCanvas extends LitElementWw {
     this._shiftKey = e.shiftKey;
 
     const target = e.target as Element;
+
+    // A click on the badge opens the connected page, even in edit mode.
+    const badgeEl = target.closest(".badge");
+    if (badgeEl) {
+      const nodeId =
+        badgeEl.closest<SVGElement>("[data-item-id]")?.dataset["itemId"];
+      if (nodeId) {
+        e.preventDefault();
+        this._openPage(nodeId);
+        return;
+      }
+    }
+
     const handleEl = target.closest<SVGElement>("[data-handle]");
     const itemEl = !handleEl
       ? target.closest<SVGElement>("[data-item-id]")
@@ -392,7 +435,18 @@ export class AoCanvas extends LitElementWw {
     }
   }
 
+  private _openPage(pageId: Id): void {
+    this.dispatchEvent(
+      new CustomEvent("open-page", {
+        detail: { pageId },
+        bubbles: true,
+        composed: true,
+      }),
+    );
+  }
+
   private _onContextMenu(e: PointerEvent): void {
+    if (!this.editable) return;
     if (this._mode.kind !== "idle") return;
 
     e.preventDefault();

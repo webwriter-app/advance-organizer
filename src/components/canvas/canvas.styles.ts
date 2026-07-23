@@ -59,6 +59,11 @@ export const canvasStyles = css`
     user-select: text;
   }
 
+  :host(:not([editable])) .node.has-page,
+  .badge {
+    cursor: pointer;
+  }
+
   .edge .label-content {
     background-color: rgba(255, 255, 255, 0.8);
     border-radius: 4px;
