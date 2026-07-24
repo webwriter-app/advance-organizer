@@ -8,6 +8,9 @@ import { Id } from "../model/types";
 const PAGE_TAG = "webwriter-advance-organizer-page";
 
 export class PageController extends Observable {
+  private _observer: MutationObserver | null = null;
+  private _knownPageIds: Set<Id> = new Set();
+
   constructor(
     host: ReactiveControllerHost,
     private readonly doc: DocumentController,
@@ -17,6 +20,18 @@ export class PageController extends Observable {
     this.doc.subscribe(() => {
       this._prune();
     });
+  }
+
+  override hostConnected(): void {
+    this._observer?.disconnect();
+    this._knownPageIds = this.pageIds;
+    this._observer = new MutationObserver(() => this._syncPageIds());
+    this._observer.observe(this.host as LitElementWw, { childList: true });
+  }
+
+  override hostDisconnected(): void {
+    this._observer?.disconnect();
+    this._observer = null;
   }
 
   hasPage(id: Id): boolean {
@@ -57,7 +72,7 @@ export class PageController extends Observable {
       page.innerHTML = sanitizedContent;
     }
     (this.host as LitElementWw).appendChild(page);
-    this.notify();
+    this._notifyPagesChanged();
     return page;
   }
 
@@ -67,7 +82,7 @@ export class PageController extends Observable {
     const clone = source.cloneNode(true) as Element;
     clone.id = toId;
     (this.host as LitElementWw).appendChild(clone);
-    this.notify();
+    this._notifyPagesChanged();
     return clone;
   }
 
@@ -75,8 +90,25 @@ export class PageController extends Observable {
     const page = this.getPage(id);
     if (page) {
       page.remove();
-      this.notify();
+      this._notifyPagesChanged();
     }
+  }
+
+  private _notifyPagesChanged(): void {
+    this._knownPageIds = this.pageIds;
+    this.notify();
+  }
+
+  private _syncPageIds(): void {
+    const current = this.pageIds;
+    if (
+      current.size === this._knownPageIds.size &&
+      [...current].every((id) => this._knownPageIds.has(id))
+    ) {
+      return;
+    }
+    this._knownPageIds = current;
+    this.notify();
   }
 
   private _prune(): void {

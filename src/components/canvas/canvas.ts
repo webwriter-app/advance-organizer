@@ -122,6 +122,7 @@ export class AoCanvas extends LitElementWw {
   protected override firstUpdated(_changedProperties: PropertyValues): void {
     new SubscribeController(this, this.doc);
     new SubscribeController(this, this.selection);
+    new SubscribeController(this, this.pages);
 
     const viewport = this.renderRoot.querySelector<SVGGElement>("g.viewport");
     const svg = this.renderRoot.querySelector<SVGSVGElement>("svg");

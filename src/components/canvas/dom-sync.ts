@@ -14,7 +14,7 @@ import {
   getHandlePositions,
   HANDLE_SIZE,
 } from "./helper";
-import { getBadgePosition } from "./node";
+import { getBadgePosition, getLabelBounds } from "./node";
 
 export function applyDragDom(
   root: ParentNode,
@@ -81,19 +81,20 @@ export function applyResizeDom(
     }
   }
 
+  const node = doc.get(id);
+  const shape = node?.kind === "node" ? node.style.shape : undefined;
+
   const labelFo = root.querySelector(
     `g.node[data-item-id="${id}"] foreignObject.label-fo`,
   ) as SVGForeignObjectElement | null;
   if (labelFo) {
-    applyResize(labelFo, newDim);
+    applyResize(labelFo, getLabelBounds(shape, newDim).dimension);
   }
 
   const badgeG = root.querySelector(
     `g.node[data-item-id="${id}"] g.badge`,
   ) as SVGGElement | null;
   if (badgeG) {
-    const node = doc.get(id);
-    const shape = node?.kind === "node" ? node.style.shape : undefined;
     const badgePos = getBadgePosition(shape, newDim);
     badgeG.setAttribute(
       "transform",

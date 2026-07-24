@@ -1,5 +1,5 @@
 import { nothing, svg, type TemplateResult } from "lit";
-import { Dimension, Node, NodeShape, Point } from "../../model/types";
+import { Bounds, Dimension, Node, NodeShape, Point } from "../../model/types";
 import { getStrokeDashArray } from "./helper";
 import { renderLabel } from "./label";
 
@@ -8,10 +8,7 @@ export function renderNode(
   hasPage: boolean = false,
   editingLabel: boolean = false,
 ): TemplateResult {
-  const position = {
-    x: -n.dimension.width / 2,
-    y: -n.dimension.height / 2,
-  };
+  const label = getLabelBounds(n.style.shape, n.dimension);
   return svg`
     <g
       class="node${hasPage ? " has-page" : ""}"
@@ -19,9 +16,26 @@ export function renderNode(
       transform="translate(${n.position.x}, ${n.position.y})"
     >
     ${renderShape(n)}
-    ${renderLabel(n.id, n.label, position, n.dimension, editingLabel)}
+    ${renderLabel(n.id, n.label, label.position, label.dimension, editingLabel)}
     ${hasPage ? renderBadge(n) : nothing}
   </g>`;
+}
+
+export function getLabelBounds(
+  shape: NodeShape | undefined,
+  dim: Dimension,
+): Bounds {
+  const scale =
+    shape === "ellipse" ? Math.SQRT1_2 : shape === "diamond" ? 0.5 : 1;
+
+  const dimension = {
+    width: dim.width * scale,
+    height: dim.height * scale,
+  };
+  return {
+    position: { x: -dimension.width / 2, y: -dimension.height / 2 },
+    dimension,
+  };
 }
 
 function renderShape(n: Node): TemplateResult | typeof nothing {

@@ -1,9 +1,5 @@
-import { consume } from "@lit/context";
 import { LitElementWw } from "@webwriter/lit";
-import { documentContext } from "../../../state/contexts";
-import { DocumentController } from "../../../state/document";
-import { html, nothing, PropertyValues, type TemplateResult } from "lit";
-import { SubscribeController } from "../../../state/subscribe";
+import { html, type TemplateResult } from "lit";
 import { actionsStyles } from "./toolbar-actions.styles";
 
 import SlButton from "@shoelace-style/shoelace/dist/components/button/button.component.js";
@@ -11,17 +7,9 @@ import SlButtonGroup from "@shoelace-style/shoelace/dist/components/button-group
 import SlIcon from "@shoelace-style/shoelace/dist/components/icon/icon.component.js";
 import SlTooltip from "@shoelace-style/shoelace/dist/components/tooltip/tooltip.component.js";
 
-import iconArrowLeft from "@tabler/icons/outline/arrow-left.svg";
-import { property } from "lit/decorators.js";
-import { Id } from "../../../model/types";
+import iconDelete from "@tabler/icons/outline/trash.svg";
 
 export class AoPageEditActionsGroup extends LitElementWw {
-  @consume({ context: documentContext })
-  accessor doc!: DocumentController;
-
-  @property({ type: String })
-  accessor openPageId: Id | null = null;
-
   static override scopedElements = {
     "sl-button": SlButton,
     "sl-button-group": SlButtonGroup,
@@ -29,33 +17,21 @@ export class AoPageEditActionsGroup extends LitElementWw {
     "sl-tooltip": SlTooltip,
   };
 
-  protected override firstUpdated(_changedProperties: PropertyValues): void {
-    new SubscribeController(this, this.doc);
-  }
-
   static override styles = actionsStyles;
 
-  protected override render(): TemplateResult | typeof nothing {
-    if (!this.doc) {
-      return nothing;
-    }
-
-    const node = this.openPageId ? this.doc.get(this.openPageId) : null;
-    const label = node?.kind === "node" ? node.label.text : null;
-
-    return html`<sl-button-group label="Go back">
-        <sl-tooltip content="Go back">
-          <sl-button @click=${this._handleClosePageClick}>
-            <sl-icon src=${iconArrowLeft}></sl-icon>
-          </sl-button>
-        </sl-tooltip>
-      </sl-button-group>
-      <p>${label}</p>`;
+  protected override render(): TemplateResult {
+    return html`<sl-button-group label="Page actions">
+      <sl-tooltip content="Delete page">
+        <sl-button @click=${this._handleDeletePageClick}>
+          <sl-icon src=${iconDelete}></sl-icon>
+        </sl-button>
+      </sl-tooltip>
+    </sl-button-group>`;
   }
 
-  private _handleClosePageClick(): void {
+  private _handleDeletePageClick(): void {
     this.dispatchEvent(
-      new CustomEvent("close-page", {
+      new CustomEvent("delete-page", {
         bubbles: true,
         composed: true,
       }),

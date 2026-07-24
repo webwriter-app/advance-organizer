@@ -4,6 +4,7 @@ export const styles = css`
   :host {
     display: block;
     position: relative;
+    overflow: hidden;
 
     border: 1px solid var(--sl-color-neutral-300);
     border-radius: var(--sl-border-radius-medium);

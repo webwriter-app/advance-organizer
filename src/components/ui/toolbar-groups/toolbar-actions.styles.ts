@@ -28,5 +28,10 @@ export const actionsStyles = css`
     margin: 0;
     margin-left: var(--sl-spacing-x-small);
     font-weight: bold;
+
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 `;
