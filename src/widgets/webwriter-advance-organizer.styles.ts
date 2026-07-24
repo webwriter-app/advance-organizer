@@ -10,6 +10,22 @@ export const styles = css`
     box-sizing: border-box;
   }
 
+  .root {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .root.reading {
+    height: 600px;
+  }
+
+  .root.reading ao-canvas,
+  .root.reading .page-container {
+    flex: 1 1 0;
+    min-height: 0;
+    height: auto;
+  }
+
   .context-menu-backdrop {
     position: absolute;
     inset: 0;
@@ -28,13 +44,16 @@ export const styles = css`
     background-color: var(--sl-color-gray-100);
     overflow: auto;
 
+    display: flex;
+    flex-direction: column;
+
     animation: ao-view-enter 200ms ease both;
   }
 
   .page-container slot {
     background-color: white;
     display: block;
-    min-height: 100%;
+    flex: 1 0 auto;
     padding: var(--sl-spacing-medium);
     border: 1px solid var(--sl-color-gray-300);
     border-bottom: none;
@@ -51,7 +70,7 @@ export const styles = css`
 
   @keyframes ao-page-slot-enter {
     from {
-      transform: scale(0.985) translateY(5px);
+      transform: scale(0.985);
     }
     to {
       transform: none;

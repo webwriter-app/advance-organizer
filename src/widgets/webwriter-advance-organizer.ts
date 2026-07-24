@@ -278,9 +278,10 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
   }
 
   protected override render(): TemplateResult {
-    return html`${this._renderToolbar()}
-    ${this._openPage === null
-      ? html`<ao-canvas
+    return html`<div class="root${this.isContentEditable ? "" : " reading"}">
+      ${this._renderToolbar()}
+      ${this._openPage === null
+        ? html`<ao-canvas
             .editable=${this.isContentEditable}
             @open-page=${(e: CustomEvent<{ pageId: Id | null }>) =>
               this._openPageForNode(e.detail.pageId)}
@@ -313,6 +314,7 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
             : nothing}`
       : html`<div class="page-container">
           <slot id="page-slot"></slot>
-        </div>`}`;
+        </div>`}
+    </div>`;
   }
 }
