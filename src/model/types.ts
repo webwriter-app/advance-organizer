@@ -71,6 +71,12 @@ export interface Edge {
   readonly label?: Label;
 }
 
+export interface ImageStyle {
+  readonly stroke?: string;
+  readonly strokeWidth?: number;
+  readonly strokeStyle?: StrokeStyle;
+}
+
 export interface Image {
   readonly id: Id;
   readonly kind: "image";
@@ -78,6 +84,7 @@ export interface Image {
   readonly dimension: Dimension;
   readonly src: string;
   readonly alt?: string;
+  readonly style?: ImageStyle;
 }
 
 export type CanvasItem = Node | Edge | Image;

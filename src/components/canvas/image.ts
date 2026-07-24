@@ -1,11 +1,14 @@
 import { svg, type TemplateResult } from "lit";
 import { Image } from "../../model/types";
+import { getStrokeDashArray } from "./helper";
 
 export function renderImage(img: Image): TemplateResult {
   const position = {
     x: -img.dimension.width / 2,
     y: -img.dimension.height / 2,
   };
+  const strokeWidth = img.style?.strokeWidth ?? 0;
+
   return svg`
     <g
       class="image"
@@ -21,5 +24,17 @@ export function renderImage(img: Image): TemplateResult {
       height="${img.dimension.height}"
       preserveAspectRatio="none"
       />
-  </g>`;
+      <rect
+        class="image-border"
+        x="${position.x}"
+        y="${position.y}"
+        width="${img.dimension.width}"
+        height="${img.dimension.height}"
+        fill="none"
+        pointer-events="none"
+        stroke="${img.style?.stroke || "#000000"}"
+        stroke-width="${strokeWidth}"
+        stroke-dasharray="${getStrokeDashArray(img.style?.strokeStyle, strokeWidth)}"
+      />
+    </g>`;
 }

@@ -25,6 +25,7 @@ import { PageController } from "../state/page";
 import { AoCreateActionsGroup } from "../components/ui/toolbar-groups/create-actions";
 import { AoEdgeActionsGroup } from "../components/ui/toolbar-groups/edge-actions";
 import { ClipboardAction } from "../utils/clipboard";
+import { AoImageActionsGroup } from "../components/ui/toolbar-groups/image-actions";
 
 /* Optional LOCALIZATION: Uncomment this after first running `npm run localize` in the command line.
 import LOCALIZE from '../localization/generated'
@@ -189,6 +190,7 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
     "ao-create-actions": AoCreateActionsGroup,
     "ao-node-actions": AoNodeActionsGroup,
     "ao-edge-actions": AoEdgeActionsGroup,
+    "ao-image-actions": AoImageActionsGroup,
     "ao-page-actions": AoPageActionsGroup,
     "ao-page-info-actions": AoPageInfoActionsGroup,
     "ao-page-edit-actions": AoPageEditActionsGroup,
@@ -268,6 +270,7 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
             <div class="spacer"></div>
             <ao-node-actions></ao-node-actions>
             <ao-edge-actions></ao-edge-actions>
+            <ao-image-actions></ao-image-actions>
             <ao-page-actions
               @open-page=${(e: CustomEvent<{ pageId: Id | null }>) =>
                 this._openPageForNode(e.detail.pageId)}></ao-page-actions>`

@@ -52,10 +52,12 @@ export function applyResizeDom(
 ): void {
   applyDragDom(root, doc, id, newPos);
 
-  const shapeEl = root.querySelector(
-    `g.node[data-item-id="${id}"] g.shape > *, g.image[data-item-id="${id}"] image`,
-  ) as SVGElement | null;
-  if (shapeEl) {
+  const shapeEls = root.querySelectorAll<SVGElement>(
+    `g.node[data-item-id="${id}"] g.shape > *,
+     g.image[data-item-id="${id}"] image,
+     g.image[data-item-id="${id}"] rect.image-border`,
+  );
+  for (const shapeEl of shapeEls) {
     applyResize(shapeEl, newDim);
   }
 

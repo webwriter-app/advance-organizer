@@ -7,6 +7,7 @@ import {
   EdgeStyle,
   Id,
   Image,
+  ImageStyle,
   Node,
   NodeStyle,
 } from "../model/types";
@@ -352,6 +353,13 @@ export class DocumentController extends Observable {
     const edge = this._edges.get(id);
     if (!edge) return;
     this._edges.set(id, { ...edge, style: { ...edge.style, ...style } });
+    this.notify();
+  }
+
+  updateImageStyle(id: Id, style: Partial<ImageStyle>): void {
+    const image = this._images.get(id);
+    if (!image) return;
+    this._images.set(id, { ...image, style: { ...image.style, ...style } });
     this.notify();
   }
 }
