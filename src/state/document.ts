@@ -337,7 +337,8 @@ export class DocumentController extends Observable {
     }
     const edge = this._edges.get(id);
     if (edge) {
-      this._edges.set(id, { ...edge, label: { ...edge.label, text } });
+      const label = text ? { ...edge.label, text } : undefined;
+      this._edges.set(id, { ...edge, label });
       this.notify();
     }
   }

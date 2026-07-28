@@ -361,10 +361,7 @@ export class AoCanvas extends LitElementWw {
       this._lastItemClick = { id, time: e.timeStamp };
 
       const item = this.doc.get(id);
-      if (
-        isDoubleClick &&
-        (item?.kind === "node" || (item?.kind === "edge" && !!item.label))
-      ) {
+      if (isDoubleClick && (item?.kind === "node" || item?.kind === "edge")) {
         // Suppress browser focus handling
         e.preventDefault();
         this._lastItemClick = null;

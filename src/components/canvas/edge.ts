@@ -41,7 +41,7 @@ export function renderEdge(
         stroke-width="${MIN_TARGET_SIZE}"
       />
       ${renderEdgeLine(start, end, e.style)}
-      ${e.label ? renderLabel(e.id, e.label, labelPosition, labelDimension, editingLabel) : svg``}
+      ${e.label || editingLabel ? renderLabel(e.id, e.label ?? { text: "" }, labelPosition, labelDimension, editingLabel) : svg``}
     </g>`;
 }
 
