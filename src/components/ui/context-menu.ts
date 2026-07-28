@@ -1,11 +1,14 @@
 import { LitElementWw } from "@webwriter/lit";
 import { contextMenuStyles } from "./context-menu.styles";
 import { html, PropertyValues, type TemplateResult } from "lit";
+import { property, query } from "lit/decorators.js";
 
 import SlMenu from "@shoelace-style/shoelace/dist/components/menu/menu.component.js";
 import SlMenuItem from "@shoelace-style/shoelace/dist/components/menu-item/menu-item.component.js";
 import SlDivider from "@shoelace-style/shoelace/dist/components/divider/divider.component.js";
 import SlIcon from "@shoelace-style/shoelace/dist/components/icon/icon.component.js";
+import SlPopup from "@shoelace-style/shoelace/dist/components/popup/popup.component.js";
+import type { VirtualElement } from "@shoelace-style/shoelace/dist/components/popup/popup.component.js";
 import { consume } from "@lit/context";
 import {
   documentContext,
@@ -34,47 +37,104 @@ export class WwContextMenu extends LitElementWw {
   @consume({ context: pageContext })
   accessor pages!: PageController;
 
+  @property({ type: Number })
+  accessor x = 0;
+
+  @property({ type: Number })
+  accessor y = 0;
+
+  @query("sl-popup")
+  private accessor _popup!: SlPopup | null;
+
+  private _anchor: VirtualElement = {
+    getBoundingClientRect: () => {
+      const { left, top } = this.getBoundingClientRect();
+      return new DOMRect(left + this.x, top + this.y, 0, 0);
+    },
+    contextElement: this,
+  };
+
   static override scopedElements = {
+    "sl-popup": SlPopup,
     "sl-menu": SlMenu,
     "sl-menu-item": SlMenuItem,
     "sl-divider": SlDivider,
     "sl-icon": SlIcon,
   };
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.addEventListener("pointerdown", this._onBackdropPointerDown);
+    this.addEventListener("contextmenu", this._onBackdropContextMenu);
+  }
+
+  override disconnectedCallback(): void {
+    super.disconnectedCallback();
+    this.removeEventListener("pointerdown", this._onBackdropPointerDown);
+    this.removeEventListener("contextmenu", this._onBackdropContextMenu);
+  }
+
   protected override firstUpdated(_changedProperties: PropertyValues): void {
     new SubscribeController(this, this.doc);
     new SubscribeController(this, this.selection);
+  }
+
+  protected override updated(changedProperties: PropertyValues): void {
+    super.updated(changedProperties);
+    if (changedProperties.has("x") || changedProperties.has("y")) {
+      this._popup?.reposition();
+    }
   }
 
   static override styles = contextMenuStyles;
 
   protected override render(): TemplateResult {
     return html`
-      <sl-menu @sl-select=${this._handleMenuSelect}>
-        <sl-menu-item id="cut" ?disabled=${this.selection.isEmpty()}>
-          <sl-icon slot="prefix" .src=${iconCut}></sl-icon>
-          Cut
-        </sl-menu-item>
-        <sl-menu-item id="copy" ?disabled=${this.selection.isEmpty()}>
-          <sl-icon slot="prefix" .src=${iconCopy}></sl-icon>
-          Copy
-        </sl-menu-item>
-        <sl-menu-item id="paste">
-          <sl-icon slot="prefix" .src=${iconPaste}></sl-icon>
-          Paste
-        </sl-menu-item>
-        <sl-divider></sl-divider>
-        <sl-menu-item id="duplicate" ?disabled=${this.selection.isEmpty()}>
-          <sl-icon slot="prefix" .src=${iconDuplicate}></sl-icon>
-          Duplicate
-        </sl-menu-item>
-        <sl-menu-item id="delete" ?disabled=${this.selection.isEmpty()}>
-          <sl-icon slot="prefix" .src=${iconDelete}></sl-icon>
-          Delete
-        </sl-menu-item>
-      </sl-menu>
+      <sl-popup
+        active
+        placement="bottom-start"
+        flip
+        flip-fallback-placements="bottom-end top-start top-end"
+        shift
+        shift-padding="4"
+        auto-size="vertical"
+        auto-size-padding="4"
+        .anchor=${this._anchor}
+        @pointerdown=${(e: Event) => e.stopPropagation()}>
+        <sl-menu @sl-select=${this._handleMenuSelect}>
+          <sl-menu-item id="cut" ?disabled=${this.selection.isEmpty()}>
+            <sl-icon slot="prefix" .src=${iconCut}></sl-icon>
+            Cut
+          </sl-menu-item>
+          <sl-menu-item id="copy" ?disabled=${this.selection.isEmpty()}>
+            <sl-icon slot="prefix" .src=${iconCopy}></sl-icon>
+            Copy
+          </sl-menu-item>
+          <sl-menu-item id="paste">
+            <sl-icon slot="prefix" .src=${iconPaste}></sl-icon>
+            Paste
+          </sl-menu-item>
+          <sl-divider></sl-divider>
+          <sl-menu-item id="duplicate" ?disabled=${this.selection.isEmpty()}>
+            <sl-icon slot="prefix" .src=${iconDuplicate}></sl-icon>
+            Duplicate
+          </sl-menu-item>
+          <sl-menu-item id="delete" ?disabled=${this.selection.isEmpty()}>
+            <sl-icon slot="prefix" .src=${iconDelete}></sl-icon>
+            Delete
+          </sl-menu-item>
+        </sl-menu>
+      </sl-popup>
     `;
   }
+
+  private _onBackdropPointerDown = (): void => {
+    this._close();
+  };
+
+  private _onBackdropContextMenu = (e: Event): void => {
+    e.preventDefault();
+  };
 
   private _handleMenuSelect(event: CustomEvent): void {
     const menuItem = event.detail.item as SlMenuItem;
@@ -88,6 +148,10 @@ export class WwContextMenu extends LitElementWw {
       this._handleDelete();
     }
 
+    this._close();
+  }
+
+  private _close(): void {
     this.dispatchEvent(
       new CustomEvent("close-context-menu", { bubbles: true, composed: true }),
     );

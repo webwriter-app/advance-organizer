@@ -27,16 +27,6 @@ export const styles = css`
     height: auto;
   }
 
-  .context-menu-backdrop {
-    position: absolute;
-    inset: 0;
-    z-index: 1000;
-  }
-
-  .context-menu-backdrop ww-context-menu {
-    position: absolute;
-  }
-
   .page-container {
     height: 600px;
     padding: var(--sl-spacing-medium);

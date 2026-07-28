@@ -376,21 +376,16 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
                 };
               }}></ao-canvas>
             ${this._contextMenu
-              ? html`<div
-                  class="context-menu-backdrop"
-                  @pointerdown=${() => this._closeContextMenu()}
-                  @contextmenu=${(e: Event) => e.preventDefault()}>
-                  <ww-context-menu
-                    style=${`left: ${this._contextMenu.x}px; top: ${this._contextMenu.y}px;`}
-                    @pointerdown=${(e: Event) => e.stopPropagation()}
-                    @clipboard-action=${(
-                      e: CustomEvent<{ action: ClipboardAction }>,
-                    ) => {
-                      this.canvas?.runClipboardAction(e.detail.action);
-                    }}
-                    @close-context-menu=${() =>
-                      this._closeContextMenu()}></ww-context-menu>
-                </div>`
+              ? html`<ww-context-menu
+                  .x=${this._contextMenu.x}
+                  .y=${this._contextMenu.y}
+                  @clipboard-action=${(
+                    e: CustomEvent<{ action: ClipboardAction }>,
+                  ) => {
+                    this.canvas?.runClipboardAction(e.detail.action);
+                  }}
+                  @close-context-menu=${() =>
+                    this._closeContextMenu()}></ww-context-menu>`
               : nothing}`
         : html`<div class="page-container">
             <slot id="page-slot"></slot>
