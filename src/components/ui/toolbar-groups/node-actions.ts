@@ -3,7 +3,7 @@ import { LitElementWw } from "@webwriter/lit";
 import { documentContext, selectionContext } from "../../../state/contexts";
 import { DocumentController } from "../../../state/document";
 import { SelectionController } from "../../../state/selection";
-import { html, PropertyValues, type TemplateResult } from "lit";
+import { html, nothing, PropertyValues, type TemplateResult } from "lit";
 import { SubscribeController } from "../../../state/subscribe";
 import { actionsStyles } from "./toolbar-actions.styles";
 import { NodeShape, StrokeStyle } from "../../../model/types";
@@ -52,92 +52,91 @@ export class AoNodeActionsGroup extends LitElementWw {
 
   static override styles = actionsStyles;
 
-  protected override render(): TemplateResult {
-    if (!this.doc || !this.selection) {
-      return html``;
+  static isApplicable(
+    doc: DocumentController | undefined,
+    selection: SelectionController | undefined,
+  ): boolean {
+    return !!doc && !!selection && selection.sharedKind() === "node";
+  }
+
+  protected override render(): TemplateResult | typeof nothing {
+    const firstSelected = [...this.selection.entries][0]!;
+    const item = this.doc.get(firstSelected);
+    if (item?.kind !== "node") {
+      return nothing;
     }
+    const fill = item.style.fill || "#ffffff";
+    const stroke = item.style.stroke || "#000000";
+    const strokeWidth = item.style.strokeWidth ?? 1;
 
-    if (!this.selection.isEmpty() && this.selection.allOfSameKind()) {
-      const firstSelected = [...this.selection.entries][0]!;
-      const item = this.doc.get(firstSelected);
-      if (item?.kind !== "node") {
-        return html``;
-      }
-      const fill = item.style.fill || "#ffffff";
-      const stroke = item.style.stroke || "#000000";
-      const strokeWidth = item.style.strokeWidth ?? 1;
-
-      return html`<sl-button-group label="Node edits">
-        <sl-dropdown>
-          <sl-tooltip slot="trigger" content="Shape">
-            <sl-button caret>
-              <sl-icon .src=${iconShape}></sl-icon>
-            </sl-button>
-          </sl-tooltip>
-          <sl-menu
-            @sl-select=${(e: CustomEvent) =>
-              this._updateNodeShape(e.detail.item.value)}>
-            <sl-menu-item value="rectangle">Rectangle</sl-menu-item>
-            <sl-menu-item value="ellipse">Ellipse</sl-menu-item>
-            <sl-menu-item value="diamond">Diamond</sl-menu-item>
-          </sl-menu>
-        </sl-dropdown>
-        <sl-dropdown>
-          <sl-tooltip slot="trigger" content="Fill">
-            <sl-button caret>
-              <sl-icon .src=${iconFill}></sl-icon>
-            </sl-button>
-          </sl-tooltip>
+    return html`<sl-button-group label="Node edits">
+      <sl-dropdown>
+        <sl-tooltip slot="trigger" content="Shape">
+          <sl-button size="small" caret>
+            <sl-icon .src=${iconShape}></sl-icon>
+          </sl-button>
+        </sl-tooltip>
+        <sl-menu
+          @sl-select=${(e: CustomEvent) =>
+            this._updateNodeShape(e.detail.item.value)}>
+          <sl-menu-item value="rectangle">Rectangle</sl-menu-item>
+          <sl-menu-item value="ellipse">Ellipse</sl-menu-item>
+          <sl-menu-item value="diamond">Diamond</sl-menu-item>
+        </sl-menu>
+      </sl-dropdown>
+      <sl-dropdown>
+        <sl-tooltip slot="trigger" content="Fill">
+          <sl-button size="small" caret>
+            <sl-icon .src=${iconFill}></sl-icon>
+          </sl-button>
+        </sl-tooltip>
+        <sl-color-picker
+          .value=${fill}
+          opacity
+          inline
+          @sl-input=${(e: CustomEvent) => {
+            if (e.target instanceof SlColorPicker) {
+              this._updateNodeColor(e.target.getFormattedValue("hexa"));
+            }
+          }}></sl-color-picker>
+      </sl-dropdown>
+      <sl-dropdown>
+        <sl-tooltip slot="trigger" content="Border">
+          <sl-button size="small" caret>
+            <sl-icon .src=${iconBorder}></sl-icon>
+          </sl-button>
+        </sl-tooltip>
+        <sl-menu
+          @sl-select=${(e: CustomEvent) =>
+            this._updateNodeBorder(e.detail.item.value)}>
+          <sl-menu-label>Border width</sl-menu-label>
+          <sl-range
+            .value=${strokeWidth}
+            min="0"
+            max="16"
+            @sl-input=${(e: CustomEvent) => {
+              if (e.target instanceof SlRange) {
+                this._updateBorderWidth(e.target.value);
+              }
+            }}></sl-range>
+          <sl-divider></sl-divider>
+          <sl-menu-label>Border type</sl-menu-label>
+          <sl-menu-item value="border-solid">Solid</sl-menu-item>
+          <sl-menu-item value="border-dashed">Dashed</sl-menu-item>
+          <sl-menu-item value="border-dotted">Dotted</sl-menu-item>
+          <sl-divider></sl-divider>
+          <sl-menu-label>Border color</sl-menu-label>
           <sl-color-picker
-            .value=${fill}
-            opacity
+            .value=${stroke}
             inline
             @sl-input=${(e: CustomEvent) => {
               if (e.target instanceof SlColorPicker) {
-                this._updateNodeColor(e.target.getFormattedValue("hexa"));
+                this._updateBorderColor(e.target.getFormattedValue("hexa"));
               }
             }}></sl-color-picker>
-        </sl-dropdown>
-        <sl-dropdown>
-          <sl-tooltip slot="trigger" content="Border">
-            <sl-button caret>
-              <sl-icon .src=${iconBorder}></sl-icon>
-            </sl-button>
-          </sl-tooltip>
-          <sl-menu
-            @sl-select=${(e: CustomEvent) =>
-              this._updateNodeBorder(e.detail.item.value)}>
-            <sl-menu-label>Border width</sl-menu-label>
-            <sl-range
-              .value=${strokeWidth}
-              min="0"
-              max="16"
-              @sl-input=${(e: CustomEvent) => {
-                if (e.target instanceof SlRange) {
-                  this._updateBorderWidth(e.target.value);
-                }
-              }}></sl-range>
-            <sl-divider></sl-divider>
-            <sl-menu-label>Border type</sl-menu-label>
-            <sl-menu-item value="border-solid">Solid</sl-menu-item>
-            <sl-menu-item value="border-dashed">Dashed</sl-menu-item>
-            <sl-menu-item value="border-dotted">Dotted</sl-menu-item>
-            <sl-divider></sl-divider>
-            <sl-menu-label>Border color</sl-menu-label>
-            <sl-color-picker
-              .value=${stroke}
-              inline
-              @sl-input=${(e: CustomEvent) => {
-                if (e.target instanceof SlColorPicker) {
-                  this._updateBorderColor(e.target.getFormattedValue("hexa"));
-                }
-              }}></sl-color-picker>
-          </sl-menu>
-        </sl-dropdown>
-      </sl-button-group>`;
-    }
-
-    return html``;
+        </sl-menu>
+      </sl-dropdown>
+    </sl-button-group>`;
   }
 
   private _updateNodeShape(shape: NodeShape): void {

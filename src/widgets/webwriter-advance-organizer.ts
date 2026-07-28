@@ -26,6 +26,7 @@ import { AoCreateActionsGroup } from "../components/ui/toolbar-groups/create-act
 import { AoEdgeActionsGroup } from "../components/ui/toolbar-groups/edge-actions";
 import { ClipboardAction } from "../utils/clipboard";
 import { AoImageActionsGroup } from "../components/ui/toolbar-groups/image-actions";
+import { AoTextActionsGroup } from "../components/ui/toolbar-groups/text-actions";
 
 /* Optional LOCALIZATION: Uncomment this after first running `npm run localize` in the command line.
 import LOCALIZE from '../localization/generated'
@@ -191,6 +192,7 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
     "ao-node-actions": AoNodeActionsGroup,
     "ao-edge-actions": AoEdgeActionsGroup,
     "ao-image-actions": AoImageActionsGroup,
+    "ao-text-actions": AoTextActionsGroup,
     "ao-page-actions": AoPageActionsGroup,
     "ao-page-info-actions": AoPageInfoActionsGroup,
     "ao-page-edit-actions": AoPageEditActionsGroup,
@@ -268,12 +270,23 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
               @start-draw-edge=${() =>
                 this.canvas?.beginDrawEdge()}></ao-create-actions>
             <div class="spacer"></div>
-            <ao-node-actions></ao-node-actions>
-            <ao-edge-actions></ao-edge-actions>
-            <ao-image-actions></ao-image-actions>
-            <ao-page-actions
-              @open-page=${(e: CustomEvent<{ pageId: Id | null }>) =>
-                this._openPageForNode(e.detail.pageId)}></ao-page-actions>`
+            ${AoNodeActionsGroup.isApplicable(this.doc, this.selection)
+              ? html`<ao-node-actions></ao-node-actions>`
+              : nothing}
+            ${AoEdgeActionsGroup.isApplicable(this.doc, this.selection)
+              ? html`<ao-edge-actions></ao-edge-actions>`
+              : nothing}
+            ${AoImageActionsGroup.isApplicable(this.doc, this.selection)
+              ? html`<ao-image-actions></ao-image-actions>`
+              : nothing}
+            ${AoTextActionsGroup.isApplicable(this.doc, this.selection)
+              ? html`<ao-text-actions></ao-text-actions>`
+              : nothing}
+            ${AoPageActionsGroup.isApplicable(this.doc, this.selection)
+              ? html`<ao-page-actions
+                  @open-page=${(e: CustomEvent<{ pageId: Id | null }>) =>
+                    this._openPageForNode(e.detail.pageId)}></ao-page-actions>`
+              : nothing}`
         : html`<ao-page-info-actions
               .openPageId=${this._openPage}
               @close-page=${() => {

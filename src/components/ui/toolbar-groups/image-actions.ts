@@ -48,71 +48,70 @@ export class AoImageActionsGroup extends LitElementWw {
 
   static override styles = actionsStyles;
 
+  static isApplicable(
+    doc: DocumentController | undefined,
+    selection: SelectionController | undefined,
+  ): boolean {
+    return !!doc && !!selection && selection.sharedKind() === "image";
+  }
+
   protected override render(): TemplateResult | typeof nothing {
-    if (!this.doc || !this.selection) {
+    const firstSelected = [...this.selection.entries][0]!;
+    const item = this.doc.get(firstSelected);
+    if (item?.kind !== "image") {
       return nothing;
     }
+    const stroke = item.style?.stroke || "#000000";
+    const strokeWidth = item.style?.strokeWidth ?? 0;
 
-    if (!this.selection.isEmpty() && this.selection.allOfSameKind()) {
-      const firstSelected = [...this.selection.entries][0]!;
-      const item = this.doc.get(firstSelected);
-      if (item?.kind !== "image") {
-        return nothing;
-      }
-      const stroke = item.style?.stroke || "#000000";
-      const strokeWidth = item.style?.strokeWidth ?? 0;
-
-      return html`<sl-button-group label="Image edits">
-        <sl-dropdown>
-          <sl-tooltip slot="trigger" content="Stroke color">
-            <sl-button caret>
-              <sl-icon .src=${iconFill}></sl-icon>
-            </sl-button>
-          </sl-tooltip>
-          <sl-color-picker
-            .value=${stroke}
-            opacity
-            inline
-            @sl-input=${(e: CustomEvent) => {
-              if (e.target instanceof SlColorPicker) {
-                this._updateBorderColor(e.target.getFormattedValue("hexa"));
-              }
-            }}></sl-color-picker>
-        </sl-dropdown>
-        <sl-dropdown>
-          <sl-tooltip slot="trigger" content="Stroke width">
-            <sl-button caret>
-              <sl-icon .src=${iconStrokeWidth}></sl-icon>
-            </sl-button>
-          </sl-tooltip>
-          <sl-range
-            .value=${strokeWidth}
-            min="0"
-            max="16"
-            @sl-input=${(e: CustomEvent) => {
-              if (e.target instanceof SlRange) {
-                this._updateBorderWidth(e.target.value);
-              }
-            }}></sl-range>
-        </sl-dropdown>
-        <sl-dropdown>
-          <sl-tooltip slot="trigger" content="Stroke style">
-            <sl-button caret>
-              <sl-icon .src=${iconBorderStyle}></sl-icon>
-            </sl-button>
-          </sl-tooltip>
-          <sl-menu
-            @sl-select=${(e: CustomEvent) =>
-              this._updateBorderStyle(e.detail.item.value)}>
-            <sl-menu-item value="solid">Solid</sl-menu-item>
-            <sl-menu-item value="dashed">Dashed</sl-menu-item>
-            <sl-menu-item value="dotted">Dotted</sl-menu-item>
-          </sl-menu>
-        </sl-dropdown>
-      </sl-button-group>`;
-    }
-
-    return nothing;
+    return html`<sl-button-group label="Image edits">
+      <sl-dropdown>
+        <sl-tooltip slot="trigger" content="Stroke color">
+          <sl-button size="small" caret>
+            <sl-icon .src=${iconFill}></sl-icon>
+          </sl-button>
+        </sl-tooltip>
+        <sl-color-picker
+          .value=${stroke}
+          opacity
+          inline
+          @sl-input=${(e: CustomEvent) => {
+            if (e.target instanceof SlColorPicker) {
+              this._updateBorderColor(e.target.getFormattedValue("hexa"));
+            }
+          }}></sl-color-picker>
+      </sl-dropdown>
+      <sl-dropdown>
+        <sl-tooltip slot="trigger" content="Stroke width">
+          <sl-button size="small" caret>
+            <sl-icon .src=${iconStrokeWidth}></sl-icon>
+          </sl-button>
+        </sl-tooltip>
+        <sl-range
+          .value=${strokeWidth}
+          min="0"
+          max="16"
+          @sl-input=${(e: CustomEvent) => {
+            if (e.target instanceof SlRange) {
+              this._updateBorderWidth(e.target.value);
+            }
+          }}></sl-range>
+      </sl-dropdown>
+      <sl-dropdown>
+        <sl-tooltip slot="trigger" content="Stroke style">
+          <sl-button size="small" caret>
+            <sl-icon .src=${iconBorderStyle}></sl-icon>
+          </sl-button>
+        </sl-tooltip>
+        <sl-menu
+          @sl-select=${(e: CustomEvent) =>
+            this._updateBorderStyle(e.detail.item.value)}>
+          <sl-menu-item value="solid">Solid</sl-menu-item>
+          <sl-menu-item value="dashed">Dashed</sl-menu-item>
+          <sl-menu-item value="dotted">Dotted</sl-menu-item>
+        </sl-menu>
+      </sl-dropdown>
+    </sl-button-group>`;
   }
 
   private _updateBorderStyle(strokeStyle: StrokeStyle): void {

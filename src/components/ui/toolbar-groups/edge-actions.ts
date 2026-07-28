@@ -3,7 +3,7 @@ import { LitElementWw } from "@webwriter/lit";
 import { documentContext, selectionContext } from "../../../state/contexts";
 import { DocumentController } from "../../../state/document";
 import { SelectionController } from "../../../state/selection";
-import { html, PropertyValues, type TemplateResult } from "lit";
+import { html, nothing, PropertyValues, type TemplateResult } from "lit";
 import { SubscribeController } from "../../../state/subscribe";
 import { actionsStyles } from "./toolbar-actions.styles";
 import { StrokeStyle } from "../../../model/types";
@@ -52,71 +52,70 @@ export class AoEdgeActionsGroup extends LitElementWw {
 
   static override styles = actionsStyles;
 
-  protected override render(): TemplateResult {
-    if (!this.doc || !this.selection) {
-      return html``;
+  static isApplicable(
+    doc: DocumentController | undefined,
+    selection: SelectionController | undefined,
+  ): boolean {
+    return !!doc && !!selection && selection.sharedKind() === "edge";
+  }
+
+  protected override render(): TemplateResult | typeof nothing {
+    const firstSelected = [...this.selection.entries][0]!;
+    const item = this.doc.get(firstSelected);
+    if (item?.kind !== "edge") {
+      return nothing;
     }
+    const stroke = item.style.stroke || "#000000";
+    const strokeWidth = item.style.strokeWidth ?? 1;
 
-    if (!this.selection.isEmpty() && this.selection.allOfSameKind()) {
-      const firstSelected = [...this.selection.entries][0]!;
-      const item = this.doc.get(firstSelected);
-      if (item?.kind !== "edge") {
-        return html``;
-      }
-      const stroke = item.style.stroke || "#000000";
-      const strokeWidth = item.style.strokeWidth ?? 1;
-
-      return html`<sl-button-group label="Edge edits">
-        <sl-dropdown>
-          <sl-tooltip slot="trigger" content="Stroke color">
-            <sl-button caret>
-              <sl-icon .src=${iconFill}></sl-icon>
-            </sl-button>
-          </sl-tooltip>
-          <sl-color-picker
-            .value=${stroke}
-            opacity
-            inline
-            @sl-input=${(e: CustomEvent) => {
-              if (e.target instanceof SlColorPicker) {
-                this._updateEdgeColor(e.target.getFormattedValue("hexa"));
-              }
-            }}></sl-color-picker>
-        </sl-dropdown>
-        <sl-dropdown>
-          <sl-tooltip slot="trigger" content="Stroke width">
-            <sl-button caret>
-              <sl-icon .src=${iconStrokeWidth}></sl-icon>
-            </sl-button>
-          </sl-tooltip>
-          <sl-range
-            .value=${strokeWidth}
-            min="0"
-            max="16"
-            @sl-input=${(e: CustomEvent) => {
-              if (e.target instanceof SlRange) {
-                this._updateEdgeWidth(e.target.value);
-              }
-            }}></sl-range>
-        </sl-dropdown>
-        <sl-dropdown>
-          <sl-tooltip slot="trigger" content="Stroke style">
-            <sl-button caret>
-              <sl-icon .src=${iconBorderStyle}></sl-icon>
-            </sl-button>
-          </sl-tooltip>
-          <sl-menu
-            @sl-select=${(e: CustomEvent) =>
-              this._updateEdgeStyle(e.detail.item.value)}>
-            <sl-menu-item value="solid">Solid</sl-menu-item>
-            <sl-menu-item value="dashed">Dashed</sl-menu-item>
-            <sl-menu-item value="dotted">Dotted</sl-menu-item>
-          </sl-menu>
-        </sl-dropdown>
-      </sl-button-group>`;
-    }
-
-    return html``;
+    return html`<sl-button-group label="Edge edits">
+      <sl-dropdown>
+        <sl-tooltip slot="trigger" content="Stroke color">
+          <sl-button size="small" caret>
+            <sl-icon .src=${iconFill}></sl-icon>
+          </sl-button>
+        </sl-tooltip>
+        <sl-color-picker
+          .value=${stroke}
+          opacity
+          inline
+          @sl-input=${(e: CustomEvent) => {
+            if (e.target instanceof SlColorPicker) {
+              this._updateEdgeColor(e.target.getFormattedValue("hexa"));
+            }
+          }}></sl-color-picker>
+      </sl-dropdown>
+      <sl-dropdown>
+        <sl-tooltip slot="trigger" content="Stroke width">
+          <sl-button size="small" caret>
+            <sl-icon .src=${iconStrokeWidth}></sl-icon>
+          </sl-button>
+        </sl-tooltip>
+        <sl-range
+          .value=${strokeWidth}
+          min="0"
+          max="16"
+          @sl-input=${(e: CustomEvent) => {
+            if (e.target instanceof SlRange) {
+              this._updateEdgeWidth(e.target.value);
+            }
+          }}></sl-range>
+      </sl-dropdown>
+      <sl-dropdown>
+        <sl-tooltip slot="trigger" content="Stroke style">
+          <sl-button size="small" caret>
+            <sl-icon .src=${iconBorderStyle}></sl-icon>
+          </sl-button>
+        </sl-tooltip>
+        <sl-menu
+          @sl-select=${(e: CustomEvent) =>
+            this._updateEdgeStyle(e.detail.item.value)}>
+          <sl-menu-item value="solid">Solid</sl-menu-item>
+          <sl-menu-item value="dashed">Dashed</sl-menu-item>
+          <sl-menu-item value="dotted">Dotted</sl-menu-item>
+        </sl-menu>
+      </sl-dropdown>
+    </sl-button-group>`;
   }
 
   private _updateEdgeStyle(strokeStyle: StrokeStyle): void {

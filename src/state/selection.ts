@@ -34,20 +34,23 @@ export class SelectionController extends Observable {
   }
 
   allOfSameKind(): boolean {
-    let kind: "node" | "edge" | "image" | null = null;
+    return this._kinds().size <= 1;
+  }
+
+  sharedKind(): "node" | "edge" | "image" | null {
+    const kinds = this._kinds();
+    return kinds.size === 1 ? [...kinds][0]! : null;
+  }
+
+  private _kinds(): Set<"node" | "edge" | "image"> {
+    const kinds = new Set<"node" | "edge" | "image">();
     for (const id of this._entries) {
       const item = this.doc.get(id);
-      if (!item) {
-        continue;
-      }
-      const itemKind = item.kind;
-      if (!kind) {
-        kind = itemKind;
-      } else if (kind !== itemKind) {
-        return false;
+      if (item) {
+        kinds.add(item.kind);
       }
     }
-    return true;
+    return kinds;
   }
 
   select(ids: Set<Id>): void {

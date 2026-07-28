@@ -24,10 +24,16 @@ export const actionsStyles = css`
     width: 1.5em;
   }
 
+  sl-button.active::part(base) {
+    background-color: var(--sl-color-neutral-200);
+    color: var(--sl-color-neutral-1000);
+  }
+
   p {
     margin: 0;
     margin-left: var(--sl-spacing-x-small);
     font-weight: bold;
+    font-size: var(--sl-font-size-medium);
 
     min-width: 0;
     overflow: hidden;

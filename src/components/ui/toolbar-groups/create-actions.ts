@@ -50,17 +50,17 @@ export class AoCreateActionsGroup extends LitElementWw {
   protected override render(): TemplateResult {
     return html`<sl-button-group label="Add elements">
         <sl-tooltip content="Add node">
-          <sl-button @click=${this._handleAddNodeClick}>
+          <sl-button size="small" @click=${this._handleAddNodeClick}>
             <sl-icon src=${iconAddNode}></sl-icon>
           </sl-button>
         </sl-tooltip>
         <sl-tooltip content="Add edge">
-          <sl-button @click=${this._handleAddEdgeClick}>
+          <sl-button size="small" @click=${this._handleAddEdgeClick}>
             <sl-icon src=${iconAddEdge}></sl-icon>
           </sl-button>
         </sl-tooltip>
         <sl-tooltip content="Add picture">
-          <sl-button @click=${this._handleAddImageClick}>
+          <sl-button size="small" @click=${this._handleAddImageClick}>
             <sl-icon src=${iconAddImage}></sl-icon>
           </sl-button>
         </sl-tooltip>

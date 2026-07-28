@@ -3,7 +3,7 @@ import { LitElementWw } from "@webwriter/lit";
 import { documentContext, selectionContext } from "../../../state/contexts";
 import { DocumentController } from "../../../state/document";
 import { SelectionController } from "../../../state/selection";
-import { html, PropertyValues, type TemplateResult } from "lit";
+import { html, nothing, PropertyValues, type TemplateResult } from "lit";
 import { SubscribeController } from "../../../state/subscribe";
 import { actionsStyles } from "./toolbar-actions.styles";
 
@@ -35,28 +35,34 @@ export class AoPageActionsGroup extends LitElementWw {
 
   static override styles = actionsStyles;
 
-  protected override render(): TemplateResult {
-    if (!this.doc || !this.selection) {
-      return html``;
+  static isApplicable(
+    doc: DocumentController | undefined,
+    selection: SelectionController | undefined,
+  ): boolean {
+    if (!doc || !selection || selection.size !== 1) {
+      return false;
+    }
+    const firstSelected = [...selection.entries][0]!;
+    return doc.get(firstSelected)?.kind === "node";
+  }
+
+  protected override render(): TemplateResult | typeof nothing {
+    const firstSelected = [...this.selection.entries][0]!;
+    const item = this.doc.get(firstSelected);
+    if (item?.kind !== "node") {
+      return nothing;
     }
 
-    if (this.selection.size === 1) {
-      const firstSelected = [...this.selection.entries][0]!;
-      const item = this.doc.get(firstSelected);
-      if (item?.kind !== "node") {
-        return html``;
-      }
-
-      return html`<sl-button-group label="Connected page">
-        <sl-tooltip content="Connected page">
-          <sl-button variant="primary" @click=${this._handleOpenPageClick}>
-            <sl-icon src=${iconEditFile}></sl-icon>
-          </sl-button>
-        </sl-tooltip>
-      </sl-button-group>`;
-    }
-
-    return html``;
+    return html`<sl-button-group label="Connected page">
+      <sl-tooltip content="Connected page">
+        <sl-button
+          size="small"
+          variant="primary"
+          @click=${this._handleOpenPageClick}>
+          <sl-icon src=${iconEditFile}></sl-icon>
+        </sl-button>
+      </sl-tooltip>
+    </sl-button-group>`;
   }
 
   private _handleOpenPageClick(): void {
