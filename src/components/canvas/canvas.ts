@@ -168,10 +168,7 @@ export class AoCanvas extends LitElementWw {
         @contextmenu=${this._onContextMenu}
         @dragover=${this._dropController.onDragOver}
         @dragleave=${this._dropController.onDragLeave}
-        @drop=${this._dropController.onDrop}
-        @copy=${this._onCopy}
-        @cut=${this._onCut}
-        @paste=${this._onPaste}>
+        @drop=${this._dropController.onDrop}>
         <defs>
           <marker
             id="arrow"
@@ -262,16 +259,18 @@ export class AoCanvas extends LitElementWw {
     if (e.button === 1) e.preventDefault();
   };
 
-  private _onCopy(e: ClipboardEvent): void {
+  // Clipboard events fire at the focused element, which may be the widget host
+  // rather than the svg, so the host owns the listeners and delegates here.
+  handleCopy(e: ClipboardEvent): void {
     copySelection(e, this);
   }
 
-  private _onCut(e: ClipboardEvent): void {
+  handleCut(e: ClipboardEvent): void {
     if (!this.editable) return;
     cutSelection(e, this);
   }
 
-  private _onPaste(e: ClipboardEvent): void {
+  handlePaste(e: ClipboardEvent): void {
     if (!this.editable) return;
     pasteFromEvent(e, this._zoomController.viewportCenter(), this);
   }

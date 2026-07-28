@@ -200,6 +200,54 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
 
   static override styles = [styles, shoelaceTheme];
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.setAttribute("tabindex", "-1");
+    this.addEventListener("focusout", this._onFocusOut);
+    this.addEventListener("copy", this._onCopy);
+    this.addEventListener("cut", this._onCut);
+    this.addEventListener("paste", this._onPaste);
+  }
+
+  override disconnectedCallback(): void {
+    super.disconnectedCallback();
+    this.removeEventListener("focusout", this._onFocusOut);
+    this.removeEventListener("copy", this._onCopy);
+    this.removeEventListener("cut", this._onCut);
+    this.removeEventListener("paste", this._onPaste);
+  }
+
+  private _onFocusOut = (): void => {
+    queueMicrotask(() => {
+      if (!this.isConnected || this.selection.isEmpty()) return;
+      if (!document.hasFocus()) return;
+      const active = document.activeElement;
+      if (active === this || this.contains(active)) return;
+      this.selection.clear();
+    });
+  };
+
+  private _clipboardTarget(e: ClipboardEvent): AoCanvas | null {
+    if (this._openPage !== null) return null;
+    const path = e.composedPath();
+    const hostIndex = path.indexOf(this);
+    const inner = hostIndex === -1 ? path : path.slice(0, hostIndex);
+    if (inner.some(isEditableTarget)) return null;
+    return this.canvas;
+  }
+
+  private _onCopy = (e: ClipboardEvent): void => {
+    this._clipboardTarget(e)?.handleCopy(e);
+  };
+
+  private _onCut = (e: ClipboardEvent): void => {
+    this._clipboardTarget(e)?.handleCut(e);
+  };
+
+  private _onPaste = (e: ClipboardEvent): void => {
+    this._clipboardTarget(e)?.handlePaste(e);
+  };
+
   protected override firstUpdated(changedProperties: PropertyValues): void {
     super.firstUpdated(changedProperties);
     this.doc.subscribe(() => {
@@ -244,6 +292,11 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
         }
       }
     }
+  }
+
+  private _closeContextMenu(): void {
+    this.focus({ preventScroll: true });
+    this._contextMenu = null;
   }
 
   private _openPageForNode(pageId: Id | null): void {
@@ -325,9 +378,7 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
             ${this._contextMenu
               ? html`<div
                   class="context-menu-backdrop"
-                  @pointerdown=${() => {
-                    this._contextMenu = null;
-                  }}
+                  @pointerdown=${() => this._closeContextMenu()}
                   @contextmenu=${(e: Event) => e.preventDefault()}>
                   <ww-context-menu
                     style=${`left: ${this._contextMenu.x}px; top: ${this._contextMenu.y}px;`}
@@ -337,9 +388,8 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
                     ) => {
                       this.canvas?.runClipboardAction(e.detail.action);
                     }}
-                    @close-context-menu=${() => {
-                      this._contextMenu = null;
-                    }}></ww-context-menu>
+                    @close-context-menu=${() =>
+                      this._closeContextMenu()}></ww-context-menu>
                 </div>`
               : nothing}`
         : html`<div class="page-container">
@@ -347,4 +397,12 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
           </div>`}
     </div>`;
   }
+}
+
+function isEditableTarget(target: EventTarget): boolean {
+  return (
+    target instanceof HTMLInputElement ||
+    target instanceof HTMLTextAreaElement ||
+    (target instanceof HTMLElement && target.isContentEditable)
+  );
 }
