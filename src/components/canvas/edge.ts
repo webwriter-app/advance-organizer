@@ -63,6 +63,7 @@ function renderEdgeLine(
   const color = style.stroke ?? "black";
   return svg`
     <line
+      class="edge-line"
       x1="${start.x}"
       y1="${start.y}"
       x2="${end.x}"

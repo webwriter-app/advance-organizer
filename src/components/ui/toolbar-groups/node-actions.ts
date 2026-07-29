@@ -7,6 +7,7 @@ import { html, nothing, PropertyValues, type TemplateResult } from "lit";
 import { SubscribeController } from "../../../state/subscribe";
 import { actionsStyles } from "./toolbar-actions.styles";
 import { NodeShape, StrokeStyle } from "../../../model/types";
+import { onPickedColor, previewColor } from "../../../utils/color-preview";
 
 import SlButton from "@shoelace-style/shoelace/dist/components/button/button.component.js";
 import SlButtonGroup from "@shoelace-style/shoelace/dist/components/button-group/button-group.component.js";
@@ -94,11 +95,10 @@ export class AoNodeActionsGroup extends LitElementWw {
           .value=${fill}
           opacity
           inline
-          @sl-input=${(e: CustomEvent) => {
-            if (e.target instanceof SlColorPicker) {
-              this._updateNodeColor(e.target.getFormattedValue("hexa"));
-            }
-          }}></sl-color-picker>
+          @sl-input=${onPickedColor((color) => this._previewNodeColor(color))}
+          @sl-change=${onPickedColor((color) =>
+            this._updateNodeColor(color),
+          )}></sl-color-picker>
       </sl-dropdown>
       <sl-dropdown>
         <sl-tooltip slot="trigger" content="Border">
@@ -129,11 +129,12 @@ export class AoNodeActionsGroup extends LitElementWw {
           <sl-color-picker
             .value=${stroke}
             inline
-            @sl-input=${(e: CustomEvent) => {
-              if (e.target instanceof SlColorPicker) {
-                this._updateBorderColor(e.target.getFormattedValue("hexa"));
-              }
-            }}></sl-color-picker>
+            @sl-input=${onPickedColor((color) =>
+              this._previewBorderColor(color),
+            )}
+            @sl-change=${onPickedColor((color) =>
+              this._updateBorderColor(color),
+            )}></sl-color-picker>
         </sl-menu>
       </sl-dropdown>
     </sl-button-group>`;
@@ -149,12 +150,18 @@ export class AoNodeActionsGroup extends LitElementWw {
     }
   }
 
-  private _updateNodeColor(color: string): void {
+  private _previewNodeColor(color: string): void {
     if (this.selection.isEmpty() || !this.selection.allOfSameKind()) {
       return;
     }
 
-    // TODO: Only update DOM on input, update state only on change (debounce)
+    previewColor(this, this.selection.entries, "fill", color);
+  }
+
+  private _updateNodeColor(color: string): void {
+    if (this.selection.isEmpty() || !this.selection.allOfSameKind()) {
+      return;
+    }
 
     for (const id of this.selection.entries) {
       this.doc.updateNodeStyle(id, { fill: color });
@@ -173,6 +180,14 @@ export class AoNodeActionsGroup extends LitElementWw {
         this.doc.updateNodeStyle(id, { strokeStyle });
       }
     }
+  }
+
+  private _previewBorderColor(color: string): void {
+    if (this.selection.isEmpty() || !this.selection.allOfSameKind()) {
+      return;
+    }
+
+    previewColor(this, this.selection.entries, "stroke", color);
   }
 
   private _updateBorderColor(color: string): void {

@@ -18,7 +18,7 @@ import {
 } from "../state/contexts";
 import { DocumentController } from "../state/document";
 import { SelectionController } from "../state/selection";
-import { Edge, Id, Image, Node } from "../model/types";
+import { ColorPreview, Edge, Id, Image, Node } from "../model/types";
 import { AoPageEditActionsGroup } from "../components/ui/toolbar-groups/page-edit-actions";
 import { AoPageInfoActionsGroup } from "../components/ui/toolbar-groups/page-info-actions";
 import { PageController } from "../state/page";
@@ -317,7 +317,9 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
       return nothing;
     }
 
-    return html`<ww-toolbar>
+    return html`<ww-toolbar
+      @preview-color=${(e: CustomEvent<ColorPreview>) =>
+        this.canvas?.previewColor(e.detail)}>
       ${this._openPage === null
         ? html`<ao-create-actions
               @start-draw-edge=${() =>

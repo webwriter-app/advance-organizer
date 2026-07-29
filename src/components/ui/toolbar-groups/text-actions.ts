@@ -7,6 +7,7 @@ import { html, nothing, PropertyValues, type TemplateResult } from "lit";
 import { SubscribeController } from "../../../state/subscribe";
 import { actionsStyles } from "./toolbar-actions.styles";
 import { Label } from "../../../model/types";
+import { onPickedColor, previewColor } from "../../../utils/color-preview";
 
 import SlButton from "@shoelace-style/shoelace/dist/components/button/button.component.js";
 import SlButtonGroup from "@shoelace-style/shoelace/dist/components/button-group/button-group.component.js";
@@ -127,13 +128,12 @@ export class AoTextActionsGroup extends LitElementWw {
           .value=${color}
           opacity
           inline
-          @sl-input=${(e: CustomEvent) => {
-            if (e.target instanceof SlColorPicker) {
-              this._updateLabelStyle({
-                color: e.target.getFormattedValue("hexa"),
-              });
-            }
-          }}></sl-color-picker>
+          @sl-input=${onPickedColor((picked) =>
+            this._previewLabelColor(picked),
+          )}
+          @sl-change=${onPickedColor((picked) =>
+            this._updateLabelStyle({ color: picked }),
+          )}></sl-color-picker>
       </sl-dropdown>
       <sl-dropdown>
         <sl-tooltip slot="trigger" content="Font size">
@@ -154,12 +154,19 @@ export class AoTextActionsGroup extends LitElementWw {
     </sl-button-group>`;
   }
 
-  private _updateLabelStyle(style: Partial<Omit<Label, "text">>): void {
+  private _previewLabelColor(color: string): void {
     if (this.selection.isEmpty()) {
       return;
     }
 
-    // TODO: Only update DOM on input, update state only on change (debounce)
+    previewColor(this, this.selection.entries, "label-color", color);
+  }
+
+  // TODO: Only update DOM on input for the font size, update state only on change
+  private _updateLabelStyle(style: Partial<Omit<Label, "text">>): void {
+    if (this.selection.isEmpty()) {
+      return;
+    }
 
     for (const id of this.selection.entries) {
       this.doc.updateLabelStyle(id, style);

@@ -104,3 +104,11 @@ export type AnchorRendering =
   | { kind: "none" }
   | { kind: "all"; skipNodeId?: Id }
   | { kind: "single"; nodeId: Id; position: EdgePosition };
+
+export type ColorChannel = "fill" | "stroke" | "label-color";
+
+export interface ColorPreview {
+  readonly ids: readonly Id[];
+  readonly channel: ColorChannel;
+  readonly color: string;
+}

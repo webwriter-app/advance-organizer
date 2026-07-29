@@ -7,6 +7,7 @@ import { html, nothing, PropertyValues, type TemplateResult } from "lit";
 import { SubscribeController } from "../../../state/subscribe";
 import { actionsStyles } from "./toolbar-actions.styles";
 import { Id, ImageStyle, StrokeStyle } from "../../../model/types";
+import { onPickedColor, previewColor } from "../../../utils/color-preview";
 
 import SlButton from "@shoelace-style/shoelace/dist/components/button/button.component.js";
 import SlButtonGroup from "@shoelace-style/shoelace/dist/components/button-group/button-group.component.js";
@@ -75,11 +76,10 @@ export class AoImageActionsGroup extends LitElementWw {
           .value=${stroke}
           opacity
           inline
-          @sl-input=${(e: CustomEvent) => {
-            if (e.target instanceof SlColorPicker) {
-              this._updateBorderColor(e.target.getFormattedValue("hexa"));
-            }
-          }}></sl-color-picker>
+          @sl-input=${onPickedColor((color) => this._previewBorderColor(color))}
+          @sl-change=${onPickedColor((color) =>
+            this._updateBorderColor(color),
+          )}></sl-color-picker>
       </sl-dropdown>
       <sl-dropdown>
         <sl-tooltip slot="trigger" content="Stroke width">
@@ -125,6 +125,14 @@ export class AoImageActionsGroup extends LitElementWw {
         ...this._visibleWidth(id),
       });
     }
+  }
+
+  private _previewBorderColor(color: string): void {
+    if (this.selection.isEmpty() || !this.selection.allOfSameKind()) {
+      return;
+    }
+
+    previewColor(this, this.selection.entries, "stroke", color);
   }
 
   private _updateBorderColor(color: string): void {

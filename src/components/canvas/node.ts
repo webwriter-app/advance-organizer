@@ -1,5 +1,12 @@
 import { nothing, svg, type TemplateResult } from "lit";
-import { Bounds, Dimension, Node, NodeShape, Point } from "../../model/types";
+import {
+  Bounds,
+  Dimension,
+  Node,
+  NodeShape,
+  NodeStyle,
+  Point,
+} from "../../model/types";
 import { getStrokeDashArray } from "./helper";
 import { renderLabel } from "./label";
 
@@ -91,15 +98,21 @@ export function getBadgePosition(
   return { x: dim.width / 2, y: -dim.height / 2 };
 }
 
+export function getBadgeColors(style: NodeStyle): {
+  badge: string;
+  icon: "white" | "black";
+} {
+  const badge = style.stroke || style.fill || "white";
+  return { badge, icon: contrastInk(badge) };
+}
+
 function renderBadge(n: Node): TemplateResult {
   const position = getBadgePosition(n.style.shape, n.dimension);
-
-  const badgeColor = n.style.stroke || n.style.fill || "white";
-  const iconColor = contrastInk(badgeColor);
+  const { badge, icon } = getBadgeColors(n.style);
 
   return svg`
-    <g class="badge" transform="translate(${position.x}, ${position.y})" color=${iconColor}>
-      <circle r="10" fill=${badgeColor} />
+    <g class="badge" transform="translate(${position.x}, ${position.y})" color=${icon}>
+      <circle r="10" fill=${badge} />
       ${getOpenPageIcon()}
     </g>`;
 }

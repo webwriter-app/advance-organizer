@@ -1,9 +1,12 @@
 import {
   Bounds,
+  ColorPreview,
   Dimension,
   EdgePosition,
   Id,
+  Image,
   Node,
+  NodeStyle,
   Point,
 } from "../../model/types";
 import { DocumentController } from "../../state/document";
@@ -12,9 +15,10 @@ import {
   computeEdgeLabelLayout,
   computeEdgePoints,
   getHandlePositions,
+  getStrokeDashArray,
   HANDLE_SIZE,
 } from "./helper";
-import { getBadgePosition, getLabelBounds } from "./node";
+import { getBadgeColors, getBadgePosition, getLabelBounds } from "./node";
 
 export function applyDragDom(
   root: ParentNode,
@@ -98,10 +102,7 @@ export function applyResizeDom(
   ) as SVGGElement | null;
   if (badgeG) {
     const badgePos = getBadgePosition(shape, newDim);
-    badgeG.setAttribute(
-      "transform",
-      `translate(${badgePos.x}, ${badgePos.y})`,
-    );
+    badgeG.setAttribute("transform", `translate(${badgePos.x}, ${badgePos.y})`);
   }
 
   updateConnectedEdgesDom(root, doc, id, newPos, newDim);
@@ -244,6 +245,75 @@ function updateEdgeLabelDom(
   labelFo.setAttribute("y", String(position.y));
   labelFo.setAttribute("width", String(dimension.width));
   labelFo.setAttribute("height", String(dimension.height));
+}
+
+export function applyColorPreviewDom(
+  root: ParentNode,
+  doc: DocumentController,
+  { ids, channel, color }: ColorPreview,
+): void {
+  for (const id of ids) {
+    if (channel === "label-color") {
+      const labelEl = root.querySelector<HTMLElement>(
+        `.label-content[data-edit-id="${id}"]`,
+      );
+      if (labelEl) labelEl.style.color = color;
+      continue;
+    }
+
+    const item = doc.get(id);
+    if (item?.kind === "node") {
+      root
+        .querySelector(`g.node[data-item-id="${id}"] g.shape`)
+        ?.setAttribute(channel, color);
+      applyBadgeColorDom(
+        root,
+        id,
+        channel === "fill"
+          ? { ...item.style, fill: color }
+          : { ...item.style, stroke: color },
+      );
+    } else if (item?.kind === "edge") {
+      root
+        .querySelector(`g.edge[data-item-id="${id}"] line.edge-line`)
+        ?.setAttribute("stroke", color);
+    } else if (item?.kind === "image") {
+      applyImageBorderColorDom(root, item, color);
+    }
+  }
+}
+
+function applyBadgeColorDom(root: ParentNode, id: Id, style: NodeStyle): void {
+  const badgeG = root.querySelector<SVGGElement>(
+    `g.node[data-item-id="${id}"] g.badge`,
+  );
+  if (!badgeG) return;
+
+  const { badge, icon } = getBadgeColors(style);
+  badgeG.setAttribute("color", icon);
+  badgeG.querySelector("circle")?.setAttribute("fill", badge);
+}
+
+function applyImageBorderColorDom(
+  root: ParentNode,
+  image: Image,
+  color: string,
+): void {
+  const border = root.querySelector<SVGRectElement>(
+    `g.image[data-item-id="${image.id}"] rect.image-border`,
+  );
+  if (!border) return;
+
+  border.setAttribute("stroke", color);
+
+  // If no border exists yet, add one with width 1
+  if (!image.style?.strokeWidth) {
+    border.setAttribute("stroke-width", "1");
+    border.setAttribute(
+      "stroke-dasharray",
+      getStrokeDashArray(image.style?.strokeStyle, 1),
+    );
+  }
 }
 
 export function applyRectangleSelectDom(
