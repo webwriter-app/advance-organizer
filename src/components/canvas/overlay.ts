@@ -25,7 +25,7 @@ export function renderOverlay(
     ${rectangleSelection ? renderSelectionPreview(selection, doc) : nothing}
     ${[...selection.entries].map((e) => renderSelectionIndicator(e, doc))}
     ${selection.size === 1 ? renderResizeHandles([...selection.entries][0]!, doc, zoom) : nothing}
-    ${anchorRendering.active ? renderAnchorPoints(doc, anchorRendering, zoom) : nothing}
+    ${renderAnchorPoints(doc, anchorRendering, zoom)}
   </g>`;
 }
 
@@ -226,15 +226,26 @@ function renderAnchorPoints(
   doc: DocumentController,
   anchorRendering: AnchorRendering,
   zoom: number,
-): TemplateResult {
+): TemplateResult | typeof nothing {
+  if (anchorRendering.kind === "none") return nothing;
+
   const r = HANDLE_SIZE / zoom;
 
   return svg`
     ${doc.nodes.map((node) => {
-      if (node.id === anchorRendering.skipNodeId) {
-        return svg``;
+      if (
+        anchorRendering.kind === "all"
+          ? node.id === anchorRendering.skipNodeId
+          : node.id !== anchorRendering.nodeId
+      ) {
+        return nothing;
       }
-      const anchors = getAnchorPoints(node);
+      const anchors = Object.fromEntries(
+        Object.entries(getAnchorPoints(node)).filter(
+          ([pos]) =>
+            anchorRendering.kind === "all" || pos === anchorRendering.position,
+        ),
+      );
       return svg`
         <g
           class="anchor-points"

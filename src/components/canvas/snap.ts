@@ -14,6 +14,15 @@ export function findSnapTarget(
   pos: Point,
   excludeId?: Id,
 ): SnapTarget | null {
+  return findNearestAnchor(nodes, pos, SNAP_RADIUS, excludeId);
+}
+
+export function findNearestAnchor(
+  nodes: Node[],
+  pos: Point,
+  radius: number,
+  excludeId?: Id,
+): SnapTarget | null {
   let closest: SnapTarget | null = null;
 
   for (const node of nodes) {
@@ -24,7 +33,7 @@ export function findSnapTarget(
       const dy = anchorPoint.y - pos.y;
       const distance = Math.hypot(dx, dy);
       if (
-        distance <= SNAP_RADIUS &&
+        distance <= radius &&
         (closest === null || distance < closest.distance)
       ) {
         closest = {

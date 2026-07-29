@@ -13,6 +13,7 @@ export const MIN_NODE_SIZE = 20;
 export const HANDLE_SIZE = 8;
 export const MIN_TARGET_SIZE = 24;
 export const SNAP_RADIUS = 16;
+export const ANCHOR_HOVER_RADIUS = 24;
 export const MIN_EDGE_LABEL_WIDTH = 80;
 export const INSERT_GAP = 24;
 
@@ -135,9 +136,14 @@ export function computeEdgePoints(
   start: Point;
   end: Point;
 } {
-  const startPoint = getAnchorPoints(source)[edge.sourcePosition ?? "right"];
-  const endPoint = getAnchorPoints(target)[edge.targetPosition ?? "left"];
-  return { start: startPoint, end: endPoint };
+  const positions = {
+    source: edge.sourcePosition ?? "right",
+    target: edge.targetPosition ?? "left",
+  };
+  return {
+    start: getAnchorPoints(source)[positions.source],
+    end: getAnchorPoints(target)[positions.target],
+  };
 }
 
 export function computeEdgeLabelLayout(start: Point, end: Point): Bounds {

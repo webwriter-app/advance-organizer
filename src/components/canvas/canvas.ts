@@ -15,9 +15,15 @@ import { renderOverlay } from "./overlay";
 import { DocumentController } from "../../state/document";
 import { SubscribeController } from "../../state/subscribe";
 import { repeat } from "lit/directives/repeat.js";
-import { Id, Point, ResizeHandle } from "../../model/types";
+import {
+  AnchorRendering,
+  EdgePosition,
+  Id,
+  Point,
+  ResizeHandle,
+} from "../../model/types";
 import { property, state } from "lit/decorators.js";
-import { INTERACTIVE_SELECTOR } from "./helper";
+import { ANCHOR_HOVER_RADIUS, INTERACTIVE_SELECTOR } from "./helper";
 import { ClipboardAction } from "../../utils/clipboard";
 import { AoZoomControls } from "../ui/zoom-controls";
 import { ZoomController } from "./zoom";
@@ -38,10 +44,12 @@ import { beginRectangleSelect } from "./modes/rectangle-select";
 import { beginReanchor } from "./modes/reanchor-edge";
 import {
   beginDrawEdge as startDrawEdgeMode,
+  beginDrawEdgeFromAnchor,
+  findAnchorTarget,
   handleDrawEdgeClick,
   renderDrawEdgePreview,
 } from "./modes/draw-edge";
-import { SnapHighlighter } from "./snap";
+import { findNearestAnchor, SnapHighlighter } from "./snap";
 import { LabelEditController, EDITOR_CLASS } from "./label-edit";
 
 export class AoCanvas extends LitElementWw {
@@ -64,6 +72,12 @@ export class AoCanvas extends LitElementWw {
 
   @state()
   private accessor _mode: InteractionMode = { kind: "idle" };
+
+  @state()
+  private accessor _hoveredAnchor: {
+    nodeId: Id;
+    position: EdgePosition;
+  } | null = null;
 
   private readonly _labelEdit = new LabelEditController(this);
 
@@ -117,6 +131,10 @@ export class AoCanvas extends LitElementWw {
       this.selection?.clear();
       this._resetMode();
     }
+
+    if (this._hoveredAnchor && !this._tracksAnchorHover()) {
+      this._hoveredAnchor = null;
+    }
   }
 
   protected override firstUpdated(_changedProperties: PropertyValues): void {
@@ -163,6 +181,7 @@ export class AoCanvas extends LitElementWw {
         @pointermove=${this._onPointerMove}
         @pointerup=${this._onPointerUp}
         @pointercancel=${this._onPointerUp}
+        @pointerleave=${() => (this._hoveredAnchor = null)}
         @keydown=${(e: KeyboardEvent) => this._labelEdit.onKeydown(e)}
         @focusout=${(e: FocusEvent) => this._labelEdit.onFocusOut(e)}
         @contextmenu=${this._onContextMenu}
@@ -211,17 +230,7 @@ export class AoCanvas extends LitElementWw {
               this.selection,
               this.doc,
               this._zoomController.scale,
-              {
-                active:
-                  this._mode.kind === "reanchor-edge" ||
-                  this._mode.kind === "draw-edge",
-                skipNodeId:
-                  this._mode.kind === "reanchor-edge"
-                    ? this._mode.otherNodeId
-                    : this._mode.kind === "draw-edge"
-                      ? (this._mode.source?.nodeId ?? undefined)
-                      : undefined,
-              },
+              this._anchorRendering(),
               this._mode.kind === "rectangle-select" ? this._mode.start : null,
             )}
           </g>
@@ -243,6 +252,20 @@ export class AoCanvas extends LitElementWw {
         ? nothing
         : html`<ao-drag-overlay .imageCount=${this._dropController.imageCount}>
           </ao-drag-overlay>`}`;
+  }
+
+  private _anchorRendering(): AnchorRendering {
+    if (this._mode.kind === "reanchor-edge") {
+      return { kind: "all", skipNodeId: this._mode.otherNodeId };
+    }
+    if (this._mode.kind === "draw-edge") {
+      const source = this._mode.source;
+      return { kind: "all", ...(source && { skipNodeId: source.nodeId }) };
+    }
+    if (this._hoveredAnchor) {
+      return { kind: "single", ...this._hoveredAnchor };
+    }
+    return { kind: "none" };
   }
 
   private _isInteractiveTarget(target: EventTarget | null): boolean {
@@ -310,6 +333,16 @@ export class AoCanvas extends LitElementWw {
     this._shiftKey = e.shiftKey;
 
     const target = e.target as Element;
+
+    // Clicking or dragging from a hovered anchor point starts a new edge there.
+    const anchorTarget = findAnchorTarget(target);
+    if (anchorTarget) {
+      beginDrawEdgeFromAnchor(anchorTarget, this._modeContext);
+      const svg = e.currentTarget as SVGSVGElement;
+      svg.focus({ preventScroll: true });
+      svg.setPointerCapture(e.pointerId);
+      return;
+    }
 
     // A click on the badge opens the connected page, even in edit mode.
     const badgeEl = target.closest(".badge");
@@ -387,7 +420,7 @@ export class AoCanvas extends LitElementWw {
   }
 
   private _onPointerMove(e: PointerEvent): void {
-    if (!handlesPointerMove(this._mode)) return;
+    if (!handlesPointerMove(this._mode) && !this._tracksAnchorHover()) return;
 
     this._pendingPointer = { x: e.clientX, y: e.clientY };
     this._shiftKey = e.shiftKey;
@@ -395,13 +428,49 @@ export class AoCanvas extends LitElementWw {
     if (this._rafId === null) {
       this._rafId = requestAnimationFrame(() => {
         this._rafId = null;
-        if (!this._pendingPointer) return;
-        getHandlers(this._mode)?.onPointerMove?.(
-          this._pendingPointer,
-          this._mode,
-          this._modeContext,
-        );
+        const pointer = this._pendingPointer;
+        if (!pointer) return;
+        if (this._tracksAnchorHover()) {
+          this._updateAnchorHover(pointer);
+        } else {
+          getHandlers(this._mode)?.onPointerMove?.(
+            pointer,
+            this._mode,
+            this._modeContext,
+          );
+        }
       });
+    }
+  }
+
+  private _tracksAnchorHover(): boolean {
+    return (
+      this.editable &&
+      this._mode.kind === "idle" &&
+      this.editingId === null &&
+      this.selection.isEmpty()
+    );
+  }
+
+  private _updateAnchorHover(pointer: Point): void {
+    const scenePoint = this._zoomController.clientToScene(pointer.x, pointer.y);
+    const nearest = findNearestAnchor(
+      this.doc.nodes,
+      scenePoint,
+      Math.min(
+        ANCHOR_HOVER_RADIUS / this._zoomController.scale,
+        ANCHOR_HOVER_RADIUS,
+      ),
+    );
+    const anchor = nearest
+      ? { nodeId: nearest.nodeId, position: nearest.position }
+      : null;
+
+    if (
+      anchor?.nodeId !== this._hoveredAnchor?.nodeId ||
+      anchor?.position !== this._hoveredAnchor?.position
+    ) {
+      this._hoveredAnchor = anchor;
     }
   }
 

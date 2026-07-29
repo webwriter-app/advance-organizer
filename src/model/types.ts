@@ -100,7 +100,7 @@ export interface AdvanceOrganizer {
 
 export type ResizeHandle = "tl" | "t" | "tr" | "r" | "br" | "b" | "bl" | "l";
 
-export type AnchorRendering = {
-  active: boolean;
-  skipNodeId?: Id;
-};
+export type AnchorRendering =
+  | { kind: "none" }
+  | { kind: "all"; skipNodeId?: Id }
+  | { kind: "single"; nodeId: Id; position: EdgePosition };

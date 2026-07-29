@@ -19,40 +19,66 @@ export function handleDrawEdgeClick(
   mode: ModeOf<"draw-edge">,
   ctx: ModeContext,
 ): void {
-  const target = e.target as Element;
-  const anchorEl = target.closest<SVGElement>("[data-anchor-position]");
-  const anchorGroupEl = anchorEl?.closest<SVGElement>("[data-anchor-node-id]");
+  const anchor = findAnchorTarget(e.target as Element);
 
-  if (!anchorEl || !anchorGroupEl) {
+  if (!anchor) {
     ctx.resetMode();
     return;
   }
 
-  const nodeId = anchorGroupEl.dataset["anchorNodeId"]!;
-  const anchor = anchorEl.dataset["anchorPosition"] as EdgePosition;
-
   if (mode.source === null) {
-    const node = ctx.doc.get(nodeId);
-    if (!node || node.kind !== "node") return;
-    const anchorRect = anchorEl.getBoundingClientRect();
-    ctx.setMode({
-      kind: "draw-edge",
-      source: {
-        nodeId,
-        anchor,
-        start: {
-          x: anchorRect.x + anchorRect.width / 2,
-          y: anchorRect.y + anchorRect.height / 2,
-        },
-        startEndpointPos: getAnchorPoints(node)[anchor],
-      },
-    });
+    beginDrawEdgeFromAnchor(anchor, ctx);
     return;
   }
 
-  if (nodeId === mode.source.nodeId) return;
+  if (anchor.nodeId === mode.source.nodeId) return;
 
-  commitDrawEdge(mode.source, { nodeId, anchor }, ctx);
+  commitDrawEdge(
+    mode.source,
+    { nodeId: anchor.nodeId, anchor: anchor.anchor },
+    ctx,
+  );
+}
+
+export interface AnchorTarget {
+  el: SVGElement;
+  nodeId: Id;
+  anchor: EdgePosition;
+}
+
+export function findAnchorTarget(target: Element | null): AnchorTarget | null {
+  const anchorEl = target?.closest<SVGElement>("[data-anchor-position]");
+  const anchorGroupEl = anchorEl?.closest<SVGElement>("[data-anchor-node-id]");
+  if (!anchorEl || !anchorGroupEl) return null;
+
+  return {
+    el: anchorEl,
+    nodeId: anchorGroupEl.dataset["anchorNodeId"]!,
+    anchor: anchorEl.dataset["anchorPosition"] as EdgePosition,
+  };
+}
+
+export function beginDrawEdgeFromAnchor(
+  { el, nodeId, anchor }: AnchorTarget,
+  ctx: ModeContext,
+): void {
+  const node = ctx.doc.get(nodeId);
+  if (!node || node.kind !== "node") return;
+
+  const anchorRect = el.getBoundingClientRect();
+  ctx.selection.clear();
+  ctx.setMode({
+    kind: "draw-edge",
+    source: {
+      nodeId,
+      anchor,
+      start: {
+        x: anchorRect.x + anchorRect.width / 2,
+        y: anchorRect.y + anchorRect.height / 2,
+      },
+      startEndpointPos: getAnchorPoints(node)[anchor],
+    },
+  });
 }
 
 function commitDrawEdge(
