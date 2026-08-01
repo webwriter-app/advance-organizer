@@ -47,7 +47,7 @@ export const canvasStyles = css`
   .label-content {
     max-width: 100%;
     text-align: center;
-    white-space: wrap;
+    white-space: pre-wrap;
     overflow-wrap: anywhere;
     user-select: none;
   }
