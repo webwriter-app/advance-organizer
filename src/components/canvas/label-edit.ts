@@ -54,9 +54,11 @@ export class LabelEditController implements ReactiveController {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       this.commit();
+      this._focusCanvas();
     } else if (e.key === "Escape") {
       e.preventDefault();
       this.cancel();
+      this._focusCanvas();
     }
     e.stopPropagation();
   }
@@ -81,6 +83,12 @@ export class LabelEditController implements ReactiveController {
     // Triggers re-render to restore previous label text
     this._editingId = null;
     this.host.requestUpdate();
+  }
+
+  private _focusCanvas(): void {
+    this.host.renderRoot
+      .querySelector<SVGSVGElement>("svg")
+      ?.focus({ preventScroll: true });
   }
 
   private _editorFor(id: Id): HTMLElement | null {

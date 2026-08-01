@@ -22,6 +22,8 @@ import { ColorPreview, Edge, Id, Image, Node } from "../model/types";
 import { AoPageEditActionsGroup } from "../components/ui/toolbar-groups/page-edit-actions";
 import { AoPageInfoActionsGroup } from "../components/ui/toolbar-groups/page-info-actions";
 import { PageController } from "../state/page";
+import { KeyboardController } from "../state/keyboard";
+import { insertNode, pickAndInsertImages } from "../components/canvas/insert";
 import { AoCreateActionsGroup } from "../components/ui/toolbar-groups/create-actions";
 import { AoEdgeActionsGroup } from "../components/ui/toolbar-groups/edge-actions";
 import { ClipboardAction } from "../utils/clipboard";
@@ -172,6 +174,11 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
   localize = LOCALIZE
   */
 
+  constructor() {
+    super();
+    new KeyboardController(this);
+  }
+
   static override shadowRootOptions: ShadowRootInit = {
     ...super.shadowRootOptions,
     slotAssignment: "manual" as const,
@@ -227,7 +234,7 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
     });
   };
 
-  private _clipboardTarget(e: ClipboardEvent): AoCanvas | null {
+  private _canvasTarget(e: Event): AoCanvas | null {
     if (this._openPage !== null) return null;
     const path = e.composedPath();
     const hostIndex = path.indexOf(this);
@@ -236,16 +243,33 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
     return this.canvas;
   }
 
+  keyboardTarget(e: KeyboardEvent): AoCanvas | null {
+    const canvas = this._canvasTarget(e);
+    if (!canvas) return null;
+    const path = e.composedPath();
+    return path[0] === this || path.includes(canvas) ? canvas : null;
+  }
+
   private _onCopy = (e: ClipboardEvent): void => {
-    this._clipboardTarget(e)?.handleCopy(e);
+    this._canvasTarget(e)?.handleCopy(e);
   };
 
   private _onCut = (e: ClipboardEvent): void => {
-    this._clipboardTarget(e)?.handleCut(e);
+    this._canvasTarget(e)?.handleCut(e);
   };
 
   private _onPaste = (e: ClipboardEvent): void => {
-    this._clipboardTarget(e)?.handlePaste(e);
+    this._canvasTarget(e)?.handlePaste(e);
+  };
+
+  private _insertNode = (): void => {
+    if (!this.canvas) return;
+    insertNode(this.canvas.insertPosition(), this.canvas);
+  };
+
+  private _insertImage = (): void => {
+    if (!this.canvas) return;
+    void pickAndInsertImages(this.canvas.insertPosition(), this.canvas);
   };
 
   protected override firstUpdated(changedProperties: PropertyValues): void {
@@ -322,8 +346,9 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
         this.canvas?.previewColor(e.detail)}>
       ${this._openPage === null
         ? html`<ao-create-actions
-              @start-draw-edge=${() =>
-                this.canvas?.beginDrawEdge()}></ao-create-actions>
+              @start-draw-edge=${() => this.canvas?.beginDrawEdge()}
+              @add-node=${this._insertNode}
+              @add-image=${this._insertImage}></ao-create-actions>
             <div class="spacer"></div>
             ${AoNodeActionsGroup.isApplicable(this.doc, this.selection)
               ? html`<ao-node-actions></ao-node-actions>`

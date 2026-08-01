@@ -33,6 +33,8 @@ export class ZoomController implements ReactiveController {
       maxZoom: this.maxZoom,
       zoomDoubleClickSpeed: 1, // disable double-click to zoom
       beforeMouseDown: (e) => e.button !== 1, // only allow middle-click to pan
+      filterKey: (e?: KeyboardEvent) =>
+        !!(e?.target instanceof HTMLElement && e.target.isContentEditable), // prevent interference with label editing
     });
     this._panzoom.on("zoom", this._syncZoomLevel);
     this._syncZoomLevel();

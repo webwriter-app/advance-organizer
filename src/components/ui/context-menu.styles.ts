@@ -56,4 +56,10 @@ export const contextMenuStyles = css`
   sl-menu-item::part(checked-icon) {
     width: 1em;
   }
+
+  .shortcut {
+    margin-left: var(--sl-spacing-large);
+    color: var(--sl-color-neutral-500);
+    font-size: var(--sl-font-size-small);
+  }
 `;

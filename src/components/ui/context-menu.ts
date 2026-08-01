@@ -20,6 +20,8 @@ import { SelectionController } from "../../state/selection";
 import { PageController } from "../../state/page";
 import { SubscribeController } from "../../state/subscribe";
 import { ClipboardAction } from "../../utils/clipboard";
+import { MOD_LABEL } from "../../state/keyboard";
+import { duplicateSelection } from "../canvas/insert";
 
 import iconCut from "@tabler/icons/outline/cut.svg";
 import iconCopy from "@tabler/icons/outline/copy.svg";
@@ -66,17 +68,35 @@ export class WwContextMenu extends LitElementWw {
     super.connectedCallback();
     this.addEventListener("pointerdown", this._onBackdropPointerDown);
     this.addEventListener("contextmenu", this._onBackdropContextMenu);
+    this.addEventListener("keydown", this._onKeydown);
   }
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();
     this.removeEventListener("pointerdown", this._onBackdropPointerDown);
     this.removeEventListener("contextmenu", this._onBackdropContextMenu);
+    this.removeEventListener("keydown", this._onKeydown);
   }
 
   protected override firstUpdated(_changedProperties: PropertyValues): void {
     new SubscribeController(this, this.doc);
     new SubscribeController(this, this.selection);
+    this._focusFirstItem();
+  }
+
+  private async _focusFirstItem(): Promise<void> {
+    const menu = this.renderRoot.querySelector<SlMenu>("sl-menu");
+    if (!menu) return;
+    await menu.updateComplete;
+
+    const items = [
+      ...this.renderRoot.querySelectorAll<SlMenuItem>("sl-menu-item"),
+    ];
+    const item = items.find((candidate) => !candidate.disabled);
+    if (!item) return;
+
+    menu.setCurrentItem(item);
+    item.focus({ preventScroll: true });
   }
 
   protected override updated(changedProperties: PropertyValues): void {
@@ -105,23 +125,28 @@ export class WwContextMenu extends LitElementWw {
           <sl-menu-item id="cut" ?disabled=${this.selection.isEmpty()}>
             <sl-icon slot="prefix" .src=${iconCut}></sl-icon>
             Cut
+            <span slot="suffix" class="shortcut">${MOD_LABEL}+X</span>
           </sl-menu-item>
           <sl-menu-item id="copy" ?disabled=${this.selection.isEmpty()}>
             <sl-icon slot="prefix" .src=${iconCopy}></sl-icon>
             Copy
+            <span slot="suffix" class="shortcut">${MOD_LABEL}+C</span>
           </sl-menu-item>
           <sl-menu-item id="paste">
             <sl-icon slot="prefix" .src=${iconPaste}></sl-icon>
             Paste
+            <span slot="suffix" class="shortcut">${MOD_LABEL}+V</span>
           </sl-menu-item>
           <sl-divider></sl-divider>
           <sl-menu-item id="duplicate" ?disabled=${this.selection.isEmpty()}>
             <sl-icon slot="prefix" .src=${iconDuplicate}></sl-icon>
             Duplicate
+            <span slot="suffix" class="shortcut">${MOD_LABEL}+D</span>
           </sl-menu-item>
           <sl-menu-item id="delete" ?disabled=${this.selection.isEmpty()}>
             <sl-icon slot="prefix" .src=${iconDelete}></sl-icon>
             Delete
+            <span slot="suffix" class="shortcut">Del</span>
           </sl-menu-item>
         </sl-menu>
       </sl-popup>
@@ -134,6 +159,13 @@ export class WwContextMenu extends LitElementWw {
 
   private _onBackdropContextMenu = (e: Event): void => {
     e.preventDefault();
+  };
+
+  private _onKeydown = (e: KeyboardEvent): void => {
+    if (e.key !== "Escape") return;
+    e.preventDefault();
+    e.stopPropagation();
+    this._close();
   };
 
   private _handleMenuSelect(event: CustomEvent): void {
@@ -168,14 +200,7 @@ export class WwContextMenu extends LitElementWw {
   }
 
   private _handleDuplicate(): void {
-    const selectedIds = this.selection.entries;
-    const { newIds, nodeIdMap } = this.doc.duplicateItems(selectedIds);
-
-    for (const [oldNodeId, newNodeId] of nodeIdMap) {
-      this.pages.duplicatePage(oldNodeId, newNodeId);
-    }
-
-    this.selection.select(newIds);
+    duplicateSelection(this);
   }
 
   private _handleDelete(): void {

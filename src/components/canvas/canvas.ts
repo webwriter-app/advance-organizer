@@ -284,8 +284,20 @@ export class AoCanvas extends LitElementWw {
     if (e.button === 1) e.preventDefault();
   };
 
-  // Clipboard events fire at the focused element, which may be the widget host
-  // rather than the svg, so the host owns the listeners and delegates here.
+  insertPosition(): Point {
+    return this._zoomController.viewportCenter();
+  }
+
+  startLabelEdit(id: Id): void {
+    this._labelEdit.start(id);
+  }
+
+  cancelInteraction(): boolean {
+    if (this._mode.kind === "idle") return false;
+    this._resetMode();
+    return true;
+  }
+
   handleCopy(e: ClipboardEvent): void {
     copySelection(e, this);
   }

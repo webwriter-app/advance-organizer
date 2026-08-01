@@ -82,6 +82,22 @@ export function filterImageFiles(files: FileList | undefined | null): File[] {
   return Array.from(files).filter((file) => file.type.startsWith("image/"));
 }
 
+export function pickImageFiles(): Promise<File[]> {
+  return new Promise((resolve) => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.multiple = true;
+
+    input.addEventListener("change", () =>
+      resolve(filterImageFiles(input.files)),
+    );
+    input.addEventListener("cancel", () => resolve([]));
+
+    input.click();
+  });
+}
+
 export function countImageItems(items: DataTransferItemList): number {
   return Array.from(items).filter(
     (item) => item.kind === "file" && item.type.startsWith("image/"),

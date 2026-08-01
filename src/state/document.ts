@@ -260,7 +260,12 @@ export class DocumentController extends Observable {
     return { newIds, nodeIdMap };
   }
 
-  private _pasteOffset(items: readonly BoxItem[]): number {
+  freePosition(position: Point): Point {
+    const offset = this._pasteOffset([{ position }]);
+    return { x: position.x + offset, y: position.y + offset };
+  }
+
+  private _pasteOffset(items: readonly { position: Point }[]): number {
     let step = 0;
     while (
       step < 100 &&

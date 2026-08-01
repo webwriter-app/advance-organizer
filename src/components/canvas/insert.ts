@@ -1,15 +1,40 @@
-import { Id, Point } from "../../model/types";
+import { Dimension, Id, Node, NodeStyle, Point } from "../../model/types";
 import type { DocumentController } from "../../state/document";
 import type { PageController } from "../../state/page";
 import type { SelectionController } from "../../state/selection";
 import { ClipboardPayload } from "../../utils/clipboard";
-import { displayDimension, importImage } from "../../utils/image-import";
+import {
+  displayDimension,
+  importImage,
+  pickImageFiles,
+} from "../../utils/image-import";
 import { INSERT_GAP } from "./helper";
 
 export interface CanvasStores {
   doc: DocumentController;
   selection: SelectionController;
   pages: PageController;
+}
+
+export type ItemStores = Pick<CanvasStores, "doc" | "selection">;
+
+const NEW_NODE_DIMENSION: Dimension = { width: 100, height: 50 };
+const NEW_NODE_STYLE: NodeStyle = {
+  shape: "rectangle",
+  fill: "lightblue",
+  stroke: "blue",
+  strokeWidth: 2,
+};
+
+export function insertNode(position: Point, stores: ItemStores): Node {
+  const node = stores.doc.addNode({
+    dimension: NEW_NODE_DIMENSION,
+    label: { text: "New node" },
+    position: stores.doc.freePosition(position),
+    style: NEW_NODE_STYLE,
+  });
+  stores.selection.select(new Set<Id>([node.id]));
+  return node;
 }
 
 export function insertPayload(
@@ -26,10 +51,22 @@ export function insertPayload(
   stores.selection.select(newIds);
 }
 
+export function duplicateSelection(stores: CanvasStores): void {
+  const { newIds, nodeIdMap } = stores.doc.duplicateItems(
+    new Set(stores.selection.entries),
+  );
+
+  for (const [oldId, newId] of nodeIdMap) {
+    stores.pages.duplicatePage(oldId, newId);
+  }
+
+  stores.selection.select(newIds);
+}
+
 export async function insertImages(
   files: File[],
   position: Point,
-  stores: CanvasStores,
+  stores: ItemStores,
 ): Promise<void> {
   const inserted = new Set<Id>();
   let offset = 0;
@@ -50,4 +87,13 @@ export async function insertImages(
   }
 
   if (inserted.size > 0) stores.selection.select(inserted);
+}
+
+export async function pickAndInsertImages(
+  position: Point,
+  stores: ItemStores,
+): Promise<void> {
+  const files = await pickImageFiles();
+  if (files.length === 0) return;
+  await insertImages(files, position, stores);
 }
