@@ -1,5 +1,5 @@
 import { ReactiveController, ReactiveControllerHost } from "lit";
-import { Id, Point } from "../model/types";
+import { Id, Label, Point } from "../model/types";
 import {
   CanvasStores,
   duplicateSelection,
@@ -81,6 +81,12 @@ export class KeyboardController implements ReactiveController {
           return this._selectAll(canvas);
         case "d":
           return this._duplicate(canvas);
+        case "b":
+          return this._toggleLabelStyle(canvas, "bold");
+        case "i":
+          return this._toggleLabelStyle(canvas, "italic");
+        case "u":
+          return this._toggleLabelStyle(canvas, "underline");
         default:
           return false;
       }
@@ -159,6 +165,24 @@ export class KeyboardController implements ReactiveController {
   private _duplicate(canvas: KeyboardCanvas): boolean {
     if (canvas.selection.isEmpty()) return false;
     duplicateSelection(canvas);
+    return true;
+  }
+
+  private _toggleLabelStyle(
+    canvas: KeyboardCanvas,
+    key: "bold" | "italic" | "underline",
+  ): boolean {
+    const labels: Label[] = [];
+    for (const id of canvas.selection.entries) {
+      const item = canvas.doc.get(id);
+      if (item?.kind !== "image" && item?.label) labels.push(item.label);
+    }
+    if (labels.length === 0) return false;
+
+    const allSet = labels.every((label) => label[key]);
+    for (const id of canvas.selection.entries) {
+      canvas.doc.updateLabelStyle(id, { [key]: !allSet });
+    }
     return true;
   }
 
