@@ -14,6 +14,7 @@ export class ZoomController implements ReactiveController {
     private readonly host: ReactiveControllerHost,
     private readonly minZoom: number,
     private readonly maxZoom: number,
+    private readonly isEditable: () => boolean,
   ) {
     host.addController(this);
   }
@@ -32,7 +33,13 @@ export class ZoomController implements ReactiveController {
       minZoom: this.minZoom,
       maxZoom: this.maxZoom,
       zoomDoubleClickSpeed: 1, // disable double-click to zoom
-      beforeMouseDown: (e) => e.button !== 1, // only allow middle-click to pan
+      beforeMouseDown: (e) => {
+        // middle-click always pans
+        if (e.button === 1) return false;
+        // left-click pans in read-only mode
+        if (e.button === 0 && !this.isEditable()) return false;
+        return true;
+      },
       filterKey: (e?: KeyboardEvent) =>
         !!(e?.target instanceof HTMLElement && e.target.isContentEditable), // prevent interference with label editing
     });

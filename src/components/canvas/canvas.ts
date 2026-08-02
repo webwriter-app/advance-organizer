@@ -100,6 +100,7 @@ export class AoCanvas extends LitElementWw {
     this,
     AoCanvas.MIN_ZOOM,
     AoCanvas.MAX_ZOOM,
+    () => this.editable,
   );
 
   private readonly _snapHighlighter = new SnapHighlighter();
