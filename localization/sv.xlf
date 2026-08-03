@@ -185,6 +185,10 @@
         <source>Zoom in</source>
         <target>Zooma in</target>
       </trans-unit>
+      <trans-unit id="s2d46e4d6c4292d93">
+        <source>New node</source>
+        <target>Ny nod</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -13,6 +13,7 @@
 's236ae937cbcd6a39': `Palielināt`,
 's2afc172e45ceaabe': `Līnijas krāsa`,
 's2ceb11be2290bb1b': `Atcelt`,
+'s2d46e4d6c4292d93': `Jauns mezgls`,
 's2de969afacdaa7a6': `Figūra`,
 's3687049d1af562c4': `Kopēt`,
 's39be3c731b2ea7dd': `Malas tips`,

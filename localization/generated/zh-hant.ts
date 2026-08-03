@@ -14,6 +14,7 @@
 's236ae937cbcd6a39': `Zoom in`,
 'saa987c09599e0f9a': str`Drop ${0} images here`,
 'sd6f0f760e3bb3148': `Drop 1 image here`,
+'s2d46e4d6c4292d93': `New node`,
 's0bc31719aa7a8f43': `Cut`,
 's3687049d1af562c4': `Copy`,
 'sd374c80e17e18808': `Paste`,

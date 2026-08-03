@@ -13,6 +13,7 @@
 's236ae937cbcd6a39': `확대`,
 's2afc172e45ceaabe': `선 색상`,
 's2ceb11be2290bb1b': `취소`,
+'s2d46e4d6c4292d93': `새 노드`,
 's2de969afacdaa7a6': `도형`,
 's3687049d1af562c4': `복사`,
 's39be3c731b2ea7dd': `테두리 유형`,

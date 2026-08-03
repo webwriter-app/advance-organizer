@@ -13,6 +13,7 @@
 's236ae937cbcd6a39': `Povečaj`,
 's2afc172e45ceaabe': `Barva črte`,
 's2ceb11be2290bb1b': `Prekliči`,
+'s2d46e4d6c4292d93': `Novo vozlišče`,
 's2de969afacdaa7a6': `Oblika`,
 's3687049d1af562c4': `Kopiraj`,
 's39be3c731b2ea7dd': `Vrsta obrobe`,

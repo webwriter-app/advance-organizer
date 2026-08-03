@@ -13,6 +13,7 @@
 's236ae937cbcd6a39': `Ingrandisci`,
 's2afc172e45ceaabe': `Colore del tratto`,
 's2ceb11be2290bb1b': `Annulla`,
+'s2d46e4d6c4292d93': `Nuovo nodo`,
 's2de969afacdaa7a6': `Forma`,
 's3687049d1af562c4': `Copia`,
 's39be3c731b2ea7dd': `Tipo di bordo`,

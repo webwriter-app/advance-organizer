@@ -13,6 +13,7 @@
 's236ae937cbcd6a39': `Zoom ind`,
 's2afc172e45ceaabe': `Stregfarve`,
 's2ceb11be2290bb1b': `Annuller`,
+'s2d46e4d6c4292d93': `Ny node`,
 's2de969afacdaa7a6': `Form`,
 's3687049d1af562c4': `Kopier`,
 's39be3c731b2ea7dd': `Kanttype`,

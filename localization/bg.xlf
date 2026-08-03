@@ -186,6 +186,10 @@
         <source>Zoom in</source>
         <target>Увеличаване</target>
       </trans-unit>
+      <trans-unit id="s2d46e4d6c4292d93">
+        <source>New node</source>
+        <target>Нов възел</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

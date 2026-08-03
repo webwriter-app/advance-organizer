@@ -13,6 +13,7 @@
 's236ae937cbcd6a39': `Yakınlaştır`,
 's2afc172e45ceaabe': `Çizgi rengi`,
 's2ceb11be2290bb1b': `İptal`,
+'s2d46e4d6c4292d93': `Yeni düğüm`,
 's2de969afacdaa7a6': `Şekil`,
 's3687049d1af562c4': `Kopyala`,
 's39be3c731b2ea7dd': `Kenarlık türü`,

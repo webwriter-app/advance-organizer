@@ -13,6 +13,7 @@
 's236ae937cbcd6a39': `Ampliar`,
 's2afc172e45ceaabe': `Cor do traço`,
 's2ceb11be2290bb1b': `Cancelar`,
+'s2d46e4d6c4292d93': `Novo nó`,
 's2de969afacdaa7a6': `Forma`,
 's3687049d1af562c4': `Copiar`,
 's39be3c731b2ea7dd': `Tipo de borda`,

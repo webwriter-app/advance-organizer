@@ -13,6 +13,7 @@
 's236ae937cbcd6a39': `Zväčšiť`,
 's2afc172e45ceaabe': `Farba obrysu`,
 's2ceb11be2290bb1b': `Zrušiť`,
+'s2d46e4d6c4292d93': `Nový uzol`,
 's2de969afacdaa7a6': `Tvar`,
 's3687049d1af562c4': `Kopírovať`,
 's39be3c731b2ea7dd': `Typ ohraničenia`,

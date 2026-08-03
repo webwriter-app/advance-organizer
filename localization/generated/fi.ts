@@ -13,6 +13,7 @@
 's236ae937cbcd6a39': `Lähennä`,
 's2afc172e45ceaabe': `Viivan väri`,
 's2ceb11be2290bb1b': `Peruuta`,
+'s2d46e4d6c4292d93': `Uusi solmu`,
 's2de969afacdaa7a6': `Muoto`,
 's3687049d1af562c4': `Kopioi`,
 's39be3c731b2ea7dd': `Reunan tyyppi`,

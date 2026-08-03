@@ -13,6 +13,7 @@
 's236ae937cbcd6a39': `Suurenda`,
 's2afc172e45ceaabe': `Joon värv`,
 's2ceb11be2290bb1b': `Tühista`,
+'s2d46e4d6c4292d93': `Uus sõlm`,
 's2de969afacdaa7a6': `Kuju`,
 's3687049d1af562c4': `Kopeeri`,
 's39be3c731b2ea7dd': `Piirjoone tüüp`,

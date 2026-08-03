@@ -13,6 +13,7 @@
 's236ae937cbcd6a39': `Powiększ`,
 's2afc172e45ceaabe': `Kolor obrysu`,
 's2ceb11be2290bb1b': `Anuluj`,
+'s2d46e4d6c4292d93': `Nowy węzeł`,
 's2de969afacdaa7a6': `Kształt`,
 's3687049d1af562c4': `Kopiuj`,
 's39be3c731b2ea7dd': `Typ obramowania`,

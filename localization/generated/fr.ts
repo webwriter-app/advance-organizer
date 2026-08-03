@@ -13,6 +13,7 @@
 's236ae937cbcd6a39': `Zoom avant`,
 's2afc172e45ceaabe': `Couleur du trait`,
 's2ceb11be2290bb1b': `Annuler`,
+'s2d46e4d6c4292d93': `Nouveau nœud`,
 's2de969afacdaa7a6': `Forme`,
 's3687049d1af562c4': `Copier`,
 's39be3c731b2ea7dd': `Type de bordure`,

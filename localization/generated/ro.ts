@@ -13,6 +13,7 @@
 's236ae937cbcd6a39': `Mărire`,
 's2afc172e45ceaabe': `Culoarea conturului`,
 's2ceb11be2290bb1b': `Anulează`,
+'s2d46e4d6c4292d93': `Nod nou`,
 's2de969afacdaa7a6': `Formă`,
 's3687049d1af562c4': `Copiere`,
 's39be3c731b2ea7dd': `Tip de margine`,

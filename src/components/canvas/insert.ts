@@ -9,6 +9,7 @@ import {
   pickImageFiles,
 } from "../../utils/image-import";
 import { INSERT_GAP } from "./helper";
+import { msg } from "@lit/localize";
 
 export interface CanvasStores {
   doc: DocumentController;
@@ -18,18 +19,18 @@ export interface CanvasStores {
 
 export type ItemStores = Pick<CanvasStores, "doc" | "selection">;
 
-const NEW_NODE_DIMENSION: Dimension = { width: 100, height: 50 };
+const NEW_NODE_DIMENSION: Dimension = { width: 160, height: 80 };
 const NEW_NODE_STYLE: NodeStyle = {
   shape: "rectangle",
-  fill: "lightblue",
-  stroke: "blue",
+  fill: "#e0f2fe", // derived from var(--sl-color-primary-100)
+  stroke: "#0284c7", // derived from var(--sl-color-primary-600)
   strokeWidth: 2,
 };
 
 export function insertNode(position: Point, stores: ItemStores): Node {
   const node = stores.doc.addNode({
     dimension: NEW_NODE_DIMENSION,
-    label: { text: "New node" },
+    label: { text: msg("New node") },
     position: stores.doc.freePosition(position),
     style: NEW_NODE_STYLE,
   });
