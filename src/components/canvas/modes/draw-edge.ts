@@ -21,23 +21,30 @@ export function handleDrawEdgeClick(
 ): void {
   const anchor = findAnchorTarget(e.target as Element);
 
-  if (!anchor) {
-    ctx.resetMode();
+  if (anchor) {
+    if (mode.source === null) {
+      beginDrawEdgeFromAnchor(anchor, ctx);
+      return;
+    }
+
+    if (anchor.nodeId === mode.source.nodeId) return;
+
+    commitDrawEdge(
+      mode.source,
+      { nodeId: anchor.nodeId, anchor: anchor.anchor },
+      ctx,
+    );
     return;
   }
 
-  if (mode.source === null) {
-    beginDrawEdgeFromAnchor(anchor, ctx);
+  if (
+    mode.source !== null &&
+    tryCommitSnappedEdge(mode.source, { x: e.clientX, y: e.clientY }, ctx)
+  ) {
     return;
   }
 
-  if (anchor.nodeId === mode.source.nodeId) return;
-
-  commitDrawEdge(
-    mode.source,
-    { nodeId: anchor.nodeId, anchor: anchor.anchor },
-    ctx,
-  );
+  ctx.resetMode();
 }
 
 export interface AnchorTarget {
@@ -123,6 +130,23 @@ function resolveDrawEdge(
   };
 }
 
+function tryCommitSnappedEdge(
+  source: DrawEdgeSource,
+  pointer: Point,
+  ctx: ModeContext,
+): boolean {
+  const pos = resolveDrawEdge(source, pointer, ctx.zoom.scale);
+  const snapTarget = findSnapTarget(ctx.doc.nodes, pos, source.nodeId);
+  if (!snapTarget) return false;
+
+  commitDrawEdge(
+    source,
+    { nodeId: snapTarget.nodeId, anchor: snapTarget.position },
+    ctx,
+  );
+  return true;
+}
+
 export const drawEdgeHandlers: ModeHandlers<"draw-edge"> = {
   persistOnPointerUp: true,
   onPointerMove(pointer, mode, ctx) {
@@ -134,15 +158,7 @@ export const drawEdgeHandlers: ModeHandlers<"draw-edge"> = {
   },
   onPointerUp(pointer, mode, ctx) {
     if (!mode.source) return;
-    const pos = resolveDrawEdge(mode.source, pointer, ctx.zoom.scale);
-    const snapTarget = findSnapTarget(ctx.doc.nodes, pos, mode.source.nodeId);
-    if (snapTarget) {
-      commitDrawEdge(
-        mode.source,
-        { nodeId: snapTarget.nodeId, anchor: snapTarget.position },
-        ctx,
-      );
-    }
+    tryCommitSnappedEdge(mode.source, pointer, ctx);
   },
   onCancel(_mode, ctx) {
     ctx.snap.clear(ctx.root);
