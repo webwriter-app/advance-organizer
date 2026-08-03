@@ -1,0 +1,61 @@
+
+    // Do not modify this file by hand!
+    // Re-generate this file by running lit-localize
+
+    
+    import {str} from '@lit/localize';
+
+    /* eslint-disable no-irregular-whitespace */
+    /* eslint-disable @typescript-eslint/no-explicit-any */
+
+    export const templates = {
+      's0bc31719aa7a8f43': `قص`,
+'s236ae937cbcd6a39': `تكبير`,
+'s2afc172e45ceaabe': `لون الخط`,
+'s2ceb11be2290bb1b': `إلغاء`,
+'s2de969afacdaa7a6': `الشكل`,
+'s3687049d1af562c4': `نسخ`,
+'s39be3c731b2ea7dd': `نوع الحدود`,
+'s3c604c5ce842d6f2': `تكبير`,
+'s469d5c53c3a49087': `الماسة`,
+'s4975775e0dfd4b75': `إضافة عناصر`,
+'s523eb9043213ff0d': `مائل`,
+'s53dcaa8587a3546f': `عرض الحدود`,
+'s575e795c45e2d97e': `الرجوع`,
+'s5d0b63df0bad8c2e': `مستطيل`,
+'s5fd300106abf0f0e': `أضف صورة`,
+'s74de6dd63f44c218': `تعديلات العقد`,
+'s822bb535ea683190': `نمط الخط`,
+'s8e43508f1392e94d': `لون النص`,
+'s9370dc6afa716b57': `الحدود`,
+'s952c758843b27536': `هل أنت متأكد من رغبتك في حذف هذه الصفحة؟`,
+'s9ee4c202515c84c5': `حذف الصفحة`,
+'sa30f1981fd1cd441': `حجم الخط`,
+'saa987c09599e0f9a': str`سحب 
+          صور 
+          ${0} إلى هنا
+        `,
+'sabe465e6eb12f208': `لون الحدود`,
+'sabfeef1e4511a839': `إجراءات الصفحة`,
+'sad17444d283ef2db': `الصفحة المرتبطة`,
+'sad62ff7ac099b1df': `تعديلات النص`,
+'sb206d700d26b14ff': `تسطير`,
+'sb9762427948cf2b3': `تعديلات الصورة`,
+'sbadcfb6aa6ef38b1': `القطع الناقص`,
+'sc65ea2cf2f21a13a': `تصغير`,
+'sc74e6ebfbc1a0e5c': `متقطع`,
+'scbd0cdcee3a38719': `تعديلات الحافة`,
+'sceb35fbe10efb7a1': `أضف حافة`,
+'sd1f81984eeb7c0e8': `التعبئة`,
+'sd374c80e17e18808': `لصق`,
+'sd6f0f760e3bb3148': `اسقط صورة واحدة هنا`,
+'sd7e04a53d5f87b4d': `منقط`,
+'sdc673e73b5c13aea': `حذف`,
+'se0a34419921b022a': `حذف`,
+'se615f6ce0dd01061': `عرض الخط`,
+'se63c78875f5b2178': `إضافة عقدة`,
+'sf7c0eba7c822e3d6': `غامق`,
+'sfac15b89e0668996': `تكرار`,
+'sfe31d1c784d29ef4': `مملوء`,
+    };
+  

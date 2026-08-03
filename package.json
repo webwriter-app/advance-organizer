@@ -1,48 +1,82 @@
 {
-    "name": "@webwriter/advance-organizer",
-    "version": "0.0.1",
-    "keywords": [
-        "webwriter-widget"
-    ],
-    "license": "MIT",
-    "author": "Constantin Birken",
-    "scripts": {
-        "prepublishOnly": "npx @webwriter/build",
-        "dev": "npx @webwriter/build dev",
-        "localize": "lit-localize extract && npx @webwriter/build localize && lit-localize build"
+  "name": "@webwriter/advance-organizer",
+  "version": "0.0.1",
+  "keywords": [
+    "webwriter-widget",
+    "widget-lang-en",
+    "widget-lang-de",
+    "widget-lang-ar",
+    "widget-lang-bg",
+    "widget-lang-cs",
+    "widget-lang-da",
+    "widget-lang-nl",
+    "widget-lang-et",
+    "widget-lang-fi",
+    "widget-lang-fr",
+    "widget-lang-el",
+    "widget-lang-hu",
+    "widget-lang-it",
+    "widget-lang-lv",
+    "widget-lang-lt",
+    "widget-lang-nb",
+    "widget-lang-pl",
+    "widget-lang-pt-PT",
+    "widget-lang-ro",
+    "widget-lang-ru",
+    "widget-lang-sk",
+    "widget-lang-sl",
+    "widget-lang-es",
+    "widget-lang-sv",
+    "widget-lang-tr",
+    "widget-lang-uk",
+    "widget-lang-pt-BR",
+    "widget-lang-ko",
+    "widget-lang-ja",
+    "widget-lang-id",
+    "widget-lang-zh-hans",
+    "widget-lang-zh-hant"
+  ],
+  "license": "MIT",
+  "author": "Constantin Birken",
+  "scripts": {
+    "prepublishOnly": "npx @webwriter/build",
+    "dev": "npx @webwriter/build dev",
+    "localize": "lit-localize extract && npx @webwriter/build localize && lit-localize build"
+  },
+  "dependencies": {
+    "@lit/context": "^1.1.6",
+    "@lit/localize": "^0.12.2",
+    "@shoelace-style/shoelace": "^2.20.1",
+    "@webwriter/lit": "^2",
+    "dompurify": "^3.4.12",
+    "lit": "^3",
+    "panzoom": "^9.4.4"
+  },
+  "devDependencies": {
+    "@lit/localize-tools": "^0.8",
+    "@tabler/icons": "^3.44.0",
+    "typescript": "^7.0.2"
+  },
+  "exports": {
+    "./widgets/webwriter-advance-organizer.*": {
+      "source": "./src/widgets/webwriter-advance-organizer.ts",
+      "default": "./dist/widgets/webwriter-advance-organizer.*"
     },
-    "dependencies": {
-        "@lit/context": "^1.1.6",
-        "@shoelace-style/shoelace": "^2.20.1",
-        "@webwriter/lit": "^2",
-        "dompurify": "^3.4.12",
-        "lit": "^3",
-        "panzoom": "^9.4.4"
+    "./widgets/webwriter-advance-organizer-page.*": {
+      "source": "./src/widgets/webwriter-advance-organizer-page.ts",
+      "default": "./dist/widgets/webwriter-advance-organizer-page.*"
     },
-    "devDependencies": {
-        "@lit/localize-tools": "^0.8",
-        "@tabler/icons": "^3.44.0",
-        "typescript": "^7.0.2"
+    "./editing-config.json": "./editing-config.json"
+  },
+  "editingConfig": {
+    "./widgets/webwriter-advance-organizer": {
+      "definingAsContext": true,
+      "content": "(webwriter-advance-organizer-page)*"
     },
-    "exports": {
-        "./widgets/webwriter-advance-organizer.*": {
-            "source": "./src/widgets/webwriter-advance-organizer.ts",
-            "default": "./dist/widgets/webwriter-advance-organizer.*"
-        },
-        "./widgets/webwriter-advance-organizer-page.*": {
-            "source": "./src/widgets/webwriter-advance-organizer-page.ts",
-            "default": "./dist/widgets/webwriter-advance-organizer-page.*"
-        }
-    },
-    "editingConfig": {
-        "./widgets/webwriter-advance-organizer": {
-            "definingAsContext": true,
-            "content": "(webwriter-advance-organizer-page)*"
-        },
-        "./widgets/webwriter-advance-organizer-page": {
-            "definingForContent": true,
-            "content": "(flow)*",
-            "uninsertable": true
-        }
+    "./widgets/webwriter-advance-organizer-page": {
+      "definingForContent": true,
+      "content": "(flow)*",
+      "uninsertable": true
     }
+  }
 }

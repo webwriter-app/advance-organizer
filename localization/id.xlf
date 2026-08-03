@@ -1,0 +1,191 @@
+<xliff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 http://docs.oasis-open.org/xliff/v1.2/os/xliff-core-1.2-strict.xsd" xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="lit-localize-inputs" datatype="plaintext" source-language="en" target-language="id">
+    <body>
+      <trans-unit id="s0bc31719aa7a8f43">
+        <source>Cut</source>
+        <target>Potong</target>
+      </trans-unit>
+      <trans-unit id="s3687049d1af562c4">
+        <source>Copy</source>
+        <target>Salin</target>
+      </trans-unit>
+      <trans-unit id="sd374c80e17e18808">
+        <source>Paste</source>
+        <target>Tempel</target>
+      </trans-unit>
+      <trans-unit id="sfac15b89e0668996">
+        <source>Duplicate</source>
+        <target>Duplikat</target>
+      </trans-unit>
+      <trans-unit id="sdc673e73b5c13aea">
+        <source>Delete</source>
+        <target>Hapus</target>
+      </trans-unit>
+      <trans-unit id="se0a34419921b022a">
+        <source>Del</source>
+        <target>Hapus</target>
+      </trans-unit>
+      <trans-unit id="saa987c09599e0f9a">
+        <source>Drop 
+          <x id="0" equiv-text="${this.imageCount}"/> images here
+        </source>
+        <target>Seret 
+          gambar 
+          <x id="0" equiv-text="${this.imageCount}"/> ke sini
+        </target>
+      </trans-unit>
+      <trans-unit id="sd6f0f760e3bb3148">
+        <source>Drop 1 image here</source>
+        <target>Seret 1 gambar ke sini</target>
+      </trans-unit>
+      <trans-unit id="s4975775e0dfd4b75">
+        <source>Add elements</source>
+        <target>Tambahkan elemen</target>
+      </trans-unit>
+      <trans-unit id="se63c78875f5b2178">
+        <source>Add node</source>
+        <target>Tambahkan simpul</target>
+      </trans-unit>
+      <trans-unit id="sceb35fbe10efb7a1">
+        <source>Add edge</source>
+        <target>Tambahkan tepi</target>
+      </trans-unit>
+      <trans-unit id="s5fd300106abf0f0e">
+        <source>Add picture</source>
+        <target>Tambahkan gambar</target>
+      </trans-unit>
+      <trans-unit id="scbd0cdcee3a38719">
+        <source>Edge edits</source>
+        <target>Pengeditan tepi</target>
+      </trans-unit>
+      <trans-unit id="s2afc172e45ceaabe">
+        <source>Stroke color</source>
+        <target>Warna garis</target>
+      </trans-unit>
+      <trans-unit id="se615f6ce0dd01061">
+        <source>Stroke width</source>
+        <target>Lebar garis</target>
+      </trans-unit>
+      <trans-unit id="s822bb535ea683190">
+        <source>Stroke style</source>
+        <target>Gaya garis</target>
+      </trans-unit>
+      <trans-unit id="sfe31d1c784d29ef4">
+        <source>Solid</source>
+        <target>Polos</target>
+      </trans-unit>
+      <trans-unit id="sc74e6ebfbc1a0e5c">
+        <source>Dashed</source>
+        <target>Bergaris putus-putus</target>
+      </trans-unit>
+      <trans-unit id="sd7e04a53d5f87b4d">
+        <source>Dotted</source>
+        <target>Titik-titik</target>
+      </trans-unit>
+      <trans-unit id="sb9762427948cf2b3">
+        <source>Image edits</source>
+        <target>Pengeditan gambar</target>
+      </trans-unit>
+      <trans-unit id="s74de6dd63f44c218">
+        <source>Node edits</source>
+        <target>Pengeditan simpul</target>
+      </trans-unit>
+      <trans-unit id="s2de969afacdaa7a6">
+        <source>Shape</source>
+        <target>Bentuk</target>
+      </trans-unit>
+      <trans-unit id="s5d0b63df0bad8c2e">
+        <source>Rectangle</source>
+        <target>Persegi Panjang</target>
+      </trans-unit>
+      <trans-unit id="sbadcfb6aa6ef38b1">
+        <source>Ellipse</source>
+        <target>Elips</target>
+      </trans-unit>
+      <trans-unit id="s469d5c53c3a49087">
+        <source>Diamond</source>
+        <target>Bentuk berlian</target>
+      </trans-unit>
+      <trans-unit id="sd1f81984eeb7c0e8">
+        <source>Fill</source>
+        <target>Isi</target>
+      </trans-unit>
+      <trans-unit id="s9370dc6afa716b57">
+        <source>Border</source>
+        <target>Garis tepi</target>
+      </trans-unit>
+      <trans-unit id="s53dcaa8587a3546f">
+        <source>Border width</source>
+        <target>Lebar garis tepi</target>
+      </trans-unit>
+      <trans-unit id="s39be3c731b2ea7dd">
+        <source>Border type</source>
+        <target>Jenis tepi</target>
+      </trans-unit>
+      <trans-unit id="sabe465e6eb12f208">
+        <source>Border color</source>
+        <target>Warna tepi</target>
+      </trans-unit>
+      <trans-unit id="sad17444d283ef2db">
+        <source>Connected page</source>
+        <target>Halaman terkait</target>
+      </trans-unit>
+      <trans-unit id="sabfeef1e4511a839">
+        <source>Page actions</source>
+        <target>Tindakan halaman</target>
+      </trans-unit>
+      <trans-unit id="s9ee4c202515c84c5">
+        <source>Delete page</source>
+        <target>Hapus halaman</target>
+      </trans-unit>
+      <trans-unit id="s952c758843b27536">
+        <source>Are you sure you want to delete this page?</source>
+        <target>Apakah Anda yakin ingin menghapus halaman ini?</target>
+      </trans-unit>
+      <trans-unit id="s2ceb11be2290bb1b">
+        <source>Cancel</source>
+        <target>Batal</target>
+      </trans-unit>
+      <trans-unit id="s575e795c45e2d97e">
+        <source>Go back</source>
+        <target>Kembali</target>
+      </trans-unit>
+      <trans-unit id="sad62ff7ac099b1df">
+        <source>Text edits</source>
+        <target>Pengeditan teks</target>
+      </trans-unit>
+      <trans-unit id="sf7c0eba7c822e3d6">
+        <source>Bold</source>
+        <target>Tebal</target>
+      </trans-unit>
+      <trans-unit id="s523eb9043213ff0d">
+        <source>Italic</source>
+        <target>Miring</target>
+      </trans-unit>
+      <trans-unit id="sb206d700d26b14ff">
+        <source>Underline</source>
+        <target>Garis bawah</target>
+      </trans-unit>
+      <trans-unit id="s8e43508f1392e94d">
+        <source>Text color</source>
+        <target>Warna teks</target>
+      </trans-unit>
+      <trans-unit id="sa30f1981fd1cd441">
+        <source>Font size</source>
+        <target>Ukuran huruf</target>
+      </trans-unit>
+      <trans-unit id="s3c604c5ce842d6f2">
+        <source>Fit to view</source>
+        <target>Sesuaikan dengan tampilan</target>
+      </trans-unit>
+      <trans-unit id="sc65ea2cf2f21a13a">
+        <source>Zoom out</source>
+        <target>Perbesar</target>
+      </trans-unit>
+      <trans-unit id="s236ae937cbcd6a39">
+        <source>Zoom in</source>
+        <target>Perbesar</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

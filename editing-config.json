@@ -1,0 +1,37 @@
+{
+  ".": {
+    "description": {
+      "bg": "не е дефинирано",
+      "de": "undefiniert",
+      "da": "udefineret",
+      "ar": "غير محدد",
+      "cs": "nedefinováno",
+      "it": "non definito",
+      "fi": "määrittelemätön",
+      "et": "määratlemata",
+      "nl": "undefined",
+      "fr": "non défini",
+      "el": "undefined",
+      "hu": "nem definiált",
+      "lv": "nav definēts",
+      "lt": "nenustatyta",
+      "pl": "nieokreślone",
+      "nb": "udefinert",
+      "pt-PT": "indefinido",
+      "ro": "nedefinit",
+      "sk": "nešpecifikované",
+      "sl": "nedoločeno",
+      "ru": "не определено",
+      "es": "sin definir",
+      "sv": "odefinierat",
+      "uk": "не визначено",
+      "tr": "tanımlanmamış",
+      "pt-BR": "indefinido",
+      "ko": "정의되지 않음",
+      "ja": "未定義",
+      "id": "tidak ditentukan",
+      "zh-hans": "未定义",
+      "zh-hant": "未定義"
+    }
+  }
+}

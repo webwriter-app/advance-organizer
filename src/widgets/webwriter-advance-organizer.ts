@@ -30,11 +30,11 @@ import { ClipboardAction } from "../utils/clipboard";
 import { AoImageActionsGroup } from "../components/ui/toolbar-groups/image-actions";
 import { AoTextActionsGroup } from "../components/ui/toolbar-groups/text-actions";
 
-/* Optional LOCALIZATION: Uncomment this after first running `npm run localize` in the command line.
-import LOCALIZE from '../localization/generated'
-import {msg} from '@lit/localize'
-*/
+// @ts-ignore
+import LOCALIZE from "../../localization/generated";
+import { localized } from "@lit/localize";
 
+@localized()
 @customElement("webwriter-advance-organizer")
 export class WebwriterAdvanceOrganizer extends LitElementWw {
   @provide({
@@ -170,9 +170,7 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
   @query("ao-canvas")
   private accessor canvas!: AoCanvas | null;
 
-  /* Optional LOCALIZATION: Uncomment this after first running `npm run localize` in the command line.
-  localize = LOCALIZE
-  */
+  protected override localize = LOCALIZE;
 
   constructor() {
     super();

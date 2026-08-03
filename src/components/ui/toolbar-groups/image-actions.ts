@@ -8,6 +8,7 @@ import { SubscribeController } from "../../../state/subscribe";
 import { actionsStyles } from "./toolbar-actions.styles";
 import { Id, ImageStyle, StrokeStyle } from "../../../model/types";
 import { onPickedColor, previewColor } from "../../../utils/color-preview";
+import { localized, msg } from "@lit/localize";
 
 import SlButton from "@shoelace-style/shoelace/dist/components/button/button.component.js";
 import SlButtonGroup from "@shoelace-style/shoelace/dist/components/button-group/button-group.component.js";
@@ -23,6 +24,7 @@ import iconStrokeWidth from "@tabler/icons/outline/stroke-straight.svg";
 import iconFill from "@tabler/icons/outline/bucket-droplet.svg";
 import iconBorderStyle from "@tabler/icons/outline/border-style-2.svg";
 
+@localized()
 export class AoImageActionsGroup extends LitElementWw {
   @consume({ context: documentContext })
   accessor doc!: DocumentController;
@@ -65,9 +67,9 @@ export class AoImageActionsGroup extends LitElementWw {
     const stroke = item.style?.stroke || "#000000";
     const strokeWidth = item.style?.strokeWidth ?? 0;
 
-    return html`<sl-button-group label="Image edits">
+    return html`<sl-button-group label=${msg("Image edits")}>
       <sl-dropdown>
-        <sl-tooltip slot="trigger" content="Stroke color">
+        <sl-tooltip slot="trigger" content=${msg("Stroke color")}>
           <sl-button size="small" caret>
             <sl-icon .src=${iconFill}></sl-icon>
           </sl-button>
@@ -82,7 +84,7 @@ export class AoImageActionsGroup extends LitElementWw {
           )}></sl-color-picker>
       </sl-dropdown>
       <sl-dropdown>
-        <sl-tooltip slot="trigger" content="Stroke width">
+        <sl-tooltip slot="trigger" content=${msg("Stroke width")}>
           <sl-button size="small" caret>
             <sl-icon .src=${iconStrokeWidth}></sl-icon>
           </sl-button>
@@ -98,7 +100,7 @@ export class AoImageActionsGroup extends LitElementWw {
           }}></sl-range>
       </sl-dropdown>
       <sl-dropdown>
-        <sl-tooltip slot="trigger" content="Stroke style">
+        <sl-tooltip slot="trigger" content=${msg("Stroke style")}>
           <sl-button size="small" caret>
             <sl-icon .src=${iconBorderStyle}></sl-icon>
           </sl-button>
@@ -106,9 +108,9 @@ export class AoImageActionsGroup extends LitElementWw {
         <sl-menu
           @sl-select=${(e: CustomEvent) =>
             this._updateBorderStyle(e.detail.item.value)}>
-          <sl-menu-item value="solid">Solid</sl-menu-item>
-          <sl-menu-item value="dashed">Dashed</sl-menu-item>
-          <sl-menu-item value="dotted">Dotted</sl-menu-item>
+          <sl-menu-item value="solid">${msg("Solid")}</sl-menu-item>
+          <sl-menu-item value="dashed">${msg("Dashed")}</sl-menu-item>
+          <sl-menu-item value="dotted">${msg("Dotted")}</sl-menu-item>
         </sl-menu>
       </sl-dropdown>
     </sl-button-group>`;

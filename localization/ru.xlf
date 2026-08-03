@@ -1,0 +1,191 @@
+<xliff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 http://docs.oasis-open.org/xliff/v1.2/os/xliff-core-1.2-strict.xsd" xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="lit-localize-inputs" datatype="plaintext" source-language="en" target-language="ru">
+    <body>
+      <trans-unit id="s0bc31719aa7a8f43">
+        <source>Cut</source>
+        <target>Вырезать</target>
+      </trans-unit>
+      <trans-unit id="s3687049d1af562c4">
+        <source>Copy</source>
+        <target>Копировать</target>
+      </trans-unit>
+      <trans-unit id="sd374c80e17e18808">
+        <source>Paste</source>
+        <target>Вставить</target>
+      </trans-unit>
+      <trans-unit id="sfac15b89e0668996">
+        <source>Duplicate</source>
+        <target>Дублировать</target>
+      </trans-unit>
+      <trans-unit id="sdc673e73b5c13aea">
+        <source>Delete</source>
+        <target>Удалить</target>
+      </trans-unit>
+      <trans-unit id="se0a34419921b022a">
+        <source>Del</source>
+        <target>Удалить</target>
+      </trans-unit>
+      <trans-unit id="saa987c09599e0f9a">
+        <source>Drop 
+          <x id="0" equiv-text="${this.imageCount}"/> images here
+        </source>
+        <target>Перетащите 
+          изображения 
+          <x id="0" equiv-text="${this.imageCount}"/> сюда
+        </target>
+      </trans-unit>
+      <trans-unit id="sd6f0f760e3bb3148">
+        <source>Drop 1 image here</source>
+        <target>Перетащите 1 изображение сюда</target>
+      </trans-unit>
+      <trans-unit id="s4975775e0dfd4b75">
+        <source>Add elements</source>
+        <target>Добавить элементы</target>
+      </trans-unit>
+      <trans-unit id="se63c78875f5b2178">
+        <source>Add node</source>
+        <target>Добавить узел</target>
+      </trans-unit>
+      <trans-unit id="sceb35fbe10efb7a1">
+        <source>Add edge</source>
+        <target>Добавить ребро</target>
+      </trans-unit>
+      <trans-unit id="s5fd300106abf0f0e">
+        <source>Add picture</source>
+        <target>Добавить изображение</target>
+      </trans-unit>
+      <trans-unit id="scbd0cdcee3a38719">
+        <source>Edge edits</source>
+        <target>Редактирование ребер</target>
+      </trans-unit>
+      <trans-unit id="s2afc172e45ceaabe">
+        <source>Stroke color</source>
+        <target>Цвет обводки</target>
+      </trans-unit>
+      <trans-unit id="se615f6ce0dd01061">
+        <source>Stroke width</source>
+        <target>Ширина обводки</target>
+      </trans-unit>
+      <trans-unit id="s822bb535ea683190">
+        <source>Stroke style</source>
+        <target>Стиль обводки</target>
+      </trans-unit>
+      <trans-unit id="sfe31d1c784d29ef4">
+        <source>Solid</source>
+        <target>Сплошная</target>
+      </trans-unit>
+      <trans-unit id="sc74e6ebfbc1a0e5c">
+        <source>Dashed</source>
+        <target>Пунктирная</target>
+      </trans-unit>
+      <trans-unit id="sd7e04a53d5f87b4d">
+        <source>Dotted</source>
+        <target>Точечно-штриховая</target>
+      </trans-unit>
+      <trans-unit id="sb9762427948cf2b3">
+        <source>Image edits</source>
+        <target>Редактирование изображений</target>
+      </trans-unit>
+      <trans-unit id="s74de6dd63f44c218">
+        <source>Node edits</source>
+        <target>Редактирование узлов</target>
+      </trans-unit>
+      <trans-unit id="s2de969afacdaa7a6">
+        <source>Shape</source>
+        <target>Фигура</target>
+      </trans-unit>
+      <trans-unit id="s5d0b63df0bad8c2e">
+        <source>Rectangle</source>
+        <target>Прямоугольник</target>
+      </trans-unit>
+      <trans-unit id="sbadcfb6aa6ef38b1">
+        <source>Ellipse</source>
+        <target>Эллипс</target>
+      </trans-unit>
+      <trans-unit id="s469d5c53c3a49087">
+        <source>Diamond</source>
+        <target>Ромб</target>
+      </trans-unit>
+      <trans-unit id="sd1f81984eeb7c0e8">
+        <source>Fill</source>
+        <target>Заливка</target>
+      </trans-unit>
+      <trans-unit id="s9370dc6afa716b57">
+        <source>Border</source>
+        <target>Контур</target>
+      </trans-unit>
+      <trans-unit id="s53dcaa8587a3546f">
+        <source>Border width</source>
+        <target>Ширина рамки</target>
+      </trans-unit>
+      <trans-unit id="s39be3c731b2ea7dd">
+        <source>Border type</source>
+        <target>Тип рамки</target>
+      </trans-unit>
+      <trans-unit id="sabe465e6eb12f208">
+        <source>Border color</source>
+        <target>Цвет рамки</target>
+      </trans-unit>
+      <trans-unit id="sad17444d283ef2db">
+        <source>Connected page</source>
+        <target>Связанная страница</target>
+      </trans-unit>
+      <trans-unit id="sabfeef1e4511a839">
+        <source>Page actions</source>
+        <target>Действия со страницей</target>
+      </trans-unit>
+      <trans-unit id="s9ee4c202515c84c5">
+        <source>Delete page</source>
+        <target>Удалить страницу</target>
+      </trans-unit>
+      <trans-unit id="s952c758843b27536">
+        <source>Are you sure you want to delete this page?</source>
+        <target>Вы уверены, что хотите удалить эту страницу?</target>
+      </trans-unit>
+      <trans-unit id="s2ceb11be2290bb1b">
+        <source>Cancel</source>
+        <target>Отменить</target>
+      </trans-unit>
+      <trans-unit id="s575e795c45e2d97e">
+        <source>Go back</source>
+        <target>Вернуться</target>
+      </trans-unit>
+      <trans-unit id="sad62ff7ac099b1df">
+        <source>Text edits</source>
+        <target>Редактирование текста</target>
+      </trans-unit>
+      <trans-unit id="sf7c0eba7c822e3d6">
+        <source>Bold</source>
+        <target>Жирный шрифт</target>
+      </trans-unit>
+      <trans-unit id="s523eb9043213ff0d">
+        <source>Italic</source>
+        <target>Курсив</target>
+      </trans-unit>
+      <trans-unit id="sb206d700d26b14ff">
+        <source>Underline</source>
+        <target>Подчеркивание</target>
+      </trans-unit>
+      <trans-unit id="s8e43508f1392e94d">
+        <source>Text color</source>
+        <target>Цвет текста</target>
+      </trans-unit>
+      <trans-unit id="sa30f1981fd1cd441">
+        <source>Font size</source>
+        <target>Размер шрифта</target>
+      </trans-unit>
+      <trans-unit id="s3c604c5ce842d6f2">
+        <source>Fit to view</source>
+        <target>Подогнать под экран</target>
+      </trans-unit>
+      <trans-unit id="sc65ea2cf2f21a13a">
+        <source>Zoom out</source>
+        <target>Уменьшить масштаб</target>
+      </trans-unit>
+      <trans-unit id="s236ae937cbcd6a39">
+        <source>Zoom in</source>
+        <target>Увеличить</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -2,6 +2,7 @@ import { LitElementWw } from "@webwriter/lit";
 import { css, html, type TemplateResult } from "lit";
 import { state } from "lit/decorators.js";
 import { actionsStyles } from "./toolbar-actions.styles";
+import { localized, msg } from "@lit/localize";
 
 import SlButton from "@shoelace-style/shoelace/dist/components/button/button.component.js";
 import SlButtonGroup from "@shoelace-style/shoelace/dist/components/button-group/button-group.component.js";
@@ -11,6 +12,7 @@ import SlTooltip from "@shoelace-style/shoelace/dist/components/tooltip/tooltip.
 
 import iconDelete from "@tabler/icons/outline/trash.svg";
 
+@localized()
 export class AoPageEditActionsGroup extends LitElementWw {
   static override scopedElements = {
     "sl-button": SlButton,
@@ -34,23 +36,23 @@ export class AoPageEditActionsGroup extends LitElementWw {
   private accessor _confirmOpen = false;
 
   protected override render(): TemplateResult {
-    return html`<sl-button-group label="Page actions">
-        <sl-tooltip content="Delete page">
+    return html`<sl-button-group label=${msg("Page actions")}>
+        <sl-tooltip content=${msg("Delete page")}>
           <sl-button size="small" @click=${this._handleDeletePageClick}>
             <sl-icon src=${iconDelete}></sl-icon>
           </sl-button>
         </sl-tooltip>
       </sl-button-group>
       <sl-dialog
-        label="Delete page"
+        label=${msg("Delete page")}
         ?open=${this._confirmOpen}
         @sl-hide=${this._handleCancel}>
-        Are you sure you want to delete this page?
+        ${msg("Are you sure you want to delete this page?")}
         <sl-button slot="footer" autofocus @click=${this._handleCancel}>
-          Cancel
+          ${msg("Cancel")}
         </sl-button>
         <sl-button slot="footer" variant="danger" @click=${this._handleConfirm}>
-          Delete
+          ${msg("Delete")}
         </sl-button>
       </sl-dialog>`;
   }

@@ -8,6 +8,7 @@ import { SubscribeController } from "../../../state/subscribe";
 import { actionsStyles } from "./toolbar-actions.styles";
 import { NodeShape, StrokeStyle } from "../../../model/types";
 import { onPickedColor, previewColor } from "../../../utils/color-preview";
+import { localized, msg } from "@lit/localize";
 
 import SlButton from "@shoelace-style/shoelace/dist/components/button/button.component.js";
 import SlButtonGroup from "@shoelace-style/shoelace/dist/components/button-group/button-group.component.js";
@@ -25,6 +26,7 @@ import iconShape from "@tabler/icons/outline/circle-square.svg";
 import iconFill from "@tabler/icons/outline/bucket-droplet.svg";
 import iconBorder from "@tabler/icons/outline/border-style.svg";
 
+@localized()
 export class AoNodeActionsGroup extends LitElementWw {
   @consume({ context: documentContext })
   accessor doc!: DocumentController;
@@ -70,9 +72,9 @@ export class AoNodeActionsGroup extends LitElementWw {
     const stroke = item.style.stroke || "#000000";
     const strokeWidth = item.style.strokeWidth ?? 1;
 
-    return html`<sl-button-group label="Node edits">
+    return html`<sl-button-group label=${msg("Node edits")}>
       <sl-dropdown>
-        <sl-tooltip slot="trigger" content="Shape">
+        <sl-tooltip slot="trigger" content=${msg("Shape")}>
           <sl-button size="small" caret>
             <sl-icon .src=${iconShape}></sl-icon>
           </sl-button>
@@ -80,13 +82,13 @@ export class AoNodeActionsGroup extends LitElementWw {
         <sl-menu
           @sl-select=${(e: CustomEvent) =>
             this._updateNodeShape(e.detail.item.value)}>
-          <sl-menu-item value="rectangle">Rectangle</sl-menu-item>
-          <sl-menu-item value="ellipse">Ellipse</sl-menu-item>
-          <sl-menu-item value="diamond">Diamond</sl-menu-item>
+          <sl-menu-item value="rectangle">${msg("Rectangle")}</sl-menu-item>
+          <sl-menu-item value="ellipse">${msg("Ellipse")}</sl-menu-item>
+          <sl-menu-item value="diamond">${msg("Diamond")}</sl-menu-item>
         </sl-menu>
       </sl-dropdown>
       <sl-dropdown>
-        <sl-tooltip slot="trigger" content="Fill">
+        <sl-tooltip slot="trigger" content=${msg("Fill")}>
           <sl-button size="small" caret>
             <sl-icon .src=${iconFill}></sl-icon>
           </sl-button>
@@ -101,7 +103,7 @@ export class AoNodeActionsGroup extends LitElementWw {
           )}></sl-color-picker>
       </sl-dropdown>
       <sl-dropdown>
-        <sl-tooltip slot="trigger" content="Border">
+        <sl-tooltip slot="trigger" content=${msg("Border")}>
           <sl-button size="small" caret>
             <sl-icon .src=${iconBorder}></sl-icon>
           </sl-button>
@@ -109,7 +111,7 @@ export class AoNodeActionsGroup extends LitElementWw {
         <sl-menu
           @sl-select=${(e: CustomEvent) =>
             this._updateNodeBorder(e.detail.item.value)}>
-          <sl-menu-label>Border width</sl-menu-label>
+          <sl-menu-label>${msg("Border width")}</sl-menu-label>
           <sl-range
             .value=${strokeWidth}
             min="0"
@@ -120,12 +122,12 @@ export class AoNodeActionsGroup extends LitElementWw {
               }
             }}></sl-range>
           <sl-divider></sl-divider>
-          <sl-menu-label>Border type</sl-menu-label>
-          <sl-menu-item value="border-solid">Solid</sl-menu-item>
-          <sl-menu-item value="border-dashed">Dashed</sl-menu-item>
-          <sl-menu-item value="border-dotted">Dotted</sl-menu-item>
+          <sl-menu-label>${msg("Border type")}</sl-menu-label>
+          <sl-menu-item value="border-solid">${msg("Solid")}</sl-menu-item>
+          <sl-menu-item value="border-dashed">${msg("Dashed")}</sl-menu-item>
+          <sl-menu-item value="border-dotted">${msg("Dotted")}</sl-menu-item>
           <sl-divider></sl-divider>
-          <sl-menu-label>Border color</sl-menu-label>
+          <sl-menu-label>${msg("Border color")}</sl-menu-label>
           <sl-color-picker
             .value=${stroke}
             inline

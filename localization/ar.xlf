@@ -1,0 +1,191 @@
+<xliff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 http://docs.oasis-open.org/xliff/v1.2/os/xliff-core-1.2-strict.xsd" xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="lit-localize-inputs" datatype="plaintext" source-language="en" target-language="ar">
+    <body>
+      <trans-unit id="s0bc31719aa7a8f43">
+        <source>Cut</source>
+        <target>قص</target>
+      </trans-unit>
+      <trans-unit id="s3687049d1af562c4">
+        <source>Copy</source>
+        <target>نسخ</target>
+      </trans-unit>
+      <trans-unit id="sd374c80e17e18808">
+        <source>Paste</source>
+        <target>لصق</target>
+      </trans-unit>
+      <trans-unit id="sfac15b89e0668996">
+        <source>Duplicate</source>
+        <target>تكرار</target>
+      </trans-unit>
+      <trans-unit id="sdc673e73b5c13aea">
+        <source>Delete</source>
+        <target>حذف</target>
+      </trans-unit>
+      <trans-unit id="se0a34419921b022a">
+        <source>Del</source>
+        <target>حذف</target>
+      </trans-unit>
+      <trans-unit id="saa987c09599e0f9a">
+        <source>Drop 
+          <x id="0" equiv-text="${this.imageCount}"/> images here
+        </source>
+        <target>سحب 
+          صور 
+          <x id="0" equiv-text="${this.imageCount}"/> إلى هنا
+        </target>
+      </trans-unit>
+      <trans-unit id="sd6f0f760e3bb3148">
+        <source>Drop 1 image here</source>
+        <target>اسقط صورة واحدة هنا</target>
+      </trans-unit>
+      <trans-unit id="s4975775e0dfd4b75">
+        <source>Add elements</source>
+        <target>إضافة عناصر</target>
+      </trans-unit>
+      <trans-unit id="se63c78875f5b2178">
+        <source>Add node</source>
+        <target>إضافة عقدة</target>
+      </trans-unit>
+      <trans-unit id="sceb35fbe10efb7a1">
+        <source>Add edge</source>
+        <target>أضف حافة</target>
+      </trans-unit>
+      <trans-unit id="s5fd300106abf0f0e">
+        <source>Add picture</source>
+        <target>أضف صورة</target>
+      </trans-unit>
+      <trans-unit id="scbd0cdcee3a38719">
+        <source>Edge edits</source>
+        <target>تعديلات الحافة</target>
+      </trans-unit>
+      <trans-unit id="s2afc172e45ceaabe">
+        <source>Stroke color</source>
+        <target>لون الخط</target>
+      </trans-unit>
+      <trans-unit id="se615f6ce0dd01061">
+        <source>Stroke width</source>
+        <target>عرض الخط</target>
+      </trans-unit>
+      <trans-unit id="s822bb535ea683190">
+        <source>Stroke style</source>
+        <target>نمط الخط</target>
+      </trans-unit>
+      <trans-unit id="sfe31d1c784d29ef4">
+        <source>Solid</source>
+        <target>مملوء</target>
+      </trans-unit>
+      <trans-unit id="sc74e6ebfbc1a0e5c">
+        <source>Dashed</source>
+        <target>متقطع</target>
+      </trans-unit>
+      <trans-unit id="sd7e04a53d5f87b4d">
+        <source>Dotted</source>
+        <target>منقط</target>
+      </trans-unit>
+      <trans-unit id="sb9762427948cf2b3">
+        <source>Image edits</source>
+        <target>تعديلات الصورة</target>
+      </trans-unit>
+      <trans-unit id="s74de6dd63f44c218">
+        <source>Node edits</source>
+        <target>تعديلات العقد</target>
+      </trans-unit>
+      <trans-unit id="s2de969afacdaa7a6">
+        <source>Shape</source>
+        <target>الشكل</target>
+      </trans-unit>
+      <trans-unit id="s5d0b63df0bad8c2e">
+        <source>Rectangle</source>
+        <target>مستطيل</target>
+      </trans-unit>
+      <trans-unit id="sbadcfb6aa6ef38b1">
+        <source>Ellipse</source>
+        <target>القطع الناقص</target>
+      </trans-unit>
+      <trans-unit id="s469d5c53c3a49087">
+        <source>Diamond</source>
+        <target>الماسة</target>
+      </trans-unit>
+      <trans-unit id="sd1f81984eeb7c0e8">
+        <source>Fill</source>
+        <target>التعبئة</target>
+      </trans-unit>
+      <trans-unit id="s9370dc6afa716b57">
+        <source>Border</source>
+        <target>الحدود</target>
+      </trans-unit>
+      <trans-unit id="s53dcaa8587a3546f">
+        <source>Border width</source>
+        <target>عرض الحدود</target>
+      </trans-unit>
+      <trans-unit id="s39be3c731b2ea7dd">
+        <source>Border type</source>
+        <target>نوع الحدود</target>
+      </trans-unit>
+      <trans-unit id="sabe465e6eb12f208">
+        <source>Border color</source>
+        <target>لون الحدود</target>
+      </trans-unit>
+      <trans-unit id="sad17444d283ef2db">
+        <source>Connected page</source>
+        <target>الصفحة المرتبطة</target>
+      </trans-unit>
+      <trans-unit id="sabfeef1e4511a839">
+        <source>Page actions</source>
+        <target>إجراءات الصفحة</target>
+      </trans-unit>
+      <trans-unit id="s9ee4c202515c84c5">
+        <source>Delete page</source>
+        <target>حذف الصفحة</target>
+      </trans-unit>
+      <trans-unit id="s952c758843b27536">
+        <source>Are you sure you want to delete this page?</source>
+        <target>هل أنت متأكد من رغبتك في حذف هذه الصفحة؟</target>
+      </trans-unit>
+      <trans-unit id="s2ceb11be2290bb1b">
+        <source>Cancel</source>
+        <target>إلغاء</target>
+      </trans-unit>
+      <trans-unit id="s575e795c45e2d97e">
+        <source>Go back</source>
+        <target>الرجوع</target>
+      </trans-unit>
+      <trans-unit id="sad62ff7ac099b1df">
+        <source>Text edits</source>
+        <target>تعديلات النص</target>
+      </trans-unit>
+      <trans-unit id="sf7c0eba7c822e3d6">
+        <source>Bold</source>
+        <target>غامق</target>
+      </trans-unit>
+      <trans-unit id="s523eb9043213ff0d">
+        <source>Italic</source>
+        <target>مائل</target>
+      </trans-unit>
+      <trans-unit id="sb206d700d26b14ff">
+        <source>Underline</source>
+        <target>تسطير</target>
+      </trans-unit>
+      <trans-unit id="s8e43508f1392e94d">
+        <source>Text color</source>
+        <target>لون النص</target>
+      </trans-unit>
+      <trans-unit id="sa30f1981fd1cd441">
+        <source>Font size</source>
+        <target>حجم الخط</target>
+      </trans-unit>
+      <trans-unit id="s3c604c5ce842d6f2">
+        <source>Fit to view</source>
+        <target>تكبير</target>
+      </trans-unit>
+      <trans-unit id="sc65ea2cf2f21a13a">
+        <source>Zoom out</source>
+        <target>تصغير</target>
+      </trans-unit>
+      <trans-unit id="s236ae937cbcd6a39">
+        <source>Zoom in</source>
+        <target>تكبير</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

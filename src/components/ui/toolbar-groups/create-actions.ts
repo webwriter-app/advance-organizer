@@ -6,6 +6,7 @@ import { html, PropertyValues, type TemplateResult } from "lit";
 import { SubscribeController } from "../../../state/subscribe";
 import { actionsStyles } from "./toolbar-actions.styles";
 import { SelectionController } from "../../../state/selection";
+import { localized, msg } from "@lit/localize";
 
 import SlButton from "@shoelace-style/shoelace/dist/components/button/button.component.js";
 import SlButtonGroup from "@shoelace-style/shoelace/dist/components/button-group/button-group.component.js";
@@ -16,6 +17,7 @@ import iconAddNode from "@tabler/icons/outline/square-plus-2.svg";
 import iconAddEdge from "@tabler/icons/outline/link-plus.svg";
 import iconAddImage from "@tabler/icons/outline/photo-plus.svg";
 
+@localized()
 export class AoCreateActionsGroup extends LitElementWw {
   @consume({ context: documentContext })
   accessor doc!: DocumentController;
@@ -38,18 +40,18 @@ export class AoCreateActionsGroup extends LitElementWw {
   static override styles = actionsStyles;
 
   protected override render(): TemplateResult {
-    return html`<sl-button-group label="Add elements">
-      <sl-tooltip content="Add node (N)">
+    return html`<sl-button-group label=${msg("Add elements")}>
+      <sl-tooltip content="${msg("Add node")} (N)">
         <sl-button size="small" @click=${this._handleAddNodeClick}>
           <sl-icon src=${iconAddNode}></sl-icon>
         </sl-button>
       </sl-tooltip>
-      <sl-tooltip content="Add edge (E)">
+      <sl-tooltip content="${msg("Add edge")} (E)">
         <sl-button size="small" @click=${this._handleAddEdgeClick}>
           <sl-icon src=${iconAddEdge}></sl-icon>
         </sl-button>
       </sl-tooltip>
-      <sl-tooltip content="Add picture (I)">
+      <sl-tooltip content="${msg("Add picture")} (I)">
         <sl-button size="small" @click=${this._handleAddImageClick}>
           <sl-icon src=${iconAddImage}></sl-icon>
         </sl-button>

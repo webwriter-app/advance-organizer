@@ -8,6 +8,7 @@ import { SubscribeController } from "../../../state/subscribe";
 import { actionsStyles } from "./toolbar-actions.styles";
 import { Label } from "../../../model/types";
 import { onPickedColor, previewColor } from "../../../utils/color-preview";
+import { localized, msg } from "@lit/localize";
 
 import SlButton from "@shoelace-style/shoelace/dist/components/button/button.component.js";
 import SlButtonGroup from "@shoelace-style/shoelace/dist/components/button-group/button-group.component.js";
@@ -23,6 +24,7 @@ import iconUnderline from "@tabler/icons/outline/underline.svg";
 import iconTextColor from "@tabler/icons/outline/text-color.svg";
 import iconTextSize from "@tabler/icons/outline/text-size.svg";
 
+@localized()
 export class AoTextActionsGroup extends LitElementWw {
   @consume({ context: documentContext })
   accessor doc!: DocumentController;
@@ -93,8 +95,8 @@ export class AoTextActionsGroup extends LitElementWw {
     const color = first.color || "#000000";
     const fontSize = first.fontSize ?? 18;
 
-    return html`<sl-button-group label="Text edits">
-      <sl-tooltip content="Bold">
+    return html`<sl-button-group label=${msg("Text edits")}>
+      <sl-tooltip content=${msg("Bold")}>
         <sl-button
           size="small"
           class=${bold ? "active" : ""}
@@ -102,7 +104,7 @@ export class AoTextActionsGroup extends LitElementWw {
           <sl-icon .src=${iconBold}></sl-icon>
         </sl-button>
       </sl-tooltip>
-      <sl-tooltip content="Italic">
+      <sl-tooltip content=${msg("Italic")}>
         <sl-button
           size="small"
           class=${italic ? "active" : ""}
@@ -110,7 +112,7 @@ export class AoTextActionsGroup extends LitElementWw {
           <sl-icon .src=${iconItalic}></sl-icon>
         </sl-button>
       </sl-tooltip>
-      <sl-tooltip content="Underline">
+      <sl-tooltip content=${msg("Underline")}>
         <sl-button
           size="small"
           class=${underline ? "active" : ""}
@@ -119,7 +121,7 @@ export class AoTextActionsGroup extends LitElementWw {
         </sl-button>
       </sl-tooltip>
       <sl-dropdown>
-        <sl-tooltip slot="trigger" content="Text color">
+        <sl-tooltip slot="trigger" content=${msg("Text color")}>
           <sl-button size="small" caret>
             <sl-icon .src=${iconTextColor}></sl-icon>
           </sl-button>
@@ -136,7 +138,7 @@ export class AoTextActionsGroup extends LitElementWw {
           )}></sl-color-picker>
       </sl-dropdown>
       <sl-dropdown>
-        <sl-tooltip slot="trigger" content="Font size">
+        <sl-tooltip slot="trigger" content=${msg("Font size")}>
           <sl-button size="small" caret>
             <sl-icon .src=${iconTextSize}></sl-icon>
           </sl-button>
