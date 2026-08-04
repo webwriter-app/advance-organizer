@@ -1,1 +1,17 @@
 !dist
+
+# Secrets
+.env
+.env.*
+
+# Editor-/Tooling-Config
+.editorconfig
+.prettierrc
+.gitattributes
+.vscode/
+.idea/
+
+# Logs
+*.log
+.DS_Store
+Thumbs.db
