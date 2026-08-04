@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.1" srcLang="en" trgLang="de">
 <file id="." original=".">
-<unit id="description"><segment><source>undefined</source><target>undefiniert</target></segment></unit>
+<unit id="description"><segment><source>Create visual advance organizers to introduce new topics. Link nodes to further content that learners can open with a click.</source><target>Erstellen Sie visuelle Übersichten, um neue Themen einzuführen. Verknüpfen Sie Knoten mit weiteren Inhalten, die die Lernenden mit einem Klick öffnen können.</target></segment></unit>
 </file>
 </xliff>

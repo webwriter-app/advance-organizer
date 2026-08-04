@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.1" srcLang="en" trgLang="zh-hant">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.1" srcLang="en" trgLang="zh-Hant">
 <file id="." original=".">
-<unit id="description"><segment><source>undefined</source><target>未定義</target></segment></unit>
+<unit id="description"><segment><source>Create visual advance organizers to introduce new topics. Link nodes to further content that learners can open with a click.</source><target>建立視覺化的預備組織圖，用以引介新主題。將節點連結至延伸內容，學習者只需點擊即可開啟。</target></segment></unit>
 </file>
 </xliff>

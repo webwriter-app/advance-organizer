@@ -1,8 +1,27 @@
 {
   "name": "@webwriter/advance-organizer",
   "version": "0.0.1",
+  "description": "Create visual advance organizers to introduce new topics. Link nodes to further content that learners can open with a click.",
   "keywords": [
     "webwriter-widget",
+    "advance-organizer",
+    "concept-map",
+    "mind-map",
+    "canvas",
+    "widget-presentational",
+    "widget-conceptual",
+    "isced2011-2",
+    "isced2011-3",
+    "iscedf2013-01",
+    "iscedf2013-02",
+    "iscedf2013-03",
+    "iscedf2013-04",
+    "iscedf2013-05",
+    "iscedf2013-06",
+    "iscedf2013-07",
+    "iscedf2013-08",
+    "iscedf2013-09",
+    "iscedf2013-10",
     "widget-lang-en",
     "widget-lang-de",
     "widget-lang-ar",
@@ -66,6 +85,7 @@
       "source": "./src/widgets/webwriter-advance-organizer-page.ts",
       "default": "./dist/widgets/webwriter-advance-organizer-page.*"
     },
+    "./icon": "./icon.svg",
     "./editing-config.json": "./editing-config.json"
   },
   "editingConfig": {
