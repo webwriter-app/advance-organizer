@@ -64,8 +64,18 @@ export class PageController extends Observable {
       // https://developer.mozilla.org/en-US/docs/Web/API/HTML_Sanitizer_API
       const sanitizedContent = DOMPurify.sanitize(content, {
         CUSTOM_ELEMENT_HANDLING: {
-          tagNameCheck: () => true,
-          attributeNameCheck: () => true,
+          tagNameCheck: /^(webwriter|ww)-[a-z0-9-]+$/,
+          attributeNameCheck: (name) =>
+            /^[a-z][a-z0-9-]*$/.test(name) &&
+            !name.startsWith("on") &&
+            ![
+              "style",
+              "srcdoc",
+              "formaction",
+              "href",
+              "src",
+              "xlink:href",
+            ].includes(name),
           allowCustomizedBuiltInElements: false,
         },
       });
