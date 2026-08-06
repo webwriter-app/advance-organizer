@@ -40,4 +40,8 @@ export const actionsStyles = css`
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+
+  sl-range {
+    margin: 0 var(--sl-spacing-medium);
+  }
 `;

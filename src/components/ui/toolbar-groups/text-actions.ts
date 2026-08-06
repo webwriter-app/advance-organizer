@@ -17,6 +17,7 @@ import SlDropdown from "@shoelace-style/shoelace/dist/components/dropdown/dropdo
 import SlIcon from "@shoelace-style/shoelace/dist/components/icon/icon.component.js";
 import SlRange from "@shoelace-style/shoelace/dist/components/range/range.component.js";
 import SlTooltip from "@shoelace-style/shoelace/dist/components/tooltip/tooltip.component.js";
+import SlMenu from "@shoelace-style/shoelace/dist/components/menu/menu.component.js";
 
 import iconBold from "@tabler/icons/outline/bold.svg";
 import iconItalic from "@tabler/icons/outline/italic.svg";
@@ -40,6 +41,7 @@ export class AoTextActionsGroup extends LitElementWw {
     "sl-icon": SlIcon,
     "sl-range": SlRange,
     "sl-tooltip": SlTooltip,
+    "sl-menu": SlMenu,
   };
 
   protected override firstUpdated(_changedProperties: PropertyValues): void {
@@ -143,15 +145,17 @@ export class AoTextActionsGroup extends LitElementWw {
             <sl-icon .src=${iconTextSize}></sl-icon>
           </sl-button>
         </sl-tooltip>
-        <sl-range
-          .value=${fontSize}
-          min="8"
-          max="48"
-          @sl-input=${(e: CustomEvent) => {
-            if (e.target instanceof SlRange) {
-              this._updateLabelStyle({ fontSize: e.target.value });
-            }
-          }}></sl-range>
+        <sl-menu>
+          <sl-range
+            .value=${fontSize}
+            min="8"
+            max="48"
+            @sl-input=${(e: CustomEvent) => {
+              if (e.target instanceof SlRange) {
+                this._updateLabelStyle({ fontSize: e.target.value });
+              }
+            }}></sl-range
+        ></sl-menu>
       </sl-dropdown>
     </sl-button-group>`;
   }
