@@ -74,7 +74,7 @@ export class AoNodeActionsGroup extends LitElementWw {
 
     return html`<sl-button-group label=${msg("Node edits")}>
       <sl-dropdown>
-        <sl-tooltip slot="trigger" content=${msg("Shape")}>
+        <sl-tooltip slot="trigger" tabindex="-1" content=${msg("Shape")}>
           <sl-button size="small" caret>
             <sl-icon .src=${iconShape}></sl-icon>
           </sl-button>
@@ -88,7 +88,7 @@ export class AoNodeActionsGroup extends LitElementWw {
         </sl-menu>
       </sl-dropdown>
       <sl-dropdown>
-        <sl-tooltip slot="trigger" content=${msg("Fill")}>
+        <sl-tooltip slot="trigger" tabindex="-1" content=${msg("Fill")}>
           <sl-button size="small" caret>
             <sl-icon .src=${iconFill}></sl-icon>
           </sl-button>
@@ -103,7 +103,7 @@ export class AoNodeActionsGroup extends LitElementWw {
           )}></sl-color-picker>
       </sl-dropdown>
       <sl-dropdown>
-        <sl-tooltip slot="trigger" content=${msg("Border")}>
+        <sl-tooltip slot="trigger" tabindex="-1" content=${msg("Border")}>
           <sl-button size="small" caret>
             <sl-icon .src=${iconBorder}></sl-icon>
           </sl-button>

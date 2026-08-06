@@ -69,7 +69,7 @@ export class AoImageActionsGroup extends LitElementWw {
 
     return html`<sl-button-group label=${msg("Image edits")}>
       <sl-dropdown>
-        <sl-tooltip slot="trigger" content=${msg("Stroke color")}>
+        <sl-tooltip slot="trigger" tabindex="-1" content=${msg("Stroke color")}>
           <sl-button size="small" caret>
             <sl-icon .src=${iconFill}></sl-icon>
           </sl-button>
@@ -84,7 +84,7 @@ export class AoImageActionsGroup extends LitElementWw {
           )}></sl-color-picker>
       </sl-dropdown>
       <sl-dropdown>
-        <sl-tooltip slot="trigger" content=${msg("Stroke width")}>
+        <sl-tooltip slot="trigger" tabindex="-1" content=${msg("Stroke width")}>
           <sl-button size="small" caret>
             <sl-icon .src=${iconStrokeWidth}></sl-icon>
           </sl-button>
@@ -100,7 +100,7 @@ export class AoImageActionsGroup extends LitElementWw {
           }}></sl-range>
       </sl-dropdown>
       <sl-dropdown>
-        <sl-tooltip slot="trigger" content=${msg("Stroke style")}>
+        <sl-tooltip slot="trigger" tabindex="-1" content=${msg("Stroke style")}>
           <sl-button size="small" caret>
             <sl-icon .src=${iconBorderStyle}></sl-icon>
           </sl-button>

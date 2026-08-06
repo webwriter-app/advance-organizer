@@ -123,7 +123,7 @@ export class AoTextActionsGroup extends LitElementWw {
         </sl-button>
       </sl-tooltip>
       <sl-dropdown>
-        <sl-tooltip slot="trigger" content=${msg("Text color")}>
+        <sl-tooltip slot="trigger" tabindex="-1" content=${msg("Text color")}>
           <sl-button size="small" caret>
             <sl-icon .src=${iconTextColor}></sl-icon>
           </sl-button>
@@ -140,7 +140,7 @@ export class AoTextActionsGroup extends LitElementWw {
           )}></sl-color-picker>
       </sl-dropdown>
       <sl-dropdown>
-        <sl-tooltip slot="trigger" content=${msg("Font size")}>
+        <sl-tooltip slot="trigger" tabindex="-1" content=${msg("Font size")}>
           <sl-button size="small" caret>
             <sl-icon .src=${iconTextSize}></sl-icon>
           </sl-button>
