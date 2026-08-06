@@ -6,7 +6,7 @@ import { SelectionController } from "../../../state/selection";
 import { html, nothing, PropertyValues, type TemplateResult } from "lit";
 import { SubscribeController } from "../../../state/subscribe";
 import { actionsStyles } from "./toolbar-actions.styles";
-import { StrokeStyle } from "../../../model/types";
+import { EdgeMarker, EdgeStyle, StrokeStyle } from "../../../model/types";
 import { onPickedColor, previewColor } from "../../../utils/color-preview";
 import { localized, msg } from "@lit/localize";
 
@@ -25,6 +25,38 @@ import SlTooltip from "@shoelace-style/shoelace/dist/components/tooltip/tooltip.
 import iconStrokeWidth from "@tabler/icons/outline/stroke-straight.svg";
 import iconFill from "@tabler/icons/outline/bucket-droplet.svg";
 import iconBorderStyle from "@tabler/icons/outline/border-style-2.svg";
+import iconArrowNone from "@tabler/icons/outline/minus.svg";
+import iconArrowForward from "@tabler/icons/outline/arrow-right.svg";
+import iconArrowReverse from "@tabler/icons/outline/arrow-left.svg";
+import iconArrowBidirectional from "@tabler/icons/outline/arrows-horizontal.svg";
+
+type ArrowheadOption = "none" | "forward" | "reverse" | "bidirectional";
+
+const ARROWHEAD_ICONS: Record<ArrowheadOption, string> = {
+  none: iconArrowNone,
+  forward: iconArrowForward,
+  reverse: iconArrowReverse,
+  bidirectional: iconArrowBidirectional,
+};
+
+const ARROWHEAD_MARKERS: Record<
+  ArrowheadOption,
+  { markerStart: EdgeMarker; markerEnd: EdgeMarker }
+> = {
+  none: { markerStart: "none", markerEnd: "none" },
+  forward: { markerStart: "none", markerEnd: "arrow" },
+  reverse: { markerStart: "arrow", markerEnd: "none" },
+  bidirectional: { markerStart: "arrow", markerEnd: "arrow" },
+};
+
+function getArrowheadOption(style: EdgeStyle): ArrowheadOption {
+  const hasStart = style.markerStart === "arrow";
+  const hasEnd = style.markerEnd === "arrow";
+  if (hasStart && hasEnd) return "bidirectional";
+  if (hasStart) return "reverse";
+  if (hasEnd) return "forward";
+  return "none";
+}
 
 @localized()
 export class AoEdgeActionsGroup extends LitElementWw {
@@ -70,6 +102,7 @@ export class AoEdgeActionsGroup extends LitElementWw {
     }
     const stroke = item.style.stroke || "#000000";
     const strokeWidth = item.style.strokeWidth ?? 1;
+    const arrowheads = getArrowheadOption(item.style);
 
     return html`<sl-button-group label=${msg("Edge edits")}>
       <sl-dropdown>
@@ -117,7 +150,45 @@ export class AoEdgeActionsGroup extends LitElementWw {
           <sl-menu-item value="dotted">${msg("Dotted")}</sl-menu-item>
         </sl-menu>
       </sl-dropdown>
+      <sl-dropdown>
+        <sl-tooltip slot="trigger" content=${msg("Arrowheads")}>
+          <sl-button size="small" caret>
+            <sl-icon .src=${ARROWHEAD_ICONS[arrowheads]}></sl-icon>
+          </sl-button>
+        </sl-tooltip>
+        <sl-menu
+          @sl-select=${(e: CustomEvent) =>
+            this._updateArrowheads(e.detail.item.value)}>
+          <sl-menu-item value="none">
+            <sl-icon slot="prefix" .src=${iconArrowNone}></sl-icon>
+            ${msg("None")}
+          </sl-menu-item>
+          <sl-menu-item value="forward">
+            <sl-icon slot="prefix" .src=${iconArrowForward}></sl-icon>
+            ${msg("Forward")}
+          </sl-menu-item>
+          <sl-menu-item value="reverse">
+            <sl-icon slot="prefix" .src=${iconArrowReverse}></sl-icon>
+            ${msg("Reverse")}
+          </sl-menu-item>
+          <sl-menu-item value="bidirectional">
+            <sl-icon slot="prefix" .src=${iconArrowBidirectional}></sl-icon>
+            ${msg("Bidirectional")}
+          </sl-menu-item>
+        </sl-menu>
+      </sl-dropdown>
     </sl-button-group>`;
+  }
+
+  private _updateArrowheads(option: ArrowheadOption): void {
+    if (this.selection.isEmpty() || !this.selection.allOfSameKind()) {
+      return;
+    }
+
+    const markers = ARROWHEAD_MARKERS[option];
+    for (const id of this.selection.entries) {
+      this.doc.updateEdgeStyle(id, markers);
+    }
   }
 
   private _updateEdgeStyle(strokeStyle: StrokeStyle): void {
