@@ -86,7 +86,8 @@
       "default": "./dist/widgets/webwriter-advance-organizer-page.*"
     },
     "./icon": "./icon.svg",
-    "./editing-config.json": "./editing-config.json"
+    "./editing-config.json": "./editing-config.json",
+    "./custom-elements.json": "./custom-elements.json"
   },
   "editingConfig": {
     "./widgets/webwriter-advance-organizer": {
@@ -98,5 +99,6 @@
       "content": "(flow)*",
       "uninsertable": true
     }
-  }
+  },
+  "customElements": "custom-elements.json"
 }

@@ -34,24 +34,38 @@ import { AoTextActionsGroup } from "../components/ui/toolbar-groups/text-actions
 import LOCALIZE from "../../localization/generated";
 import { localized } from "@lit/localize";
 
+/**
+ * A visual advance organizer: a canvas of labeled boxes, connecting arrows and images
+ * that gives learners an overview of a topic before they study it in detail.
+ *
+ * @slot - The pages of the advance organizer, as `<webwriter-advance-organizer-page>` elements.
+ */
 @localized()
 @customElement("webwriter-advance-organizer")
 export class WebwriterAdvanceOrganizer extends LitElementWw {
+  /** @internal */
   @provide({
     context: documentContext,
   })
   accessor doc = new DocumentController(this);
 
+  /** @internal */
   @provide({
     context: selectionContext,
   })
   accessor selection = new SelectionController(this, this.doc);
 
+  /** @internal */
   @provide({
     context: pageContext,
   })
   accessor pages = new PageController(this, this.doc);
 
+  /**
+   * The nodes of the advance organizer. Each node has an `id` that edges refer to and that
+   * links it to a page of the same `id`, a `position` and `dimension` in canvas coordinates,
+   * a `label` and a `style`.
+   */
   @property({ type: Array, reflect: true })
   accessor nodes: Node[] = [
     {
@@ -97,6 +111,11 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
     },
   ];
 
+  /**
+   * The edges of the advance organizer. Each edge refers to its `source` and `target`
+   * node by `id`, anchored at a fixed side of the node (`sourcePosition`/`targetPosition`),
+   * and can carry a `label` and a `style` including arrow heads at either end.
+   */
   @property({ type: Array, reflect: true })
   accessor edges: Edge[] = [
     {
@@ -155,6 +174,10 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
     },
   ];
 
+  /**
+   * The images placed on the canvas. Each image has a `position` and `dimension` in canvas
+   * coordinates and a `src` stored as a data URL.
+   */
   @property({ type: Array, reflect: true })
   accessor images: Image[] = [];
 
@@ -177,17 +200,16 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
     new KeyboardController(this);
   }
 
+  /** @internal */
   static override shadowRootOptions: ShadowRootInit = {
     ...super.shadowRootOptions,
     slotAssignment: "manual" as const,
   };
 
-  /** Register the classes of custom elements to use in the Shadow DOM here.
-   * @example
-   * import SlButton from "@shoelace-style/shoelace/dist/components/button/button.component.js"
-   * ...
-   *   static scopedElements = {"sl-button": SlButton}
-   **/
+  /**
+   * Register the classes of custom elements to use in the Shadow DOM here.
+   * @internal
+   */
   static override scopedElements = {
     "ww-toolbar": WwToolbar,
     "ww-context-menu": WwContextMenu,
@@ -241,6 +263,7 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
     return this.canvas;
   }
 
+  /** @internal */
   keyboardTarget(e: KeyboardEvent): AoCanvas | null {
     const canvas = this._canvasTarget(e);
     if (!canvas) return null;
