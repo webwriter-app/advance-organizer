@@ -10,10 +10,14 @@ import {
 import { getStrokeDashArray } from "./helper";
 import { renderLabel } from "./label";
 
+/**
+ * If `pageNumber` is given, the badge shows that number instead of the open-page icon.
+ */
 export function renderNode(
   n: Node,
   hasPage: boolean = false,
   editingLabel: boolean = false,
+  pageNumber?: number,
 ): TemplateResult {
   const label = getLabelBounds(n.style.shape, n.dimension);
   return svg`
@@ -24,7 +28,7 @@ export function renderNode(
     >
     ${renderShape(n)}
     ${renderLabel(n.id, n.label, label.position, label.dimension, editingLabel)}
-    ${hasPage ? renderBadge(n) : nothing}
+    ${hasPage ? renderBadge(n, pageNumber) : nothing}
   </g>`;
 }
 
@@ -106,15 +110,28 @@ export function getBadgeColors(style: NodeStyle): {
   return { badge, icon: contrastInk(badge) };
 }
 
-function renderBadge(n: Node): TemplateResult {
+function renderBadge(n: Node, pageNumber?: number): TemplateResult {
   const position = getBadgePosition(n.style.shape, n.dimension);
   const { badge, icon } = getBadgeColors(n.style);
+  const numbered = pageNumber !== undefined;
 
   return svg`
     <g class="badge" transform="translate(${position.x}, ${position.y})" color=${icon}>
-      <circle r="10" fill=${badge} />
-      ${getOpenPageIcon()}
+      <circle r=${numbered ? 14 : 10} fill=${badge} />
+      ${numbered ? getPageNumber(pageNumber) : getOpenPageIcon()}
     </g>`;
+}
+
+function getPageNumber(pageNumber: number): TemplateResult {
+  return svg`
+    <text
+      class="badge-number"
+      text-anchor="middle"
+      dy="0.35em"
+      fill="currentColor"
+      font-size="16"
+      font-weight="bold"
+    >${pageNumber}</text>`;
 }
 
 function getOpenPageIcon(): TemplateResult {

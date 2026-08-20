@@ -1,8 +1,8 @@
 import { LitElementWw } from "@webwriter/lit";
 import { html, nothing, PropertyValues, type TemplateResult } from "lit";
-import { canvasStyles } from "./canvas.styles";
+import { labelStyles, canvasStyles } from "./canvas.styles";
 import { renderNode } from "./node";
-import { renderEdge } from "./edge";
+import { renderArrowMarker, renderEdge } from "./edge";
 import { consume } from "@lit/context";
 import {
   documentContext,
@@ -170,10 +170,8 @@ export class AoCanvas extends LitElementWw {
     });
   }
 
-  static override styles = canvasStyles;
+  static override styles = [labelStyles, canvasStyles];
 
-  // TODO: Replace <marker> with current-stroke fills with custom solution to support Safari
-  // https://caniuse.com/wf-context-fill-stroke
   protected override render(): TemplateResult {
     return html`<svg
         style="touch-action: none"
@@ -191,18 +189,7 @@ export class AoCanvas extends LitElementWw {
         @dragover=${this._dropController.onDragOver}
         @dragleave=${this._dropController.onDragLeave}
         @drop=${this._dropController.onDrop}>
-        <defs>
-          <marker
-            id="arrow"
-            viewBox="0 0 10 10"
-            refX="9"
-            refY="5"
-            markerWidth="8"
-            markerHeight="8"
-            orient="auto-start-reverse">
-            <path d="M0,0 L10,5 L0,10 z" fill="context-stroke" />
-          </marker>
-        </defs>
+        ${renderArrowMarker()}
         <g class="viewport">
           <g class="background"></g>
           <g class="images">

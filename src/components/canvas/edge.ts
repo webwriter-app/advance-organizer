@@ -75,3 +75,22 @@ function renderEdgeLine(
       marker-end="${style.markerEnd === "arrow" ? "url(#arrow)" : "none"}"
     />`;
 }
+
+// TODO: Replace <marker> with current-stroke fills with custom solution to support Safari
+// https://caniuse.com/wf-context-fill-stroke
+export function renderArrowMarker(): TemplateResult {
+  return svg`
+    <defs>
+      <marker
+        id="arrow"
+        viewBox="0 0 10 10"
+        refX="9"
+        refY="5"
+        markerWidth="8"
+        markerHeight="8"
+        orient="auto-start-reverse"
+      >
+        <path d="M0,0 L10,5 L0,10 z" fill="context-stroke" />
+      </marker>
+    </defs>`;
+}

@@ -30,6 +30,24 @@ export const canvasStyles = css`
     z-index: 20;
   }
 
+  .edge .label-content {
+    pointer-events: auto;
+  }
+
+  .label-editor {
+    outline: none;
+    cursor: text;
+    pointer-events: auto;
+    user-select: text;
+  }
+
+  :host(:not([editable])) .node.has-page,
+  .badge {
+    cursor: pointer;
+  }
+`;
+
+export const labelStyles = css`
   .label-fo {
     overflow: visible;
     pointer-events: none;
@@ -52,22 +70,9 @@ export const canvasStyles = css`
     user-select: none;
   }
 
-  .label-editor {
-    outline: none;
-    cursor: text;
-    pointer-events: auto;
-    user-select: text;
-  }
-
-  :host(:not([editable])) .node.has-page,
-  .badge {
-    cursor: pointer;
-  }
-
   .edge .label-content {
     background-color: rgba(255, 255, 255, 0.8);
     border-radius: 4px;
     padding: 2px 6px;
-    pointer-events: auto;
   }
 `;

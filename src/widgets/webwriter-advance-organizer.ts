@@ -6,6 +6,7 @@ import { styles } from "./webwriter-advance-organizer.styles";
 import { WwToolbar } from "../components/ui/toolbar";
 import { WwContextMenu } from "../components/ui/context-menu";
 import { AoCanvas } from "../components/canvas/canvas";
+import { labelStyles } from "../components/canvas/canvas.styles";
 
 import shoelaceTheme from "@shoelace-style/shoelace/dist/themes/light.styles.js";
 import { AoNodeActionsGroup } from "../components/ui/toolbar-groups/node-actions";
@@ -28,6 +29,11 @@ import { AoCreateActionsGroup } from "../components/ui/toolbar-groups/create-act
 import { AoEdgeActionsGroup } from "../components/ui/toolbar-groups/edge-actions";
 import { ClipboardAction } from "../utils/clipboard";
 import { AoImageActionsGroup } from "../components/ui/toolbar-groups/image-actions";
+import {
+  getPrintEntries,
+  renderPages,
+  renderPrintOrganizer,
+} from "../components/print/print";
 import { AoTextActionsGroup } from "../components/ui/toolbar-groups/text-actions";
 
 // @ts-ignore
@@ -187,9 +193,6 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
   @state()
   private accessor _contextMenu: { x: number; y: number } | null = null;
 
-  @query("slot#page-slot")
-  private accessor pageSlot!: HTMLSlotElement;
-
   @query("ao-canvas")
   private accessor canvas!: AoCanvas | null;
 
@@ -225,7 +228,7 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
     "ao-page-edit-actions": AoPageEditActionsGroup,
   };
 
-  static override styles = [styles, shoelaceTheme];
+  static override styles = [styles, labelStyles, shoelaceTheme];
 
   override connectedCallback(): void {
     super.connectedCallback();
@@ -330,11 +333,17 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
           ?.querySelectorAll<HTMLMediaElement>("audio, video")
           .forEach((m) => m.pause());
       }
-      if (this._openPage !== null && this.pageSlot) {
-        const page = this.pages.getPage(this._openPage);
-        if (page) {
-          this.pageSlot.assign(page);
-        }
+    }
+    this._assignPages();
+  }
+
+  private _assignPages(): void {
+    const slots =
+      this.renderRoot.querySelectorAll<HTMLSlotElement>("slot[data-page]");
+    for (const slot of slots) {
+      const page = this.pages.getPage(slot.dataset["page"]!);
+      if (page && slot.assignedElements()[0] !== page) {
+        slot.assign(page);
       }
     }
   }
@@ -407,6 +416,7 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
   }
 
   protected override render(): TemplateResult {
+    const printEntries = getPrintEntries(this.doc, this.pages);
     return html`<div class="root${this.isContentEditable ? "" : " reading"}">
       ${this._renderToolbar()}
       ${this._openPage === null
@@ -435,9 +445,9 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
                   @close-context-menu=${() =>
                     this._closeContextMenu()}></ww-context-menu>`
               : nothing}`
-        : html`<div class="page-container">
-            <slot id="page-slot"></slot>
-          </div>`}
+        : nothing}
+      ${renderPrintOrganizer(this.doc, printEntries)}
+      ${renderPages(printEntries, this._openPage)}
     </div>`;
   }
 }
