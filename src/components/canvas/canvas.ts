@@ -407,7 +407,7 @@ export class AoCanvas extends LitElementWw {
       beginDrag(e, this._modeContext);
     } else {
       if (!additive) this.selection.clear();
-      if (e.pointerType !== "touch") {
+      if (e.pointerType !== "touch" && !e.shiftKey) {
         beginRectangleSelect(e, this._modeContext);
       }
     }

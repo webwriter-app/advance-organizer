@@ -1,7 +1,7 @@
 import { ReactiveController, ReactiveControllerHost } from "lit";
 import createPanZoom, { type PanZoom } from "panzoom";
 import { BoxItem, Point } from "../../model/types";
-import { computeBounds } from "./helper";
+import { computeBounds, INTERACTIVE_SELECTOR } from "./helper";
 
 export class ZoomController implements ReactiveController {
   private _panzoom: PanZoom | null = null;
@@ -38,6 +38,13 @@ export class ZoomController implements ReactiveController {
         if (e.button === 1) return false;
         // left-click pans in read-only mode
         if (e.button === 0 && !this.isEditable()) return false;
+        // shift + left-click always pans unless clicking an interactive element
+        if (
+          e.button === 0 &&
+          e.shiftKey &&
+          !(e.target as Element | null)?.closest(INTERACTIVE_SELECTOR)
+        )
+          return false;
         return true;
       },
       filterKey: (e?: KeyboardEvent) =>
