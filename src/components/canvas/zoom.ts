@@ -6,9 +6,11 @@ import { computeBounds, INTERACTIVE_SELECTOR } from "./helper";
 export class ZoomController implements ReactiveController {
   private _panzoom: PanZoom | null = null;
   private _svg: SVGSVGElement | null = null;
+  private _wheelDoc: Document | null = null;
 
   private static readonly ZOOM_STEP = 1.3;
   private static readonly FIT_PADDING = 32;
+  private static readonly LINE_HEIGHT = 16;
 
   constructor(
     private readonly host: ReactiveControllerHost,
@@ -20,6 +22,9 @@ export class ZoomController implements ReactiveController {
   }
 
   hostDisconnected(): void {
+    this._wheelDoc?.removeEventListener("wheel", this._onWheel, {
+      capture: true,
+    });
     this._panzoom?.off("zoom", this._syncZoomLevel);
     this._panzoom?.dispose();
     this._panzoom = null;
@@ -49,10 +54,52 @@ export class ZoomController implements ReactiveController {
       },
       filterKey: (e?: KeyboardEvent) =>
         !!(e?.target instanceof HTMLElement && e.target.isContentEditable), // prevent interference with label editing
+      beforeWheel: () => true,
     });
     this._panzoom.on("zoom", this._syncZoomLevel);
     this._syncZoomLevel();
+    // The WebWriter editor sets `pointer-events: none` on the whole widget while ctrl
+    // is held, so the wheel event never reaches the SVG. Listen on the document instead
+    // and use the pointer position to decide whether the event belongs to this canvas.
+    this._wheelDoc = this._svg?.ownerDocument ?? null;
+    this._wheelDoc?.addEventListener("wheel", this._onWheel, {
+      capture: true,
+      passive: false,
+    });
   }
+
+  private _onWheel = (e: WheelEvent): void => {
+    const rect = this._svg?.getBoundingClientRect();
+    if (!rect || !this._panzoom) return;
+    if (
+      e.clientX < rect.left ||
+      e.clientX > rect.right ||
+      e.clientY < rect.top ||
+      e.clientY > rect.bottom
+    )
+      return;
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    const factor = e.deltaMode > 0 ? ZoomController.LINE_HEIGHT : 1;
+    if (e.ctrlKey || e.metaKey) {
+      const delta = e.deltaY * factor;
+      // adopted from Panzoom
+      const multiplier =
+        1 - Math.sign(delta) * Math.min(0.25, Math.abs(delta / 128));
+      this._panzoom.zoomTo(
+        e.clientX - rect.left,
+        e.clientY - rect.top,
+        multiplier,
+      );
+    } else {
+      // shift + wheel scrolls horizontally, unless the browser already swapped the axes
+      const [dx, dy] =
+        e.shiftKey && !e.deltaX ? [e.deltaY, 0] : [e.deltaX, e.deltaY];
+      this._panzoom.moveBy(-dx * factor, -dy * factor, false);
+    }
+  };
 
   get scale(): number {
     return this._panzoom?.getTransform().scale ?? 1;
