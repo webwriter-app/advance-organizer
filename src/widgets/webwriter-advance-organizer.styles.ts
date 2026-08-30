@@ -60,7 +60,8 @@ export const styles = css`
 
   .page slot {
     background-color: white;
-    display: block;
+    display: flex;
+    flex-direction: column;
     flex: 1 0 auto;
     padding: var(--sl-spacing-medium);
     border: 1px solid var(--sl-color-gray-300);
@@ -68,6 +69,10 @@ export const styles = css`
     border-radius: var(--sl-border-radius-medium) var(--sl-border-radius-medium)
       0 0;
     box-sizing: border-box;
+  }
+
+  .page ::slotted(*) {
+    flex: 1 0 auto;
   }
 
   .page.open slot {
