@@ -7,22 +7,29 @@ import {
   getAnchorPoints,
   getHandlePositions,
   HANDLE_SIZE,
+  TOUCH_INDICATOR_RADIUS,
 } from "./helper";
+
+export interface RectangleSelection {
+  start: Point;
+  touch: boolean;
+}
 
 export function renderOverlay(
   selection: SelectionController,
   doc: DocumentController,
   zoom: number,
   anchorRendering: AnchorRendering,
-  rectangleSelection: Point | null,
+  rectangleSelection: RectangleSelection | null,
 ): TemplateResult {
   return svg`
     <g 
       class="overlay"
       pointer-events="none"
     >
-    ${rectangleSelection ? renderRectangleSelection(rectangleSelection) : nothing}
+    ${rectangleSelection ? renderRectangleSelection(rectangleSelection.start) : nothing}
     ${rectangleSelection ? renderSelectionPreview(selection, doc) : nothing}
+    ${rectangleSelection?.touch ? renderTouchIndicator(rectangleSelection.start, zoom) : nothing}
     ${[...selection.entries].map((e) => renderSelectionIndicator(e, doc))}
     ${selection.size === 1 ? renderResizeHandles([...selection.entries][0]!, doc, zoom) : nothing}
     ${renderAnchorPoints(doc, anchorRendering, zoom)}
@@ -46,6 +53,29 @@ function renderRectangleSelection(point: Point): TemplateResult {
         fill-opacity="0.2"
         stroke="var(--ao-selection-color, #3b82f6)"
         stroke-width="1"
+        vector-effect="non-scaling-stroke"
+      />
+    </g>
+  `;
+}
+
+function renderTouchIndicator(point: Point, zoom: number): TemplateResult {
+  const r = TOUCH_INDICATOR_RADIUS / zoom;
+  return svg`
+    <g
+      class="touch-indicator"
+      pointer-events="none"
+      transform="translate(${point.x}, ${point.y})"
+    >
+      <rect
+        x=${-r}
+        y=${-r}
+        width=${2 * r}
+        height=${2 * r}
+        fill="var(--sl-color-neutral-400, #a0a0a9)"
+        fill-opacity="0.2"
+        stroke="var(--sl-color-neutral-400, #a0a0a9)"
+        stroke-width="2"
         vector-effect="non-scaling-stroke"
       />
     </g>

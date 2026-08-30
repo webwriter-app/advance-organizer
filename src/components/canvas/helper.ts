@@ -11,6 +11,7 @@ import {
 
 export const MIN_NODE_SIZE = 20;
 export const HANDLE_SIZE = 8;
+export const TOUCH_INDICATOR_RADIUS = 32;
 export const MIN_TARGET_SIZE = 24;
 export const SNAP_RADIUS = 16;
 export const ANCHOR_HOVER_RADIUS = 24;

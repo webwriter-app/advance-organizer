@@ -320,6 +320,8 @@ export function applyRectangleSelectDom(
   root: ParentNode,
   bounds: Bounds,
 ): void {
+  root.querySelector<SVGGElement>("g.touch-indicator")?.classList.add("hidden");
+
   const groupEl = root.querySelector<SVGGElement>(
     "g.rectangle-selection-group",
   );

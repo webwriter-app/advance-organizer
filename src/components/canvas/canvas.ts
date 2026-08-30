@@ -53,6 +53,7 @@ import {
 import { findNearestAnchor, SnapHighlighter } from "./snap";
 import { applyColorPreviewDom } from "./dom-sync";
 import { LabelEditController, EDITOR_CLASS } from "./label-edit";
+import { LongPressController } from "./long-press";
 
 export class AoCanvas extends LitElementWw {
   static override scopedElements = {
@@ -104,6 +105,10 @@ export class AoCanvas extends LitElementWw {
   );
 
   private readonly _snapHighlighter = new SnapHighlighter();
+
+  private readonly _longPress = new LongPressController((origin) =>
+    this._beginTouchRectangleSelect(origin),
+  );
 
   private readonly _dropController = new DropController(
     this,
@@ -161,6 +166,7 @@ export class AoCanvas extends LitElementWw {
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();
+    this._longPress.cancel();
     const svg = this.renderRoot?.querySelector<SVGSVGElement>("svg");
     svg?.removeEventListener("touchstart", this._onTouchStartCapture, {
       capture: true,
@@ -221,7 +227,9 @@ export class AoCanvas extends LitElementWw {
               this.doc,
               this._zoomController.scale,
               this._anchorRendering(),
-              this._mode.kind === "rectangle-select" ? this._mode.start : null,
+              this._mode.kind === "rectangle-select"
+                ? { start: this._mode.start, touch: this._mode.touch }
+                : null,
             )}
           </g>
         </g>
@@ -332,6 +340,9 @@ export class AoCanvas extends LitElementWw {
       return;
     }
 
+    // A second finger during a gesture is meant for panning or pinch zooming.
+    if (e.pointerType === "touch" && this._mode.kind !== "idle") return;
+
     this._shiftKey = e.shiftKey;
 
     const target = e.target as Element;
@@ -407,14 +418,21 @@ export class AoCanvas extends LitElementWw {
       beginDrag(e, this._modeContext);
     } else {
       if (!additive) this.selection.clear();
-      if (e.pointerType !== "touch" && !e.shiftKey) {
-        beginRectangleSelect(e, this._modeContext);
+      if (e.pointerType === "touch") {
+        this._longPress.start(e);
+      } else if (!e.shiftKey) {
+        beginRectangleSelect({ x: e.clientX, y: e.clientY }, this._modeContext);
       }
     }
 
     const svg = e.currentTarget as SVGSVGElement;
     svg.focus({ preventScroll: true });
     svg.setPointerCapture(e.pointerId);
+  }
+
+  private _beginTouchRectangleSelect(origin: Point): void {
+    beginRectangleSelect(origin, this._modeContext, true);
+    navigator.vibrate?.(20);
   }
 
   beginDrawEdge(): void {
@@ -426,6 +444,7 @@ export class AoCanvas extends LitElementWw {
   }
 
   private _onPointerMove(e: PointerEvent): void {
+    this._longPress.onPointerMove(e);
     if (!handlesPointerMove(this._mode) && !this._tracksAnchorHover()) return;
 
     this._pendingPointer = { x: e.clientX, y: e.clientY };
@@ -496,6 +515,7 @@ export class AoCanvas extends LitElementWw {
   }
 
   private _resetMode(): void {
+    this._longPress.cancel();
     getHandlers(this._mode)?.onCancel?.(this._mode, this._modeContext);
     if (this._rafId !== null) {
       cancelAnimationFrame(this._rafId);

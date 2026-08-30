@@ -45,6 +45,37 @@ export const canvasStyles = css`
   .badge {
     cursor: pointer;
   }
+
+  .touch-indicator rect {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: ao-touch-indicator-in 200ms ease-out;
+    transition:
+      transform 100ms ease-out,
+      opacity 100ms ease-out;
+  }
+
+  .touch-indicator.hidden rect {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+
+  @keyframes ao-touch-indicator-in {
+    from {
+      transform: scale(0.4);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .touch-indicator rect {
+      animation: none;
+    }
+  }
 `;
 
 export const labelStyles = css`

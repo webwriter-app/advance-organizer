@@ -1,12 +1,18 @@
-import { BoxItem, Edge, Id, Bounds } from "../../../model/types";
+import { BoxItem, Edge, Id, Bounds, Point } from "../../../model/types";
 import { applyRectangleSelectDom, applySelectionPreviewDom } from "../dom-sync";
 import { boundsFromCorners, boundsWithin } from "../helper";
 import { ModeContext, ModeHandlers } from "./types";
 
-export function beginRectangleSelect(e: PointerEvent, ctx: ModeContext) {
+export function beginRectangleSelect(
+  origin: Point,
+  ctx: ModeContext,
+  touch = false,
+) {
+  if (touch) ctx.zoom.setPanningEnabled(false);
   ctx.setMode({
     kind: "rectangle-select",
-    start: ctx.zoom.clientToScene(e.clientX, e.clientY),
+    start: ctx.zoom.clientToScene(origin.x, origin.y),
+    touch,
   });
 }
 
@@ -56,5 +62,8 @@ export const rectangleSelectHandlers: ModeHandlers<"rectangle-select"> = {
         ),
       ]),
     );
+  },
+  onCancel(mode, ctx) {
+    if (mode.touch) ctx.zoom.setPanningEnabled(true);
   },
 };

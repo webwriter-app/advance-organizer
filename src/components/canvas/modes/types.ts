@@ -12,7 +12,7 @@ import { SnapHighlighter } from "../snap";
 
 export type InteractionMode =
   | { kind: "idle" }
-  | { kind: "rectangle-select"; start: Point }
+  | { kind: "rectangle-select"; start: Point; touch: boolean }
   | {
       kind: "drag";
       start: Point;

@@ -105,6 +105,12 @@ export class ZoomController implements ReactiveController {
     return this._panzoom?.getTransform().scale ?? 1;
   }
 
+  setPanningEnabled(enabled: boolean): void {
+    if (!this._panzoom || this._panzoom.isPaused() === !enabled) return;
+    if (enabled) this._panzoom.resume();
+    else this._panzoom.pause();
+  }
+
   private _clampZoom(scale: number): number {
     return Math.min(this.maxZoom, Math.max(this.minZoom, scale));
   }
