@@ -2,7 +2,7 @@ import { LitElementWw } from "@webwriter/lit";
 import { html, nothing, PropertyValues, type TemplateResult } from "lit";
 import { labelStyles, canvasStyles } from "./canvas.styles";
 import { renderNode } from "./node";
-import { renderArrowMarker, renderEdge } from "./edge";
+import { renderEdge } from "./edge";
 import { consume } from "@lit/context";
 import {
   documentContext,
@@ -214,7 +214,6 @@ export class AoCanvas extends LitElementWw {
         @dragover=${this._dropController.onDragOver}
         @dragleave=${this._dropController.onDragLeave}
         @drop=${this._dropController.onDrop}>
-        ${renderArrowMarker()}
         <g class="viewport">
           <g class="background"></g>
           <g class="images">

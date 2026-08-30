@@ -3,7 +3,7 @@ import { styleMap } from "lit/directives/style-map.js";
 import { Id, Node } from "../../model/types";
 import { DocumentController } from "../../state/document";
 import { PageController } from "../../state/page";
-import { renderArrowMarker, renderEdge } from "../canvas/edge";
+import { renderEdge } from "../canvas/edge";
 import { computeBounds } from "../canvas/helper";
 import { renderImage } from "../canvas/image";
 import { getBadgeColors, renderNode } from "../canvas/node";
@@ -48,7 +48,6 @@ export function renderPrintOrganizer(
   ].join(" ");
 
   return html`<svg class="print-organizer" viewBox=${viewBox}>
-    ${renderArrowMarker()}
     <g class="images">${doc.images.map((img) => renderImage(img))}</g>
     <g class="edges">${doc.edges.map((e) => renderEdge(e, doc))}</g>
     <g class="nodes">

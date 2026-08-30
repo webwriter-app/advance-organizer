@@ -2,6 +2,7 @@ import { svg, type TemplateResult } from "lit";
 import { type Edge, type EdgeStyle, type Point } from "../../model/types";
 import { DocumentController } from "../../state/document";
 import {
+  getArrowPath,
   getStrokeDashArray,
   computeEdgePoints,
   computeEdgeLabelLayout,
@@ -61,6 +62,7 @@ function renderEdgeLine(
   style: EdgeStyle,
 ): TemplateResult {
   const color = style.stroke ?? "black";
+  const strokeWidth = style.strokeWidth ?? 1;
   return svg`
     <line
       class="edge-line"
@@ -69,28 +71,25 @@ function renderEdgeLine(
       x2="${end.x}"
       y2="${end.y}"
       stroke="${color}"
-      stroke-width="${style.strokeWidth ?? 1}"
-      stroke-dasharray="${getStrokeDashArray(style.strokeStyle, style.strokeWidth)}"
-      marker-start="${style.markerStart === "arrow" ? "url(#arrow)" : "none"}"
-      marker-end="${style.markerEnd === "arrow" ? "url(#arrow)" : "none"}"
-    />`;
+      stroke-width="${strokeWidth}"
+      stroke-dasharray="${getStrokeDashArray(style.strokeStyle, strokeWidth)}"
+    />
+    ${style.markerStart === "arrow" ? renderArrowhead("start", end, start, color, strokeWidth) : svg``}
+    ${style.markerEnd === "arrow" ? renderArrowhead("end", start, end, color, strokeWidth) : svg``}`;
 }
 
-// TODO: Replace <marker> with current-stroke fills with custom solution to support Safari
-// https://caniuse.com/wf-context-fill-stroke
-export function renderArrowMarker(): TemplateResult {
+function renderArrowhead(
+  endpoint: "start" | "end",
+  from: Point,
+  tip: Point,
+  color: string,
+  strokeWidth: number,
+): TemplateResult {
   return svg`
-    <defs>
-      <marker
-        id="arrow"
-        viewBox="0 0 10 10"
-        refX="9"
-        refY="5"
-        markerWidth="8"
-        markerHeight="8"
-        orient="auto-start-reverse"
-      >
-        <path d="M0,0 L10,5 L0,10 z" fill="context-stroke" />
-      </marker>
-    </defs>`;
+    <path
+      class="edge-arrow"
+      data-arrow-endpoint="${endpoint}"
+      d="${getArrowPath(from, tip, strokeWidth)}"
+      fill="${color}"
+    />`;
 }

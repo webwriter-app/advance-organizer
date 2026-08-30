@@ -14,6 +14,7 @@ import {
   applyResize,
   computeEdgeLabelLayout,
   computeEdgePoints,
+  getArrowPath,
   getHandlePositions,
   getStrokeDashArray,
   HANDLE_SIZE,
@@ -161,6 +162,7 @@ function updateConnectedEdgesDom(
       lineEl.setAttribute("y2", String(end.y));
     }
 
+    updateEdgeArrowsDom(gEl, start, end, edge.style.strokeWidth);
     updateEdgeLabelDom(gEl, start, end);
   };
 
@@ -178,6 +180,7 @@ function updateConnectedEdgesDom(
 
 export function applyReanchorDom(
   root: ParentNode,
+  doc: DocumentController,
   edgeId: Id,
   endpoint: "source" | "target",
   newPos: Point,
@@ -206,14 +209,42 @@ export function applyReanchorDom(
 
   const start = endpoint === "source" ? newPos : otherPos;
   const end = endpoint === "source" ? otherPos : newPos;
+  const edge = doc.get(edgeId);
+  updateEdgeArrowsDom(
+    edgeG,
+    start,
+    end,
+    edge?.kind === "edge" ? edge.style.strokeWidth : undefined,
+  );
   updateEdgeLabelDom(edgeG, start, end);
 }
 
 export function applyDrawEdgePreviewDom(root: ParentNode, end: Point): void {
-  const line = root.querySelector<SVGLineElement>("g.edge-preview line");
-  if (!line) return;
+  const previewG = root.querySelector<SVGGElement>("g.edge-preview");
+  const line = previewG?.querySelector("line");
+  if (!previewG || !line) return;
   line.setAttribute("x2", String(end.x));
   line.setAttribute("y2", String(end.y));
+
+  const start = {
+    x: Number(line.getAttribute("x1")),
+    y: Number(line.getAttribute("y1")),
+  };
+  updateEdgeArrowsDom(previewG, start, end, undefined);
+}
+
+function updateEdgeArrowsDom(
+  edgeG: SVGGElement,
+  start: Point,
+  end: Point,
+  strokeWidth?: number,
+): void {
+  edgeG
+    .querySelector('path.edge-arrow[data-arrow-endpoint="start"]')
+    ?.setAttribute("d", getArrowPath(end, start, strokeWidth));
+  edgeG
+    .querySelector('path.edge-arrow[data-arrow-endpoint="end"]')
+    ?.setAttribute("d", getArrowPath(start, end, strokeWidth));
 }
 
 export function applyAnchorHighlightDom(
@@ -274,9 +305,11 @@ export function applyColorPreviewDom(
           : { ...item.style, stroke: color },
       );
     } else if (item?.kind === "edge") {
-      root
-        .querySelector(`g.edge[data-item-id="${id}"] line.edge-line`)
-        ?.setAttribute("stroke", color);
+      const edgeG = root.querySelector(`g.edge[data-item-id="${id}"]`);
+      edgeG?.querySelector("line.edge-line")?.setAttribute("stroke", color);
+      for (const arrow of edgeG?.querySelectorAll("path.edge-arrow") ?? []) {
+        arrow.setAttribute("fill", color);
+      }
     } else if (item?.kind === "image") {
       applyImageBorderColorDom(root, item, color);
     }

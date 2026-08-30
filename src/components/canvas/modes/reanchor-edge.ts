@@ -50,6 +50,7 @@ export const reanchorEdgeHandlers: ModeHandlers<"reanchor-edge"> = {
     ctx.snap.update(ctx.root, snapTarget);
     applyReanchorDom(
       ctx.root,
+      ctx.doc,
       mode.edgeId,
       mode.endpoint,
       snapTarget ? snapTarget.point : pos,
@@ -70,6 +71,7 @@ export const reanchorEdgeHandlers: ModeHandlers<"reanchor-edge"> = {
     } else {
       applyReanchorDom(
         ctx.root,
+        ctx.doc,
         mode.edgeId,
         mode.endpoint,
         mode.startEndpointPos,

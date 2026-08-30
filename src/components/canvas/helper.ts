@@ -158,3 +158,39 @@ export function computeEdgeLabelLayout(start: Point, end: Point): Bounds {
   };
   return { position, dimension };
 }
+
+const ARROW_SCALE = 0.8;
+const ARROW_TIP = 1 * ARROW_SCALE;
+const ARROW_BACK = 9 * ARROW_SCALE;
+const ARROW_HALF_WIDTH = 5 * ARROW_SCALE;
+
+export function getArrowPath(
+  from: Point,
+  tip: Point,
+  strokeWidth?: number,
+): string {
+  const dx = tip.x - from.x;
+  const dy = tip.y - from.y;
+  const length = Math.hypot(dx, dy);
+  if (length === 0) return "";
+
+  const width = strokeWidth ?? 1;
+  const ux = dx / length;
+  const uy = dy / length;
+
+  const px = -uy;
+  const py = ux;
+
+  const point = (along: number, across: number): string => {
+    const x = tip.x + ux * along * width + px * across * width;
+    const y = tip.y + uy * along * width + py * across * width;
+    return `${x},${y}`;
+  };
+
+  return [
+    `M${point(-ARROW_BACK, -ARROW_HALF_WIDTH)}`,
+    `L${point(ARROW_TIP, 0)}`,
+    `L${point(-ARROW_BACK, ARROW_HALF_WIDTH)}`,
+    "z",
+  ].join(" ");
+}
