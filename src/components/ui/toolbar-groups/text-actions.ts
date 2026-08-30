@@ -9,6 +9,7 @@ import { actionsStyles } from "./toolbar-actions.styles";
 import { Label } from "../../../model/types";
 import { onPickedColor, previewColor } from "../../../utils/color-preview";
 import { localized, msg } from "@lit/localize";
+import { MOD_LABEL } from "../../../state/keyboard";
 
 import SlButton from "@shoelace-style/shoelace/dist/components/button/button.component.js";
 import SlButtonGroup from "@shoelace-style/shoelace/dist/components/button-group/button-group.component.js";
@@ -98,7 +99,7 @@ export class AoTextActionsGroup extends LitElementWw {
     const fontSize = first.fontSize ?? 18;
 
     return html`<sl-button-group label=${msg("Text edits")}>
-      <sl-tooltip content=${msg("Bold")}>
+      <sl-tooltip content="${msg("Bold")} (${MOD_LABEL}+B)">
         <sl-button
           size="small"
           class=${bold ? "active" : ""}
@@ -106,7 +107,7 @@ export class AoTextActionsGroup extends LitElementWw {
           <sl-icon .src=${iconBold}></sl-icon>
         </sl-button>
       </sl-tooltip>
-      <sl-tooltip content=${msg("Italic")}>
+      <sl-tooltip content="${msg("Italic")} (${MOD_LABEL}+I)">
         <sl-button
           size="small"
           class=${italic ? "active" : ""}
@@ -114,7 +115,7 @@ export class AoTextActionsGroup extends LitElementWw {
           <sl-icon .src=${iconItalic}></sl-icon>
         </sl-button>
       </sl-tooltip>
-      <sl-tooltip content=${msg("Underline")}>
+      <sl-tooltip content="${msg("Underline")} (${MOD_LABEL}+U)">
         <sl-button
           size="small"
           class=${underline ? "active" : ""}
