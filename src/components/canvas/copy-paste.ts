@@ -1,4 +1,4 @@
-import { Id, Point } from "../../model/types";
+import { Bounds, Id, Point } from "../../model/types";
 import {
   ClipboardAction,
   ClipboardContent,
@@ -52,7 +52,7 @@ export function cutSelection(e: ClipboardEvent, stores: ClipboardHost): void {
 
 export function pasteFromEvent(
   e: ClipboardEvent,
-  position: Point,
+  viewport: Bounds | null,
   stores: ClipboardHost,
 ): void {
   if (stores.editingId) return;
@@ -60,25 +60,29 @@ export function pasteFromEvent(
   const payload = readPayload(e.clipboardData);
   if (payload) {
     e.preventDefault();
-    insertPayload(payload, stores);
+    insertPayload(payload, stores, viewport);
     return;
   }
 
   const files = filterImageFiles(e.clipboardData?.files);
   if (files.length === 0) return;
   e.preventDefault();
-  insertImages(files, position, stores);
+  insertImages(files, dropPosition(viewport), stores);
+}
+
+function dropPosition(viewport: Bounds | null): Point {
+  return viewport?.position ?? { x: 0, y: 0 };
 }
 
 export async function runClipboardAction(
   action: ClipboardAction,
-  position: Point,
+  viewport: Bounds | null,
   stores: ClipboardHost,
 ): Promise<void> {
   if (stores.editingId) return;
 
   if (action === "paste") {
-    await pasteFromClipboard(position, stores);
+    await pasteFromClipboard(viewport, stores);
     return;
   }
 
@@ -98,7 +102,7 @@ export async function runClipboardAction(
 }
 
 async function pasteFromClipboard(
-  position: Point,
+  viewport: Bounds | null,
   stores: ClipboardHost,
 ): Promise<void> {
   let content: ClipboardContent;
@@ -110,8 +114,8 @@ async function pasteFromClipboard(
   }
 
   if (content.payload) {
-    insertPayload(content.payload, stores);
+    insertPayload(content.payload, stores, viewport);
   } else if (content.images.length > 0) {
-    await insertImages(content.images, position, stores);
+    await insertImages(content.images, dropPosition(viewport), stores);
   }
 }

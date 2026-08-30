@@ -1,4 +1,4 @@
-import { Dimension, Id, Node, NodeStyle, Point } from "../../model/types";
+import { Bounds, Dimension, Id, Node, NodeStyle, Point } from "../../model/types";
 import type { DocumentController } from "../../state/document";
 import type { PageController } from "../../state/page";
 import type { SelectionController } from "../../state/selection";
@@ -41,8 +41,9 @@ export function insertNode(position: Point, stores: ItemStores): Node {
 export function insertPayload(
   payload: ClipboardPayload,
   stores: CanvasStores,
+  viewport?: Bounds | null,
 ): void {
-  const { newIds, nodeIdMap } = stores.doc.insertItems(payload);
+  const { newIds, nodeIdMap } = stores.doc.insertItems(payload, viewport);
 
   for (const [oldId, newId] of nodeIdMap) {
     const content = payload.pages[oldId];

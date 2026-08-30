@@ -305,14 +305,14 @@ export class AoCanvas extends LitElementWw {
 
   handlePaste(e: ClipboardEvent): void {
     if (!this.editable) return;
-    pasteFromEvent(e, this._zoomController.viewportCenter(), this);
+    pasteFromEvent(e, this._zoomController.visibleBounds(), this);
   }
 
   async runClipboardAction(action: ClipboardAction): Promise<void> {
     if (!this.editable) return;
     await performClipboardAction(
       action,
-      this._zoomController.viewportCenter(),
+      this._zoomController.visibleBounds(),
       this,
     );
   }

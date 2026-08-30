@@ -1,6 +1,6 @@
 import { ReactiveController, ReactiveControllerHost } from "lit";
 import createPanZoom, { type PanZoom } from "panzoom";
-import { BoxItem, Point } from "../../model/types";
+import { Bounds, BoxItem, Point } from "../../model/types";
 import { computeBounds, INTERACTIVE_SELECTOR } from "./helper";
 
 export class ZoomController implements ReactiveController {
@@ -194,6 +194,16 @@ export class ZoomController implements ReactiveController {
     return {
       x: (width / 2 - (t?.x ?? 0)) / scale,
       y: (height / 2 - (t?.y ?? 0)) / scale,
+    };
+  }
+
+  visibleBounds(): Bounds | null {
+    const { width, height } = this._viewportSize();
+    if (width === 0 || height === 0) return null;
+    const scale = this._panzoom?.getTransform().scale ?? 1;
+    return {
+      position: this.viewportCenter(),
+      dimension: { width: width / scale, height: height / scale },
     };
   }
 

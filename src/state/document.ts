@@ -1,4 +1,5 @@
 import {
+  Bounds,
   BoxItem,
   CanvasItem,
   Dimension,
@@ -14,7 +15,11 @@ import {
 } from "../model/types";
 import { Point } from "../model/types";
 import { Observable } from "./observable";
-import { INSERT_GAP } from "../components/canvas/helper";
+import {
+  boundsWithin,
+  computeBounds,
+  INSERT_GAP,
+} from "../components/canvas/helper";
 
 export class DocumentController extends Observable {
   private _nodes: Map<Id, Node> = new Map();
@@ -201,7 +206,10 @@ export class DocumentController extends Observable {
     return { nodes, edges, images };
   }
 
-  insertItems(items: { nodes: Node[]; edges: Edge[]; images: Image[] }): {
+  insertItems(
+    items: { nodes: Node[]; edges: Edge[]; images: Image[] },
+    viewport?: Bounds | null,
+  ): {
     newIds: Set<Id>;
     nodeIdMap: Map<Id, Id>;
   } {
@@ -212,10 +220,10 @@ export class DocumentController extends Observable {
     const newIds: Set<Id> = new Set();
     const nodeIdMap: Map<Id, Id> = new Map();
 
-    const offset = this._pasteOffset(boxItems);
+    const offset = this._pasteShift(boxItems, viewport);
     const shift = (position: Point): Point => ({
-      x: position.x + offset,
-      y: position.y + offset,
+      x: position.x + offset.x,
+      y: position.y + offset.y,
     });
 
     for (const node of items.nodes) {
@@ -265,14 +273,48 @@ export class DocumentController extends Observable {
     return { x: position.x + offset, y: position.y + offset };
   }
 
-  private _pasteOffset(items: readonly { position: Point }[]): number {
+  private _pasteShift(
+    items: readonly BoxItem[],
+    viewport?: Bounds | null,
+  ): Point {
+    const cascade = (base: Point): Point => {
+      const step = this._pasteOffset(items, base);
+      return { x: base.x + step, y: base.y + step };
+    };
+
+    const atOrigin = cascade({ x: 0, y: 0 });
+    const bounds = computeBounds(items);
+    if (!viewport || !bounds) return atOrigin;
+
+    const isVisible = (shift: Point): boolean =>
+      boundsWithin(viewport, {
+        position: {
+          x: bounds.position.x + shift.x,
+          y: bounds.position.y + shift.y,
+        },
+        dimension: bounds.dimension,
+      });
+    if (isVisible(atOrigin)) return atOrigin;
+
+    const toCenter = {
+      x: viewport.position.x - bounds.position.x,
+      y: viewport.position.y - bounds.position.y,
+    };
+    const centered = cascade(toCenter);
+    return isVisible(centered) ? centered : toCenter;
+  }
+
+  private _pasteOffset(
+    items: readonly { position: Point }[],
+    base: Point = { x: 0, y: 0 },
+  ): number {
     let step = 0;
     while (
       step < 100 &&
       items.some((item) =>
         this.hasItemAt({
-          x: item.position.x + step * INSERT_GAP,
-          y: item.position.y + step * INSERT_GAP,
+          x: item.position.x + base.x + step * INSERT_GAP,
+          y: item.position.y + base.y + step * INSERT_GAP,
         }),
       )
     ) {
