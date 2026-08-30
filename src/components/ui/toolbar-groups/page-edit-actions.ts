@@ -39,7 +39,7 @@ export class AoPageEditActionsGroup extends LitElementWw {
     return html`<sl-button-group label=${msg("Page actions")}>
         <sl-tooltip content=${msg("Delete page")}>
           <sl-button size="small" @click=${this._handleDeletePageClick}>
-            <sl-icon src=${iconDelete}></sl-icon>
+            <sl-icon label=${msg("Delete page")} src=${iconDelete}></sl-icon>
           </sl-button>
         </sl-tooltip>
       </sl-button-group>

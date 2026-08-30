@@ -108,7 +108,7 @@ export class AoEdgeActionsGroup extends LitElementWw {
       <sl-dropdown>
         <sl-tooltip slot="trigger" tabindex="-1" content=${msg("Stroke color")}>
           <sl-button size="small" caret>
-            <sl-icon .src=${iconFill}></sl-icon>
+            <sl-icon label=${msg("Stroke color")} .src=${iconFill}></sl-icon>
           </sl-button>
         </sl-tooltip>
         <sl-color-picker
@@ -123,7 +123,9 @@ export class AoEdgeActionsGroup extends LitElementWw {
       <sl-dropdown>
         <sl-tooltip slot="trigger" tabindex="-1" content=${msg("Stroke width")}>
           <sl-button size="small" caret>
-            <sl-icon .src=${iconStrokeWidth}></sl-icon>
+            <sl-icon
+              label=${msg("Stroke width")}
+              .src=${iconStrokeWidth}></sl-icon>
           </sl-button>
         </sl-tooltip>
         <sl-range
@@ -139,7 +141,9 @@ export class AoEdgeActionsGroup extends LitElementWw {
       <sl-dropdown>
         <sl-tooltip slot="trigger" tabindex="-1" content=${msg("Stroke style")}>
           <sl-button size="small" caret>
-            <sl-icon .src=${iconBorderStyle}></sl-icon>
+            <sl-icon
+              label=${msg("Stroke style")}
+              .src=${iconBorderStyle}></sl-icon>
           </sl-button>
         </sl-tooltip>
         <sl-menu
@@ -153,7 +157,9 @@ export class AoEdgeActionsGroup extends LitElementWw {
       <sl-dropdown>
         <sl-tooltip slot="trigger" tabindex="-1" content=${msg("Arrowheads")}>
           <sl-button size="small" caret>
-            <sl-icon .src=${ARROWHEAD_ICONS[arrowheads]}></sl-icon>
+            <sl-icon
+              label=${msg("Arrowheads")}
+              .src=${ARROWHEAD_ICONS[arrowheads]}></sl-icon>
           </sl-button>
         </sl-tooltip>
         <sl-menu

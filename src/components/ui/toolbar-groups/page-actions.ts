@@ -61,7 +61,7 @@ export class AoPageActionsGroup extends LitElementWw {
           size="small"
           variant="primary"
           @click=${this._handleOpenPageClick}>
-          <sl-icon src=${iconEditFile}></sl-icon>
+          <sl-icon label=${msg("Connected page")} src=${iconEditFile}></sl-icon>
         </sl-button>
       </sl-tooltip>
     </sl-button-group>`;

@@ -140,9 +140,28 @@ export class AoCanvas extends LitElementWw {
       this._resetMode();
     }
 
+    if (this.drawingEdge && this.selection && !this.selection.isEmpty()) {
+      this._resetMode();
+    }
+
     if (this._hoveredAnchor && !this._tracksAnchorHover()) {
       this._hoveredAnchor = null;
     }
+  }
+
+  protected override updated(changedProperties: PropertyValues): void {
+    if (!changedProperties.has("_mode")) return;
+    const previous = changedProperties.get("_mode") as
+      | InteractionMode
+      | undefined;
+    if ((previous?.kind === "draw-edge") === this.drawingEdge) return;
+    this.dispatchEvent(
+      new CustomEvent("draw-edge-change", {
+        detail: { active: this.drawingEdge },
+        bubbles: true,
+        composed: true,
+      }),
+    );
   }
 
   protected override firstUpdated(_changedProperties: PropertyValues): void {
@@ -435,8 +454,13 @@ export class AoCanvas extends LitElementWw {
     navigator.vibrate?.(20);
   }
 
-  beginDrawEdge(): void {
-    startDrawEdgeMode(this._modeContext);
+  get drawingEdge(): boolean {
+    return this._mode.kind === "draw-edge";
+  }
+
+  toggleDrawEdge(): void {
+    if (this.drawingEdge) this._resetMode();
+    else startDrawEdgeMode(this._modeContext);
   }
 
   previewColor(preview: ColorPreview): void {

@@ -3,6 +3,7 @@ import { LitElementWw } from "@webwriter/lit";
 import { documentContext, selectionContext } from "../../../state/contexts";
 import { DocumentController } from "../../../state/document";
 import { html, PropertyValues, type TemplateResult } from "lit";
+import { property } from "lit/decorators.js";
 import { SubscribeController } from "../../../state/subscribe";
 import { actionsStyles } from "./toolbar-actions.styles";
 import { SelectionController } from "../../../state/selection";
@@ -25,6 +26,9 @@ export class AoCreateActionsGroup extends LitElementWw {
   @consume({ context: selectionContext })
   accessor selection!: SelectionController;
 
+  @property({ type: Boolean })
+  accessor drawingEdge = false;
+
   static override scopedElements = {
     "sl-button": SlButton,
     "sl-button-group": SlButtonGroup,
@@ -43,17 +47,20 @@ export class AoCreateActionsGroup extends LitElementWw {
     return html`<sl-button-group label=${msg("Add elements")}>
       <sl-tooltip content="${msg("Add node")} (N)">
         <sl-button size="small" @click=${this._handleAddNodeClick}>
-          <sl-icon src=${iconAddNode}></sl-icon>
+          <sl-icon label=${msg("Add node")} src=${iconAddNode}></sl-icon>
         </sl-button>
       </sl-tooltip>
       <sl-tooltip content="${msg("Add edge")} (E)">
-        <sl-button size="small" @click=${this._handleAddEdgeClick}>
-          <sl-icon src=${iconAddEdge}></sl-icon>
+        <sl-button
+          size="small"
+          class=${this.drawingEdge ? "active" : ""}
+          @click=${this._handleAddEdgeClick}>
+          <sl-icon label=${msg("Add edge")} src=${iconAddEdge}></sl-icon>
         </sl-button>
       </sl-tooltip>
       <sl-tooltip content="${msg("Add picture")} (I)">
         <sl-button size="small" @click=${this._handleAddImageClick}>
-          <sl-icon src=${iconAddImage}></sl-icon>
+          <sl-icon label=${msg("Add picture")} src=${iconAddImage}></sl-icon>
         </sl-button>
       </sl-tooltip>
     </sl-button-group>`;
@@ -70,7 +77,7 @@ export class AoCreateActionsGroup extends LitElementWw {
 
   private _handleAddEdgeClick(): void {
     this.dispatchEvent(
-      new CustomEvent("start-draw-edge", {
+      new CustomEvent("toggle-draw-edge", {
         bubbles: true,
         composed: true,
       }),

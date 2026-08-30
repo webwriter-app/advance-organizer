@@ -55,7 +55,7 @@ export class AoPageInfoActionsGroup extends LitElementWw {
     return html`<sl-button-group label=${msg("Go back")}>
         <sl-tooltip content=${msg("Go back")}>
           <sl-button size="small" @click=${this._handleClosePageClick}>
-            <sl-icon src=${iconArrowLeft}></sl-icon>
+            <sl-icon label=${msg("Go back")} src=${iconArrowLeft}></sl-icon>
           </sl-button>
         </sl-tooltip>
       </sl-button-group>

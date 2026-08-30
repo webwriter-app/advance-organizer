@@ -27,7 +27,7 @@ export interface KeyboardCanvas extends CanvasStores {
 
   insertPosition(): Point;
   startLabelEdit(id: Id): void;
-  beginDrawEdge(): void;
+  toggleDrawEdge(): void;
 
   cancelInteraction(): boolean;
 }
@@ -108,7 +108,7 @@ export class KeyboardController implements ReactiveController {
         if (!e.repeat) insertNode(canvas.insertPosition(), canvas);
         return true;
       case "e":
-        if (!e.repeat) canvas.beginDrawEdge();
+        if (!e.repeat) canvas.toggleDrawEdge();
         return true;
       case "i":
         if (!e.repeat) {

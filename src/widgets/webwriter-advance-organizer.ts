@@ -193,6 +193,9 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
   @state()
   private accessor _contextMenu: { x: number; y: number } | null = null;
 
+  @state()
+  private accessor _drawingEdge = false;
+
   @query("ao-canvas")
   private accessor canvas!: AoCanvas | null;
 
@@ -307,6 +310,9 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
 
   protected override willUpdate(changedProperties: PropertyValues): void {
     super.willUpdate(changedProperties);
+    if (changedProperties.has("_openPage") && this._openPage !== null) {
+      this._drawingEdge = false;
+    }
     if (
       changedProperties.has("nodes") ||
       changedProperties.has("edges") ||
@@ -376,7 +382,8 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
         this.canvas?.previewColor(e.detail)}>
       ${this._openPage === null
         ? html`<ao-create-actions
-              @start-draw-edge=${() => this.canvas?.beginDrawEdge()}
+              .drawingEdge=${this._drawingEdge}
+              @toggle-draw-edge=${() => this.canvas?.toggleDrawEdge()}
               @add-node=${this._insertNode}
               @add-image=${this._insertImage}></ao-create-actions>
             <div class="spacer"></div>
@@ -422,6 +429,9 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
       ${this._openPage === null
         ? html`<ao-canvas
               .editable=${this.isContentEditable}
+              @draw-edge-change=${(e: CustomEvent<{ active: boolean }>) => {
+                this._drawingEdge = e.detail.active;
+              }}
               @open-page=${(e: CustomEvent<{ pageId: Id | null }>) =>
                 this._openPageForNode(e.detail.pageId)}
               @open-context-menu=${(

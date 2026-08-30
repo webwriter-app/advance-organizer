@@ -104,7 +104,7 @@ export class AoTextActionsGroup extends LitElementWw {
           size="small"
           class=${bold ? "active" : ""}
           @click=${() => this._updateLabelStyle({ bold: !bold })}>
-          <sl-icon .src=${iconBold}></sl-icon>
+          <sl-icon label=${msg("Bold")} .src=${iconBold}></sl-icon>
         </sl-button>
       </sl-tooltip>
       <sl-tooltip content="${msg("Italic")} (${MOD_LABEL}+I)">
@@ -112,7 +112,7 @@ export class AoTextActionsGroup extends LitElementWw {
           size="small"
           class=${italic ? "active" : ""}
           @click=${() => this._updateLabelStyle({ italic: !italic })}>
-          <sl-icon .src=${iconItalic}></sl-icon>
+          <sl-icon label=${msg("Italic")} .src=${iconItalic}></sl-icon>
         </sl-button>
       </sl-tooltip>
       <sl-tooltip content="${msg("Underline")} (${MOD_LABEL}+U)">
@@ -120,13 +120,13 @@ export class AoTextActionsGroup extends LitElementWw {
           size="small"
           class=${underline ? "active" : ""}
           @click=${() => this._updateLabelStyle({ underline: !underline })}>
-          <sl-icon .src=${iconUnderline}></sl-icon>
+          <sl-icon label=${msg("Underline")} .src=${iconUnderline}></sl-icon>
         </sl-button>
       </sl-tooltip>
       <sl-dropdown>
         <sl-tooltip slot="trigger" tabindex="-1" content=${msg("Text color")}>
           <sl-button size="small" caret>
-            <sl-icon .src=${iconTextColor}></sl-icon>
+            <sl-icon label=${msg("Text color")} .src=${iconTextColor}></sl-icon>
           </sl-button>
         </sl-tooltip>
         <sl-color-picker
@@ -143,7 +143,7 @@ export class AoTextActionsGroup extends LitElementWw {
       <sl-dropdown>
         <sl-tooltip slot="trigger" tabindex="-1" content=${msg("Font size")}>
           <sl-button size="small" caret>
-            <sl-icon .src=${iconTextSize}></sl-icon>
+            <sl-icon label=${msg("Font size")} .src=${iconTextSize}></sl-icon>
           </sl-button>
         </sl-tooltip>
         <sl-menu>
