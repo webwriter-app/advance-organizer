@@ -195,7 +195,7 @@ export class DocumentController extends Observable {
 
     const nodeIds = new Set(nodes.map((n) => n.id));
     const edges = [...this._edges.values()].filter(
-      (e) => nodeIds.has(e.source) && nodeIds.has(e.target),
+      (e) => ids.has(e.id) && nodeIds.has(e.source) && nodeIds.has(e.target),
     );
 
     return { nodes, edges, images };
