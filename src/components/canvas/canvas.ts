@@ -102,6 +102,7 @@ export class AoCanvas extends LitElementWw {
     AoCanvas.MIN_ZOOM,
     AoCanvas.MAX_ZOOM,
     () => this.editable,
+    () => [...this.doc.nodes, ...this.doc.images],
   );
 
   private readonly _snapHighlighter = new SnapHighlighter();
@@ -150,6 +151,8 @@ export class AoCanvas extends LitElementWw {
   }
 
   protected override updated(changedProperties: PropertyValues): void {
+    this._zoomController.clampPan();
+
     if (!changedProperties.has("_mode")) return;
     const previous = changedProperties.get("_mode") as
       | InteractionMode
@@ -258,11 +261,7 @@ export class AoCanvas extends LitElementWw {
         .zoomLevel=${this._zoomController.scale}
         @zoom-in=${() => this._zoomController.zoomIn()}
         @zoom-out=${() => this._zoomController.zoomOut()}
-        @center-view=${() =>
-          this._zoomController.fitToContent([
-            ...this.doc.nodes,
-            ...this.doc.images,
-          ])}>
+        @center-view=${() => this._zoomController.fitToContent()}>
       </ao-zoom-controls>
       ${this._dropController.imageCount === null
         ? nothing

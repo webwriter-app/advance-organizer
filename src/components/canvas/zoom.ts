@@ -11,12 +11,16 @@ export class ZoomController implements ReactiveController {
   private static readonly ZOOM_STEP = 1.3;
   private static readonly FIT_PADDING = 32;
   private static readonly LINE_HEIGHT = 16;
+  private static readonly PAN_MARGIN = 200;
+
+  private _clamping = false;
 
   constructor(
     private readonly host: ReactiveControllerHost,
     private readonly minZoom: number,
     private readonly maxZoom: number,
     private readonly isEditable: () => boolean,
+    private readonly contentItems: () => readonly BoxItem[],
   ) {
     host.addController(this);
   }
@@ -25,7 +29,8 @@ export class ZoomController implements ReactiveController {
     this._wheelDoc?.removeEventListener("wheel", this._onWheel, {
       capture: true,
     });
-    this._panzoom?.off("zoom", this._syncZoomLevel);
+    this._panzoom?.off("zoom", this._onZoom);
+    this._panzoom?.off("pan", this.clampPan);
     this._panzoom?.dispose();
     this._panzoom = null;
   }
@@ -56,7 +61,8 @@ export class ZoomController implements ReactiveController {
         !!(e?.target instanceof HTMLElement && e.target.isContentEditable), // prevent interference with label editing
       beforeWheel: () => true,
     });
-    this._panzoom.on("zoom", this._syncZoomLevel);
+    this._panzoom.on("zoom", this._onZoom);
+    this._panzoom.on("pan", this.clampPan);
     this._syncZoomLevel();
     // The WebWriter editor sets `pointer-events: none` on the whole widget while ctrl
     // is held, so the wheel event never reaches the SVG. Listen on the document instead
@@ -100,6 +106,48 @@ export class ZoomController implements ReactiveController {
       this._panzoom.moveBy(-dx * factor, -dy * factor, false);
     }
   };
+
+  clampPan = (): void => {
+    if (!this._panzoom || this._clamping || this.isEditable()) return;
+
+    const { width, height } = this._viewportSize();
+    if (width === 0 || height === 0) return;
+
+    const bounds = computeBounds(this.contentItems());
+    if (!bounds) return;
+
+    const t = this._panzoom.getTransform();
+    const margin = ZoomController.PAN_MARGIN;
+    const x = ZoomController._clampAxis(
+      t.x,
+      width,
+      (bounds.position.x - bounds.dimension.width / 2 - margin) * t.scale,
+      (bounds.position.x + bounds.dimension.width / 2 + margin) * t.scale,
+    );
+    const y = ZoomController._clampAxis(
+      t.y,
+      height,
+      (bounds.position.y - bounds.dimension.height / 2 - margin) * t.scale,
+      (bounds.position.y + bounds.dimension.height / 2 + margin) * t.scale,
+    );
+    if (x === t.x && y === t.y) return;
+
+    this._clamping = true;
+    this._panzoom.moveTo(x, y);
+    this._clamping = false;
+  };
+
+  private static _clampAxis(
+    translation: number,
+    size: number,
+    min: number,
+    max: number,
+  ): number {
+    const lower = size - max;
+    const upper = -min;
+    if (lower > upper) return (lower + upper) / 2;
+    return Math.min(upper, Math.max(lower, translation));
+  }
 
   get scale(): number {
     return this._panzoom?.getTransform().scale ?? 1;
@@ -147,12 +195,12 @@ export class ZoomController implements ReactiveController {
     );
   }
 
-  fitToContent(items: readonly BoxItem[]): void {
+  fitToContent(): void {
     if (!this._panzoom) return;
     const { width, height } = this._viewportSize();
     if (width === 0 || height === 0) return;
 
-    const bounds = computeBounds(items);
+    const bounds = computeBounds(this.contentItems());
     if (!bounds) {
       this._zoomTo(1, width / 2, height / 2);
       return;
@@ -206,6 +254,11 @@ export class ZoomController implements ReactiveController {
       dimension: { width: width / scale, height: height / scale },
     };
   }
+
+  private _onZoom = (): void => {
+    this.clampPan();
+    this._syncZoomLevel();
+  };
 
   private _syncZoomLevel = (): void => {
     this.host.requestUpdate();
