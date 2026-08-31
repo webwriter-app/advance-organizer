@@ -8,4 +8,10 @@ export const styles = css`
     box-sizing: border-box;
     line-height: 1.5;
   }
+
+  @media print {
+    :host {
+      outline: none !important;
+    }
+  }
 `;
