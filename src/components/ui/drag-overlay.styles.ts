@@ -17,6 +17,7 @@ export const dragOverlayStyles = css`
     );
     color: var(--sl-color-neutral-0);
     font-size: var(--sl-font-size-large);
+    -webkit-user-select: none;
     user-select: none;
     pointer-events: none;
     border-radius: 0 0 var(--sl-border-radius-small)

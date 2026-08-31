@@ -44,7 +44,14 @@ export class LabelEditController implements ReactiveController {
     // Set text imperatively to avoid Lit issues with contenteditable
     el.textContent = item.label?.text ?? "";
     el.focus();
-    selectAllText(el);
+    if (selectAllText(el)) return;
+
+    const id = this._editingId;
+    requestAnimationFrame(() => {
+      if (this._editingId !== id) return;
+      const editor = this._editorFor(id);
+      if (editor) selectAllText(editor);
+    });
   }
 
   onKeydown(e: KeyboardEvent): void {
@@ -102,10 +109,25 @@ function isEditorElement(target: EventTarget | null): boolean {
   return !!(target as HTMLElement | null)?.classList?.contains(EDITOR_CLASS);
 }
 
-function selectAllText(el: HTMLElement): void {
-  const range = document.createRange();
-  range.selectNodeContents(el);
-  const sel = window.getSelection();
-  sel?.removeAllRanges();
-  sel?.addRange(range);
+function selectAllText(el: HTMLElement): boolean {
+  const sel = selectionOf(el);
+  if (!sel) return false;
+
+  sel.removeAllRanges();
+  sel.setBaseAndExtent(el, 0, el, el.childNodes.length);
+
+  return selectionIsInside(el);
+}
+
+function selectionOf(el: HTMLElement): Selection | null {
+  const root = el.getRootNode() as Node & {
+    getSelection?: () => Selection | null;
+  };
+  return root.getSelection?.() ?? window.getSelection();
+}
+
+function selectionIsInside(el: HTMLElement): boolean {
+  const sel = selectionOf(el);
+  if (!sel?.rangeCount) return false;
+  return el.contains(sel.getRangeAt(0).commonAncestorContainer);
 }

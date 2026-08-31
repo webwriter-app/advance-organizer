@@ -13,6 +13,12 @@ export const canvasStyles = css`
     cursor: var(--ao-resize-cursor, default) !important;
   }
 
+  svg {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+
   svg:focus {
     outline: none;
   }
@@ -38,7 +44,9 @@ export const canvasStyles = css`
     outline: none;
     cursor: text;
     pointer-events: auto;
+    -webkit-user-select: text;
     user-select: text;
+    -webkit-touch-callout: default;
   }
 
   :host(:not([editable])) .node.has-page,
@@ -98,6 +106,7 @@ export const labelStyles = css`
     text-align: center;
     white-space: pre-wrap;
     overflow-wrap: anywhere;
+    -webkit-user-select: none;
     user-select: none;
   }
 

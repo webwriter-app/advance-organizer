@@ -108,8 +108,10 @@ export class AoCanvas extends LitElementWw {
   private readonly _snapHighlighter = new SnapHighlighter();
 
   private readonly _longPress = new LongPressController((origin) =>
-    this._beginTouchRectangleSelect(origin),
+    this._onLongPress(origin),
   );
+
+  private _lastPointerType: string = "mouse";
 
   private readonly _dropController = new DropController(
     this,
@@ -209,7 +211,7 @@ export class AoCanvas extends LitElementWw {
         @pointerdown=${this._onPointerDown}
         @pointermove=${this._onPointerMove}
         @pointerup=${this._onPointerUp}
-        @pointercancel=${this._onPointerUp}
+        @pointercancel=${this._onPointerCancel}
         @pointerleave=${() => (this._hoveredAnchor = null)}
         @keydown=${(e: KeyboardEvent) => this._labelEdit.onKeydown(e)}
         @focusout=${(e: FocusEvent) => this._labelEdit.onFocusOut(e)}
@@ -335,6 +337,8 @@ export class AoCanvas extends LitElementWw {
   }
 
   private _onPointerDown(e: PointerEvent): void {
+    this._lastPointerType = e.pointerType;
+
     // Ignore clicks inside the label being edited, they are handled by the contenteditable div
     if ((e.target as Element).closest(`.${EDITOR_CLASS}`)) return;
 
@@ -433,6 +437,7 @@ export class AoCanvas extends LitElementWw {
       }
 
       beginDrag(e, this._modeContext);
+      if (e.pointerType === "touch") this._longPress.start(e);
     } else {
       if (!additive) this.selection.clear();
       if (e.pointerType === "touch") {
@@ -447,9 +452,11 @@ export class AoCanvas extends LitElementWw {
     svg.setPointerCapture(e.pointerId);
   }
 
-  private _beginTouchRectangleSelect(origin: Point): void {
-    beginRectangleSelect(origin, this._modeContext, true);
+  private _onLongPress(origin: Point): void {
     navigator.vibrate?.(20);
+    if (this._mode.kind === "idle") {
+      beginRectangleSelect(origin, this._modeContext, true);
+    }
   }
 
   get drawingEdge(): boolean {
@@ -467,6 +474,7 @@ export class AoCanvas extends LitElementWw {
 
   private _onPointerMove(e: PointerEvent): void {
     this._longPress.onPointerMove(e);
+    if (this._longPress.pending) return;
     if (!handlesPointerMove(this._mode) && !this._tracksAnchorHover()) return;
 
     this._pendingPointer = { x: e.clientX, y: e.clientY };
@@ -521,8 +529,20 @@ export class AoCanvas extends LitElementWw {
     }
   }
 
+  private _onPointerCancel = (e: PointerEvent): void => {
+    this._longPress.cancel();
+    this._onPointerUp(e);
+  };
+
   private _onPointerUp(e?: PointerEvent): void {
     if (e) this._shiftKey = e.shiftKey;
+
+    const held = e ? this._longPress.heldPress(e.pointerId) : null;
+    if (held) {
+      this._resetMode();
+      this._openContextMenuAt(held.origin, held.target);
+      return;
+    }
 
     const handlers = getHandlers(this._mode);
     if (this._pendingPointer) {
@@ -559,15 +579,26 @@ export class AoCanvas extends LitElementWw {
     );
   }
 
-  private _onContextMenu(e: PointerEvent): void {
+  private _onContextMenu(e: MouseEvent): void {
+    if (this._lastPointerType === "touch") {
+      e.preventDefault();
+      return;
+    }
+
     if (!this.editable) return;
     if (this._mode.kind !== "idle") return;
 
     e.preventDefault();
     e.stopPropagation();
 
-    const target = e.target as Element;
-    const itemEl = target.closest<SVGElement>("[data-item-id]");
+    this._openContextMenuAt(
+      { x: e.clientX, y: e.clientY },
+      e.target as Element,
+    );
+  }
+
+  private _openContextMenuAt(origin: Point, target: Element | null): void {
+    const itemEl = target?.closest<SVGElement>("[data-item-id]");
 
     if (!itemEl) {
       this.selection.clear();
@@ -577,8 +608,8 @@ export class AoCanvas extends LitElementWw {
 
     const contextMenuEvent = new CustomEvent("open-context-menu", {
       detail: {
-        x: e.clientX,
-        y: e.clientY,
+        x: origin.x,
+        y: origin.y,
       },
       bubbles: true,
       composed: true,

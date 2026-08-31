@@ -15,6 +15,7 @@ export const zoomControlsStyles = css`
 
     color: var(--sl-color-neutral-700);
     font-size: var(--sl-font-size-large);
+    -webkit-user-select: none;
     user-select: none;
   }
 
