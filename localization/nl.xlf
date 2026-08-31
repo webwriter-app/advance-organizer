@@ -26,9 +26,7 @@
         <target>Verwijderen</target>
       </trans-unit>
       <trans-unit id="saa987c09599e0f9a">
-        <source>Drop 
-          <x id="0" equiv-text="${this.imageCount}"/> images here
-        </source>
+        <source>Drop <x id="0" equiv-text="${this.imageCount}"/> images here</source>
         <target>Zet 
           <x id="0" equiv-text="${this.imageCount}"/> afbeeldingen hier neer
         </target>
@@ -188,6 +186,54 @@
       <trans-unit id="s2d46e4d6c4292d93">
         <source>New node</source>
         <target>Nieuw knooppunt</target>
+      </trans-unit>
+      <trans-unit id="s821f2ff928cf5899">
+        <source>Arrowheads</source>
+        <target>Pijlpunten</target>
+      </trans-unit>
+      <trans-unit id="s669b18c6d2d9c95b">
+        <source>None</source>
+        <target>Geen</target>
+      </trans-unit>
+      <trans-unit id="s9fc3568ec8629bda">
+        <source>Forward</source>
+        <target>Voorzijde</target>
+      </trans-unit>
+      <trans-unit id="s3ffcdc5db5e7d0c5">
+        <source>Reverse</source>
+        <target>Achteruit</target>
+      </trans-unit>
+      <trans-unit id="s0520016b18aadf60">
+        <source>Bidirectional</source>
+        <target>Bidirectioneel</target>
+      </trans-unit>
+      <trans-unit id="s6a7f201c8d3fdb35">
+        <source>Help actions</source>
+        <target>Help-acties</target>
+      </trans-unit>
+      <trans-unit id="s352719d86112de9a">
+        <source>Help</source>
+        <target>Help</target>
+      </trans-unit>
+      <trans-unit id="s6218b19e67f6d134">
+        <source>Select an element</source>
+        <target>Selecteer een element</target>
+      </trans-unit>
+      <trans-unit id="se610cb50ceb6ad1d">
+        <source>Move the selection</source>
+        <target>De selectie verplaatsen</target>
+      </trans-unit>
+      <trans-unit id="s7fd3469f78111589">
+        <source>Open context menu</source>
+        <target>Contextmenu openen</target>
+      </trans-unit>
+      <trans-unit id="sb6f7c888c7d917a1">
+        <source>Pan the canvas</source>
+        <target>Schuif over het canvas</target>
+      </trans-unit>
+      <trans-unit id="s1c8cc3603762c768">
+        <source>Zoom in and out</source>
+        <target>In- en uitzoomen</target>
       </trans-unit>
     </body>
   </file>

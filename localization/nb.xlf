@@ -26,9 +26,7 @@
         <target>Slett</target>
       </trans-unit>
       <trans-unit id="saa987c09599e0f9a">
-        <source>Drop 
-          <x id="0" equiv-text="${this.imageCount}"/> images here
-        </source>
+        <source>Drop <x id="0" equiv-text="${this.imageCount}"/> images here</source>
         <target>Slipp 
           <x id="0" equiv-text="${this.imageCount}"/> bilder her
         </target>
@@ -188,6 +186,54 @@
       <trans-unit id="s2d46e4d6c4292d93">
         <source>New node</source>
         <target>Ny node</target>
+      </trans-unit>
+      <trans-unit id="s821f2ff928cf5899">
+        <source>Arrowheads</source>
+        <target>Pilspisser</target>
+      </trans-unit>
+      <trans-unit id="s669b18c6d2d9c95b">
+        <source>None</source>
+        <target>Ingen</target>
+      </trans-unit>
+      <trans-unit id="s9fc3568ec8629bda">
+        <source>Forward</source>
+        <target>Fremover</target>
+      </trans-unit>
+      <trans-unit id="s3ffcdc5db5e7d0c5">
+        <source>Reverse</source>
+        <target>Bakover</target>
+      </trans-unit>
+      <trans-unit id="s0520016b18aadf60">
+        <source>Bidirectional</source>
+        <target>Toveis</target>
+      </trans-unit>
+      <trans-unit id="s6a7f201c8d3fdb35">
+        <source>Help actions</source>
+        <target>Hjelpehandlinger</target>
+      </trans-unit>
+      <trans-unit id="s352719d86112de9a">
+        <source>Help</source>
+        <target>Hjelp</target>
+      </trans-unit>
+      <trans-unit id="s6218b19e67f6d134">
+        <source>Select an element</source>
+        <target>Velg et element</target>
+      </trans-unit>
+      <trans-unit id="se610cb50ceb6ad1d">
+        <source>Move the selection</source>
+        <target>Flytt markeringen</target>
+      </trans-unit>
+      <trans-unit id="s7fd3469f78111589">
+        <source>Open context menu</source>
+        <target>Åpne kontekstmenyen</target>
+      </trans-unit>
+      <trans-unit id="sb6f7c888c7d917a1">
+        <source>Pan the canvas</source>
+        <target>Panorer lerretet</target>
+      </trans-unit>
+      <trans-unit id="s1c8cc3603762c768">
+        <source>Zoom in and out</source>
+        <target>Zoom inn og ut</target>
       </trans-unit>
     </body>
   </file>

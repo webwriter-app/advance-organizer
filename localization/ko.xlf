@@ -26,9 +26,7 @@
         <target>삭제</target>
       </trans-unit>
       <trans-unit id="saa987c09599e0f9a">
-        <source>Drop 
-          <x id="0" equiv-text="${this.imageCount}"/> images here
-        </source>
+        <source>Drop <x id="0" equiv-text="${this.imageCount}"/> images here</source>
         <target>여기에 
           <x id="0" equiv-text="${this.imageCount}"/> 이미지를 드래그 앤 드롭하세요
         </target>
@@ -188,6 +186,54 @@
       <trans-unit id="s2d46e4d6c4292d93">
         <source>New node</source>
         <target>새 노드</target>
+      </trans-unit>
+      <trans-unit id="s821f2ff928cf5899">
+        <source>Arrowheads</source>
+        <target>화살촉</target>
+      </trans-unit>
+      <trans-unit id="s669b18c6d2d9c95b">
+        <source>None</source>
+        <target>없음</target>
+      </trans-unit>
+      <trans-unit id="s9fc3568ec8629bda">
+        <source>Forward</source>
+        <target>앞으로</target>
+      </trans-unit>
+      <trans-unit id="s3ffcdc5db5e7d0c5">
+        <source>Reverse</source>
+        <target>뒤로</target>
+      </trans-unit>
+      <trans-unit id="s0520016b18aadf60">
+        <source>Bidirectional</source>
+        <target>양방향</target>
+      </trans-unit>
+      <trans-unit id="s6a7f201c8d3fdb35">
+        <source>Help actions</source>
+        <target>도움말 동작</target>
+      </trans-unit>
+      <trans-unit id="s352719d86112de9a">
+        <source>Help</source>
+        <target>도움말</target>
+      </trans-unit>
+      <trans-unit id="s6218b19e67f6d134">
+        <source>Select an element</source>
+        <target>요소 선택</target>
+      </trans-unit>
+      <trans-unit id="se610cb50ceb6ad1d">
+        <source>Move the selection</source>
+        <target>선택 항목 이동</target>
+      </trans-unit>
+      <trans-unit id="s7fd3469f78111589">
+        <source>Open context menu</source>
+        <target>컨텍스트 메뉴 열기</target>
+      </trans-unit>
+      <trans-unit id="sb6f7c888c7d917a1">
+        <source>Pan the canvas</source>
+        <target>캔버스 이동</target>
+      </trans-unit>
+      <trans-unit id="s1c8cc3603762c768">
+        <source>Zoom in and out</source>
+        <target>확대 및 축소</target>
       </trans-unit>
     </body>
   </file>
