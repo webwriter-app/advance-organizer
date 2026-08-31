@@ -312,6 +312,9 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
 
   protected override willUpdate(changedProperties: PropertyValues): void {
     super.willUpdate(changedProperties);
+    if (this._openPage !== null && !this.pages.hasPage(this._openPage)) {
+      this._openPage = null;
+    }
     if (changedProperties.has("_openPage") && this._openPage !== null) {
       this._drawingEdge = false;
     }
