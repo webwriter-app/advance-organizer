@@ -35,6 +35,7 @@ import {
   renderPrintOrganizer,
 } from "../components/print/print";
 import { AoTextActionsGroup } from "../components/ui/toolbar-groups/text-actions";
+import { AoHelpActionsGroup } from "../components/ui/toolbar-groups/help-actions";
 
 // @ts-ignore
 import LOCALIZE from "../../localization/generated";
@@ -229,6 +230,7 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
     "ao-page-actions": AoPageActionsGroup,
     "ao-page-info-actions": AoPageInfoActionsGroup,
     "ao-page-edit-actions": AoPageEditActionsGroup,
+    "ao-help-actions": AoHelpActionsGroup,
   };
 
   static override styles = [styles, labelStyles, shoelaceTheme];
@@ -403,6 +405,9 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
               ? html`<ao-page-actions
                   @open-page=${(e: CustomEvent<{ pageId: Id | null }>) =>
                     this._openPageForNode(e.detail.pageId)}></ao-page-actions>`
+              : nothing}
+            ${AoHelpActionsGroup.isApplicable(this.doc, this.selection)
+              ? html`<ao-help-actions></ao-help-actions>`
               : nothing}`
         : html`<ao-page-info-actions
               .openPageId=${this._openPage}
