@@ -119,14 +119,7 @@ export const resizeHandlers: ModeHandlers<"resize"> = {
       ctx.zoom.scale,
       ctx.shiftKeyPressed(),
     );
-    applyResizeDom(
-      ctx.root,
-      ctx.doc,
-      mode.itemId,
-      newPos,
-      newDim,
-      ctx.zoom.scale,
-    );
+    applyResizeDom(ctx.root, ctx.doc, mode.itemId, newPos, newDim);
   },
   onPointerUp(pointer, mode, ctx) {
     const { newPos, newDim } = resolveResize(

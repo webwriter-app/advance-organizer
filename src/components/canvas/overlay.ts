@@ -1,12 +1,13 @@
 import { svg, nothing, type TemplateResult } from "lit";
 import { SelectionController } from "../../state/selection";
-import { AnchorRendering, Id, Point } from "../../model/types";
+import { AnchorRendering, Id, Point, ResizeHandle } from "../../model/types";
 import { DocumentController } from "../../state/document";
 import {
   computeEdgePoints,
   getAnchorPoints,
   getHandlePositions,
   HANDLE_SIZE,
+  MIN_TARGET_SIZE,
   TOUCH_INDICATOR_RADIUS,
 } from "./helper";
 
@@ -165,8 +166,6 @@ function renderResizeHandles(
   const item = doc.get(entryId);
   if (!item) return svg``;
 
-  const hs = HANDLE_SIZE / zoom;
-
   if (item.kind === "node" || item.kind === "image") {
     const {
       position: { x, y },
@@ -185,20 +184,7 @@ function renderResizeHandles(
         stroke-width="1.5"
         vector-effect="non-scaling-stroke"
       >
-        ${handles.map(
-          (h) => svg`
-          <rect
-            class="resize-handle"
-            x=${h.pos.x - hs / 2}
-            y=${h.pos.y - hs / 2}
-            width=${hs}
-            height=${hs}
-            style="cursor: ${h.cursor}"
-            vector-effect="non-scaling-stroke"
-            data-handle=${h.handle}
-          />
-        `,
-        )}
+        ${handles.map((h) => renderHandle(h.handle, h.pos, h.cursor, zoom))}
       </g>
     `;
   } else if (item.kind === "edge") {
@@ -225,31 +211,49 @@ function renderResizeHandles(
         stroke-width="1.5"
         vector-effect="non-scaling-stroke"
       >
-        <rect
-          class="resize-handle"
-          x=${start.x - hs / 2}
-          y=${start.y - hs / 2}
-          width=${hs}
-          height=${hs}
-          style="cursor: grab"
-          vector-effect="non-scaling-stroke"
-          data-handle="source"
-        />
-        <rect
-          class="resize-handle"
-          x=${end.x - hs / 2}
-          y=${end.y - hs / 2}
-          width=${hs}
-          height=${hs}
-          style="cursor: grab"
-          vector-effect="non-scaling-stroke"
-          data-handle="target"
-        />
+        ${renderHandle("source", start, "grab", zoom)}
+        ${renderHandle("target", end, "grab", zoom)}
       </g>
     `;
   }
 
   return svg``;
+}
+
+function renderHandle(
+  handle: ResizeHandle | "source" | "target",
+  pos: Point,
+  cursor: string,
+  zoom: number,
+): TemplateResult {
+  const hs = HANDLE_SIZE / zoom;
+  const ts = MIN_TARGET_SIZE / zoom;
+
+  return svg`
+    <g
+      class="resize-handle"
+      data-handle=${handle}
+      transform="translate(${pos.x}, ${pos.y})"
+      style="cursor: ${cursor}"
+    >
+      <rect
+        class="resize-handle-target"
+        x=${-ts / 2}
+        y=${-ts / 2}
+        width=${ts}
+        height=${ts}
+        fill="transparent"
+        stroke="none"
+      />
+      <rect
+        x=${-hs / 2}
+        y=${-hs / 2}
+        width=${hs}
+        height=${hs}
+        vector-effect="non-scaling-stroke"
+      />
+    </g>
+  `;
 }
 
 function renderAnchorPoints(

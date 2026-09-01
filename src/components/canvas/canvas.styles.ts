@@ -54,6 +54,16 @@ export const canvasStyles = css`
     cursor: pointer;
   }
 
+  .resize-handle-target {
+    pointer-events: none;
+  }
+
+  @media (pointer: coarse) {
+    .resize-handle-target {
+      pointer-events: all;
+    }
+  }
+
   .touch-indicator rect {
     transform-box: fill-box;
     transform-origin: center;

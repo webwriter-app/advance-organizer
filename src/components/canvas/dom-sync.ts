@@ -17,7 +17,6 @@ import {
   getArrowPath,
   getHandlePositions,
   getStrokeDashArray,
-  HANDLE_SIZE,
 } from "./helper";
 import { getBadgeColors, getBadgePosition, getLabelBounds } from "./node";
 
@@ -53,7 +52,6 @@ export function applyResizeDom(
   id: Id,
   newPos: Point,
   newDim: Dimension,
-  zoomScale: number,
 ): void {
   applyDragDom(root, doc, id, newPos);
 
@@ -77,14 +75,10 @@ export function applyResizeDom(
     `.resize-handles[data-resize-id="${id}"]`,
   ) as SVGGElement | null;
   if (handlesG) {
-    const hs = HANDLE_SIZE / zoomScale;
     const handlePositions = getHandlePositions(newDim);
     for (const { handle, pos } of handlePositions) {
-      const rect = handlesG.querySelector(`[data-handle="${handle}"]`);
-      if (rect) {
-        rect.setAttribute("x", String(pos.x - hs / 2));
-        rect.setAttribute("y", String(pos.y - hs / 2));
-      }
+      const handleG = handlesG.querySelector(`[data-handle="${handle}"]`);
+      handleG?.setAttribute("transform", `translate(${pos.x}, ${pos.y})`);
     }
   }
 
