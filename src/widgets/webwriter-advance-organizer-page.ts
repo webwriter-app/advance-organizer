@@ -1,12 +1,16 @@
 import { html, type TemplateResult } from "lit";
 import { LitElementWw } from "@webwriter/lit";
-import { customElement, queryAssignedElements } from "lit/decorators.js";
+import {
+  customElement,
+  property,
+  queryAssignedElements,
+} from "lit/decorators.js";
 import { styles } from "./webwriter-advance-organizer-page.styles";
 
 /**
  * A page of a `<webwriter-advance-organizer>`: the content shown when a learner clicks on
  * the node it belongs to. Pages are children of the advance organizer and are linked to a
- * node by giving them the `id` of that node.
+ * node by their `node-id`.
  *
  * A page holds arbitrary content – text, images, other widgets – and stays hidden until
  * its node is opened. Pages are managed by the advance organizer, adding a page to a node
@@ -16,6 +20,9 @@ import { styles } from "./webwriter-advance-organizer-page.styles";
  */
 @customElement("webwriter-advance-organizer-page")
 export class WebwriterAdvanceOrganizerPage extends LitElementWw {
+  @property({ type: String, attribute: "node-id", reflect: true })
+  accessor nodeId: string | null = null;
+
   /** @internal */
   @queryAssignedElements({ flatten: true })
   accessor assignedElements!: Element[];

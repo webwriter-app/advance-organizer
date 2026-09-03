@@ -6,6 +6,7 @@ import DOMPurify from "dompurify";
 import { Id } from "../model/types";
 
 const PAGE_TAG = "webwriter-advance-organizer-page";
+const NODE_ID_ATTR = "node-id";
 
 export class PageController extends Observable {
   private _observer: MutationObserver | null = null;
@@ -35,11 +36,13 @@ export class PageController extends Observable {
   }
 
   hasPage(id: Id): boolean {
-    return (this.host as LitElementWw).children.namedItem(id) !== null;
+    return this.getPage(id) !== null;
   }
 
   getPage(id: Id): Element | null {
-    return (this.host as LitElementWw).children.namedItem(id);
+    return (
+      this._pages.find((page) => page.getAttribute(NODE_ID_ATTR) === id) ?? null
+    );
   }
 
   getPageContent(id: Id): string | null {
@@ -48,17 +51,22 @@ export class PageController extends Observable {
 
   get pageIds(): Set<Id> {
     const ids = new Set<Id>();
-    for (const child of (this.host as LitElementWw).children) {
-      if (child.tagName.toLowerCase() === PAGE_TAG && child.id) {
-        ids.add(child.id);
-      }
+    for (const page of this._pages) {
+      const id = page.getAttribute(NODE_ID_ATTR);
+      if (id) ids.add(id);
     }
     return ids;
   }
 
+  private get _pages(): Element[] {
+    return [...(this.host as LitElementWw).children].filter(
+      (child) => child.tagName.toLowerCase() === PAGE_TAG,
+    );
+  }
+
   addPage(id: Id, content?: string): Element {
     const page = document.createElement(PAGE_TAG);
-    page.id = id;
+    page.setAttribute(NODE_ID_ATTR, id);
     if (content) {
       // Once browser support is better, replace this with the HTML Sanitizer API
       // https://developer.mozilla.org/en-US/docs/Web/API/HTML_Sanitizer_API
@@ -90,7 +98,8 @@ export class PageController extends Observable {
     const source = this.getPage(fromId);
     if (!source) return null;
     const clone = source.cloneNode(true) as Element;
-    clone.id = toId;
+    clone.setAttribute(NODE_ID_ATTR, toId);
+    clone.removeAttribute("id");
     (this.host as LitElementWw).appendChild(clone);
     this._notifyPagesChanged();
     return clone;

@@ -70,8 +70,8 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
 
   /**
    * The nodes of the advance organizer. Each node has an `id` that edges refer to and that
-   * links it to a page of the same `id`, a `position` and `dimension` in canvas coordinates,
-   * a `label` and a `style`.
+   * links it to the page with that `node-id`, a `position` and `dimension` in canvas
+   * coordinates, a `label` and a `style`.
    */
   @property({ type: Array, reflect: true })
   accessor nodes: Node[] = [
