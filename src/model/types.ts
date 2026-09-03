@@ -28,7 +28,21 @@ export type NodeShape = "rectangle" | "ellipse" | "diamond";
 
 export type StrokeStyle = "solid" | "dashed" | "dotted";
 
+export type NodePresetId =
+  | "main-topic"
+  | "subtopic"
+  | "detail"
+  | "term"
+  | "topic-a"
+  | "topic-b"
+  | "topic-c"
+  | "topic-d"
+  | "topic-e";
+
+export type NodePresetSelection = NodePresetId | "custom";
+
 export interface NodeStyle {
+  readonly preset?: NodePresetSelection;
   readonly shape?: NodeShape;
   readonly fill?: string;
   readonly stroke?: string;

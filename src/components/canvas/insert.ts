@@ -1,4 +1,5 @@
 import { Bounds, Dimension, Id, Node, NodeStyle, Point } from "../../model/types";
+import { DEFAULT_PRESET, presetStyle } from "../../model/presets";
 import type { DocumentController } from "../../state/document";
 import type { PageController } from "../../state/page";
 import type { SelectionController } from "../../state/selection";
@@ -20,12 +21,7 @@ export interface CanvasStores {
 export type ItemStores = Pick<CanvasStores, "doc" | "selection">;
 
 const NEW_NODE_DIMENSION: Dimension = { width: 160, height: 80 };
-const NEW_NODE_STYLE: NodeStyle = {
-  shape: "rectangle",
-  fill: "#e0f2fe", // derived from var(--sl-color-primary-100)
-  stroke: "#0284c7", // derived from var(--sl-color-primary-600)
-  strokeWidth: 2,
-};
+const NEW_NODE_STYLE: NodeStyle = presetStyle(DEFAULT_PRESET);
 
 export function insertNode(position: Point, stores: ItemStores): Node {
   const node = stores.doc.addNode({

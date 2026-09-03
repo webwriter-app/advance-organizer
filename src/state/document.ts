@@ -408,7 +408,11 @@ export class DocumentController extends Observable {
   updateNodeStyle(id: Id, style: Partial<NodeStyle>): void {
     const node = this._nodes.get(id);
     if (!node) return;
-    this._nodes.set(id, { ...node, style: { ...node.style, ...style } });
+    const preset = "preset" in style ? style.preset : "custom";
+    this._nodes.set(id, {
+      ...node,
+      style: { ...node.style, ...style, preset },
+    });
     this.notify();
   }
 

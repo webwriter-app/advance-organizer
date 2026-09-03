@@ -3,10 +3,18 @@ import { LitElementWw } from "@webwriter/lit";
 import { documentContext, selectionContext } from "../../../state/contexts";
 import { DocumentController } from "../../../state/document";
 import { SelectionController } from "../../../state/selection";
-import { html, nothing, PropertyValues, type TemplateResult } from "lit";
+import { css, html, nothing, PropertyValues, type TemplateResult } from "lit";
 import { SubscribeController } from "../../../state/subscribe";
 import { actionsStyles } from "./toolbar-actions.styles";
-import { NodeShape, StrokeStyle } from "../../../model/types";
+import {
+  Node,
+  NodePresetId,
+  NodePresetSelection,
+  NodeShape,
+  StrokeStyle,
+} from "../../../model/types";
+import { NODE_PRESETS, presetLabel, presetStyle } from "../../../model/presets";
+import { renderShapePreview } from "../../canvas/node";
 import { onPickedColor, previewColor } from "../../../utils/color-preview";
 import { localized, msg } from "@lit/localize";
 
@@ -25,6 +33,9 @@ import SlTooltip from "@shoelace-style/shoelace/dist/components/tooltip/tooltip.
 import iconShape from "@tabler/icons/outline/circle-square.svg";
 import iconFill from "@tabler/icons/outline/bucket-droplet.svg";
 import iconBorder from "@tabler/icons/outline/border-style.svg";
+import iconCustom from "@tabler/icons/outline/adjustments.svg";
+
+const CUSTOM = "custom";
 
 @localized()
 export class AoNodeActionsGroup extends LitElementWw {
@@ -53,7 +64,33 @@ export class AoNodeActionsGroup extends LitElementWw {
     new SubscribeController(this, this.selection);
   }
 
-  static override styles = actionsStyles;
+  static override styles = [
+    actionsStyles,
+    css`
+      sl-menu.presets {
+        max-height: 60vh;
+        overflow-y: auto;
+      }
+
+      .shape-preview {
+        width: 3.5em;
+        height: 1.75em;
+        flex: none;
+      }
+
+      sl-menu-item .shape-preview {
+        margin-right: var(--sl-spacing-x-small);
+      }
+
+      sl-menu-item sl-icon[slot="prefix"] {
+        width: 3.5em;
+      }
+
+      sl-button .shape-preview {
+        margin: 0 var(--sl-spacing-3x-small);
+      }
+    `,
+  ];
 
   static isApplicable(
     doc: DocumentController | undefined,
@@ -62,18 +99,85 @@ export class AoNodeActionsGroup extends LitElementWw {
     return !!doc && !!selection && selection.sharedKind() === "node";
   }
 
+  private _selectedNodes(): Node[] {
+    const nodes: Node[] = [];
+    for (const id of this.selection.entries) {
+      const item = this.doc.get(id);
+      if (item?.kind === "node") {
+        nodes.push(item);
+      }
+    }
+    return nodes;
+  }
+
+  private _sharedPreset(nodes: Node[]): NodePresetSelection | null {
+    const presets = new Set(nodes.map((node) => node.style.preset ?? CUSTOM));
+    return presets.size === 1 ? [...presets][0]! : null;
+  }
+
   protected override render(): TemplateResult | typeof nothing {
-    const firstSelected = [...this.selection.entries][0]!;
-    const item = this.doc.get(firstSelected);
-    if (item?.kind !== "node") {
+    const nodes = this._selectedNodes();
+    const first = nodes[0];
+    if (!first) {
       return nothing;
     }
-    const fill = item.style.fill || "#ffffff";
-    const stroke = item.style.stroke || "#000000";
-    const strokeWidth = item.style.strokeWidth ?? 1;
+
+    const preset = this._sharedPreset(nodes);
 
     return html`<sl-button-group label=${msg("Node edits")}>
       <sl-dropdown>
+        <sl-tooltip slot="trigger" tabindex="-1" content=${msg("Node preset")}>
+          <sl-button size="small" caret>
+            ${preset === CUSTOM
+              ? html`<sl-icon
+                  label=${msg("Node preset")}
+                  .src=${iconCustom}></sl-icon>`
+              : renderShapePreview(first.style)}
+          </sl-button>
+        </sl-tooltip>
+        <sl-menu
+          class="presets"
+          @sl-select=${(e: CustomEvent) => this._onPresetSelect(e)}>
+          ${this._renderPresets(preset)}
+          <sl-divider></sl-divider>
+          <sl-menu-item
+            type="checkbox"
+            value=${CUSTOM}
+            ?checked=${preset === CUSTOM}>
+            <sl-icon slot="prefix" .src=${iconCustom}></sl-icon>
+            ${msg("Custom")}
+          </sl-menu-item>
+        </sl-menu>
+      </sl-dropdown>
+      ${preset === CUSTOM ? this._renderCustomActions(first) : nothing}
+    </sl-button-group>`;
+  }
+
+  private _renderPresets(selected: NodePresetSelection | null): TemplateResult {
+    return html` ${NODE_PRESETS.map(
+      (preset) =>
+        html`<sl-menu-item
+          type="checkbox"
+          value=${preset.id}
+          ?checked=${selected === preset.id}>
+          <span slot="prefix">${renderShapePreview(preset.style)}</span>
+          ${presetLabel(preset.id)}
+        </sl-menu-item>`,
+    )}`;
+  }
+
+  private _onPresetSelect(e: CustomEvent): void {
+    const item = e.detail.item as SlMenuItem;
+    item.checked = true;
+    this._applyPreset(item.value as NodePresetSelection);
+  }
+
+  private _renderCustomActions(node: Node): TemplateResult {
+    const fill = node.style.fill || "#ffffff";
+    const stroke = node.style.stroke || "#000000";
+    const strokeWidth = node.style.strokeWidth ?? 1;
+
+    return html`<sl-dropdown>
         <sl-tooltip slot="trigger" tabindex="-1" content=${msg("Shape")}>
           <sl-button size="small" caret>
             <sl-icon label=${msg("Shape")} .src=${iconShape}></sl-icon>
@@ -138,8 +242,22 @@ export class AoNodeActionsGroup extends LitElementWw {
               this._updateBorderColor(color),
             )}></sl-color-picker>
         </sl-menu>
-      </sl-dropdown>
-    </sl-button-group>`;
+      </sl-dropdown>`;
+  }
+
+  private _applyPreset(value: NodePresetSelection): void {
+    if (this.selection.isEmpty() || !this.selection.allOfSameKind()) {
+      return;
+    }
+
+    const style =
+      value === CUSTOM
+        ? { preset: CUSTOM as NodePresetSelection }
+        : presetStyle(value as NodePresetId);
+
+    for (const id of this.selection.entries) {
+      this.doc.updateNodeStyle(id, style);
+    }
   }
 
   private _updateNodeShape(shape: NodeShape): void {

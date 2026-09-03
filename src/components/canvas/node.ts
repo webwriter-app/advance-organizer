@@ -1,4 +1,4 @@
-import { nothing, svg, type TemplateResult } from "lit";
+import { html, nothing, svg, type TemplateResult } from "lit";
 import {
   Bounds,
   Dimension,
@@ -26,7 +26,7 @@ export function renderNode(
       data-item-id="${n.id}"
       transform="translate(${n.position.x}, ${n.position.y})"
     >
-    ${renderShape(n)}
+    ${renderShape(n.style, n.dimension)}
     ${renderLabel(n.id, n.label, label.position, label.dimension, editingLabel)}
     ${hasPage ? renderBadge(n, pageNumber) : nothing}
   </g>`;
@@ -49,29 +49,32 @@ export function getLabelBounds(
   };
 }
 
-function renderShape(n: Node): TemplateResult | typeof nothing {
+function renderShape(
+  style: NodeStyle,
+  dim: Dimension,
+): TemplateResult | typeof nothing {
   let shape: TemplateResult;
 
-  if (n.style.shape === "rectangle") {
+  if (style.shape === "rectangle") {
     shape = svg`
       <rect 
-        x=${-n.dimension.width / 2}
-        y=${-n.dimension.height / 2}
-        width="${n.dimension.width}"
-        height="${n.dimension.height}"
+        x=${-dim.width / 2}
+        y=${-dim.height / 2}
+        width="${dim.width}"
+        height="${dim.height}"
       />`;
-  } else if (n.style.shape === "ellipse") {
+  } else if (style.shape === "ellipse") {
     shape = svg`
       <ellipse
         cx="0"
         cy="0"
-        rx="${n.dimension.width / 2}"
-        ry="${n.dimension.height / 2}"
+        rx="${dim.width / 2}"
+        ry="${dim.height / 2}"
       />`;
-  } else if (n.style.shape === "diamond") {
+  } else if (style.shape === "diamond") {
     shape = svg`
       <polygon
-        points="${-n.dimension.width / 2},0 0,${-n.dimension.height / 2} ${n.dimension.width / 2},0 0,${n.dimension.height / 2}"
+        points="${-dim.width / 2},0 0,${-dim.height / 2} ${dim.width / 2},0 0,${dim.height / 2}"
       />`;
   } else {
     return nothing;
@@ -80,11 +83,31 @@ function renderShape(n: Node): TemplateResult | typeof nothing {
   return svg`
     <g
       class="shape"
-      fill="${n.style.fill || "lightgray"}"
-      stroke="${n.style.stroke || "black"}"
-      stroke-width="${n.style.strokeWidth ?? 1}"
-      stroke-dasharray="${getStrokeDashArray(n.style.strokeStyle, n.style.strokeWidth)}"
+      fill="${style.fill || "lightgray"}"
+      stroke="${style.stroke || "black"}"
+      stroke-width="${style.strokeWidth ?? 1}"
+      stroke-dasharray="${getStrokeDashArray(style.strokeStyle, style.strokeWidth)}"
     >${shape}</g>`;
+}
+
+const PREVIEW_DIMENSION: Dimension = { width: 48, height: 24 };
+const PREVIEW_PADDING = 4;
+
+export function renderShapePreview(style: NodeStyle): TemplateResult {
+  const width = PREVIEW_DIMENSION.width + 2 * PREVIEW_PADDING;
+  const height = PREVIEW_DIMENSION.height + 2 * PREVIEW_PADDING;
+
+  return html`<svg
+    class="shape-preview"
+    viewBox="${-width / 2} ${-height / 2} ${width} ${height}"
+    width=${width}
+    height=${height}
+    aria-hidden="true">
+    ${renderShape(
+      { ...style, shape: style.shape ?? "rectangle" },
+      PREVIEW_DIMENSION,
+    )}
+  </svg>`;
 }
 
 export function getBadgePosition(
