@@ -7,11 +7,13 @@ export class ZoomController implements ReactiveController {
   private _panzoom: PanZoom | null = null;
   private _svg: SVGSVGElement | null = null;
   private _wheelDoc: Document | null = null;
+  private _initialFitObserver: ResizeObserver | null = null;
 
   private static readonly ZOOM_STEP = 1.3;
   private static readonly FIT_PADDING = 32;
   private static readonly LINE_HEIGHT = 16;
   private static readonly PAN_MARGIN = 200;
+  private static readonly INITIAL_FIT_MAX_ZOOM = 1;
 
   private _clamping = false;
 
@@ -26,6 +28,8 @@ export class ZoomController implements ReactiveController {
   }
 
   hostDisconnected(): void {
+    this._initialFitObserver?.disconnect();
+    this._initialFitObserver = null;
     this._wheelDoc?.removeEventListener("wheel", this._onWheel, {
       capture: true,
     });
@@ -72,6 +76,25 @@ export class ZoomController implements ReactiveController {
       capture: true,
       passive: false,
     });
+    this._scheduleInitialFit();
+  }
+
+  private _scheduleInitialFit(): void {
+    if (this._tryInitialFit() || !this._svg) return;
+    this._initialFitObserver = new ResizeObserver(() => this._tryInitialFit());
+    this._initialFitObserver.observe(this._svg);
+  }
+
+  private _tryInitialFit(): boolean {
+    const { width, height } = this._viewportSize();
+    if (width === 0 || height === 0) return false;
+
+    if (this.contentItems().length > 0) {
+      this.fitToContent(ZoomController.INITIAL_FIT_MAX_ZOOM);
+    }
+    this._initialFitObserver?.disconnect();
+    this._initialFitObserver = null;
+    return true;
   }
 
   private _onWheel = (e: WheelEvent): void => {
@@ -195,7 +218,7 @@ export class ZoomController implements ReactiveController {
     );
   }
 
-  fitToContent(): void {
+  fitToContent(maxScale: number = this.maxZoom): void {
     if (!this._panzoom) return;
     const { width, height } = this._viewportSize();
     if (width === 0 || height === 0) return;
@@ -206,10 +229,13 @@ export class ZoomController implements ReactiveController {
       return;
     }
 
-    const scale = this._clampZoom(
-      Math.min(
-        (width - 2 * ZoomController.FIT_PADDING) / bounds.dimension.width,
-        (height - 2 * ZoomController.FIT_PADDING) / bounds.dimension.height,
+    const scale = Math.min(
+      maxScale,
+      this._clampZoom(
+        Math.min(
+          (width - 2 * ZoomController.FIT_PADDING) / bounds.dimension.width,
+          (height - 2 * ZoomController.FIT_PADDING) / bounds.dimension.height,
+        ),
       ),
     );
 

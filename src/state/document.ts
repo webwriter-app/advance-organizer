@@ -33,6 +33,10 @@ export class DocumentController extends Observable {
     this.notify();
   }
 
+  isEmpty(): boolean {
+    return this._nodes.size === 0 && this._images.size === 0;
+  }
+
   hasItem(id: Id): boolean {
     return this._nodes.has(id) || this._edges.has(id) || this._images.has(id);
   }

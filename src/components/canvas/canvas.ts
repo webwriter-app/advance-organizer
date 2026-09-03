@@ -54,7 +54,9 @@ import { findNearestAnchor, SnapHighlighter } from "./snap";
 import { applyColorPreviewDom } from "./dom-sync";
 import { LabelEditController, EDITOR_CLASS } from "./label-edit";
 import { LongPressController } from "./long-press";
+import { localized, msg } from "@lit/localize";
 
+@localized()
 export class AoCanvas extends LitElementWw {
   static override scopedElements = {
     "ao-zoom-controls": AoZoomControls,
@@ -265,6 +267,11 @@ export class AoCanvas extends LitElementWw {
         @zoom-out=${() => this._zoomController.zoomOut()}
         @center-view=${() => this._zoomController.fitToContent()}>
       </ao-zoom-controls>
+      ${this.editable && this.doc.isEmpty()
+        ? html`<div class="empty-hint">
+            ${msg("Add concepts via the toolbar above.")}
+          </div>`
+        : nothing}
       ${this._dropController.imageCount === null
         ? nothing
         : html`<ao-drag-overlay .imageCount=${this._dropController.imageCount}>

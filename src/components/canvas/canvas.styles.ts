@@ -32,6 +32,22 @@ export const canvasStyles = css`
     z-index: 10;
   }
 
+  .empty-hint {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--sl-spacing-large);
+    box-sizing: border-box;
+    text-align: center;
+    color: var(--sl-color-neutral-500);
+    font-size: var(--sl-font-size-small);
+    -webkit-user-select: none;
+    user-select: none;
+    pointer-events: none;
+  }
+
   ao-drag-overlay {
     z-index: 20;
   }
