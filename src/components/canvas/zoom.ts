@@ -8,6 +8,7 @@ export class ZoomController implements ReactiveController {
   private _svg: SVGSVGElement | null = null;
   private _wheelDoc: Document | null = null;
   private _initialFitObserver: ResizeObserver | null = null;
+  private _savedTransform: (Point & { scale: number }) | null = null;
 
   private static readonly ZOOM_STEP = 1.3;
   private static readonly FIT_PADDING = 32;
@@ -27,20 +28,29 @@ export class ZoomController implements ReactiveController {
     host.addController(this);
   }
 
+  hostConnected(): void {
+    if (this._panzoom) this._listenForWheel();
+  }
+
   hostDisconnected(): void {
+    this._stopListeningForWheel();
+  }
+
+  destroy(): void {
+    this._stopListeningForWheel();
     this._initialFitObserver?.disconnect();
     this._initialFitObserver = null;
-    this._wheelDoc?.removeEventListener("wheel", this._onWheel, {
-      capture: true,
-    });
-    this._panzoom?.off("zoom", this._onZoom);
-    this._panzoom?.off("pan", this.clampPan);
-    this._panzoom?.dispose();
+    if (!this._panzoom) return;
+    const { x, y, scale } = this._panzoom.getTransform();
+    this._savedTransform = { x, y, scale };
+    this._panzoom.off("zoom", this._onZoom);
+    this._panzoom.off("pan", this.clampPan);
+    this._panzoom.dispose();
     this._panzoom = null;
   }
 
   init(viewport: SVGGElement): void {
-    if (!viewport) return;
+    if (!viewport || this._panzoom) return;
     this._svg = viewport.ownerSVGElement;
 
     this._panzoom = createPanZoom(viewport, {
@@ -68,15 +78,29 @@ export class ZoomController implements ReactiveController {
     this._panzoom.on("zoom", this._onZoom);
     this._panzoom.on("pan", this.clampPan);
     this._syncZoomLevel();
-    // The WebWriter editor sets `pointer-events: none` on the whole widget while ctrl
-    // is held, so the wheel event never reaches the SVG. Listen on the document instead
-    // and use the pointer position to decide whether the event belongs to this canvas.
+    this._listenForWheel();
+    if (this._savedTransform) {
+      const { x, y, scale } = this._savedTransform;
+      this._savedTransform = null;
+      this._zoomTo(scale, x, y);
+    } else {
+      this._scheduleInitialFit();
+    }
+  }
+
+  private _listenForWheel(): void {
     this._wheelDoc = this._svg?.ownerDocument ?? null;
     this._wheelDoc?.addEventListener("wheel", this._onWheel, {
       capture: true,
       passive: false,
     });
-    this._scheduleInitialFit();
+  }
+
+  private _stopListeningForWheel(): void {
+    this._wheelDoc?.removeEventListener("wheel", this._onWheel, {
+      capture: true,
+    });
+    this._wheelDoc = null;
   }
 
   private _scheduleInitialFit(): void {

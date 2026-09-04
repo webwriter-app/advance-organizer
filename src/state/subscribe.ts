@@ -3,6 +3,7 @@ import { Observable } from "./observable";
 
 export class SubscribeController implements ReactiveController {
   private _unsubscribe?: () => void;
+  private _reconnecting = false;
 
   constructor(
     private readonly host: ReactiveControllerHost,
@@ -15,6 +16,8 @@ export class SubscribeController implements ReactiveController {
     this._unsubscribe = this.source.subscribe(() => {
       this.host.requestUpdate();
     });
+    if (this._reconnecting) this.host.requestUpdate();
+    this._reconnecting = true;
   }
 
   hostDisconnected(): void {

@@ -176,23 +176,45 @@ export class AoCanvas extends LitElementWw {
     new SubscribeController(this, this.selection);
     new SubscribeController(this, this.pages);
 
-    const viewport = this.renderRoot.querySelector<SVGGElement>("g.viewport");
-    const svg = this.renderRoot.querySelector<SVGSVGElement>("svg");
-    if (!viewport || !svg) return;
+    this._attach();
+  }
 
-    this._zoomController.init(viewport);
-    svg.addEventListener("touchstart", this._onTouchStartCapture, {
-      capture: true,
-      passive: true,
-    });
-    svg.addEventListener("mousedown", this._onMouseDownCapture, {
-      capture: true,
-    });
+  override connectedCallback(): void {
+    super.connectedCallback();
+    if (this.hasUpdated) this._attach();
   }
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();
-    this._longPress.cancel();
+    this._labelEdit.commit();
+    this._resetMode();
+    this._detachSvgListeners();
+  }
+
+  destroy(): void {
+    this._zoomController.destroy();
+  }
+
+  private _attach(): void {
+    const viewport = this.renderRoot.querySelector<SVGGElement>("g.viewport");
+    if (!viewport) return;
+
+    this._zoomController.init(viewport);
+    this._attachSvgListeners();
+  }
+
+  private _attachSvgListeners(): void {
+    const svg = this.renderRoot?.querySelector<SVGSVGElement>("svg");
+    svg?.addEventListener("touchstart", this._onTouchStartCapture, {
+      capture: true,
+      passive: true,
+    });
+    svg?.addEventListener("mousedown", this._onMouseDownCapture, {
+      capture: true,
+    });
+  }
+
+  private _detachSvgListeners(): void {
     const svg = this.renderRoot?.querySelector<SVGSVGElement>("svg");
     svg?.removeEventListener("touchstart", this._onTouchStartCapture, {
       capture: true,

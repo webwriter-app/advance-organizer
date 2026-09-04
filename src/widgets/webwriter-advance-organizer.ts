@@ -40,6 +40,7 @@ import { AoHelpActionsGroup } from "../components/ui/toolbar-groups/help-actions
 // @ts-ignore
 import LOCALIZE from "../../localization/generated";
 import { localized } from "@lit/localize";
+import { cache } from "lit/directives/cache.js";
 
 /**
  * A visual advance organizer: a canvas of labeled boxes, connecting arrows and images
@@ -250,6 +251,7 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
     this.removeEventListener("copy", this._onCopy);
     this.removeEventListener("cut", this._onCut);
     this.removeEventListener("paste", this._onPaste);
+    this.canvas?.destroy();
   }
 
   private _onFocusOut = (): void => {
@@ -434,36 +436,38 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
     const printEntries = getPrintEntries(this.doc, this.pages);
     return html`<div class="root${this.isContentEditable ? "" : " reading"}">
       ${this._renderToolbar()}
-      ${this._openPage === null
-        ? html`<ao-canvas
-              .editable=${this.isContentEditable}
-              @draw-edge-change=${(e: CustomEvent<{ active: boolean }>) => {
-                this._drawingEdge = e.detail.active;
-              }}
-              @open-page=${(e: CustomEvent<{ pageId: Id | null }>) =>
-                this._openPageForNode(e.detail.pageId)}
-              @open-context-menu=${(
-                e: CustomEvent<{ x: number; y: number }>,
-              ) => {
-                const rect = this.getBoundingClientRect();
-                this._contextMenu = {
-                  x: e.detail.x - rect.left,
-                  y: e.detail.y - rect.top,
-                };
-              }}></ao-canvas>
-            ${this._contextMenu
-              ? html`<ww-context-menu
-                  .x=${this._contextMenu.x}
-                  .y=${this._contextMenu.y}
-                  @clipboard-action=${(
-                    e: CustomEvent<{ action: ClipboardAction }>,
-                  ) => {
-                    this.canvas?.runClipboardAction(e.detail.action);
-                  }}
-                  @close-context-menu=${() =>
-                    this._closeContextMenu()}></ww-context-menu>`
-              : nothing}`
-        : nothing}
+      ${cache(
+        this._openPage === null
+          ? html`<ao-canvas
+                .editable=${this.isContentEditable}
+                @draw-edge-change=${(e: CustomEvent<{ active: boolean }>) => {
+                  this._drawingEdge = e.detail.active;
+                }}
+                @open-page=${(e: CustomEvent<{ pageId: Id | null }>) =>
+                  this._openPageForNode(e.detail.pageId)}
+                @open-context-menu=${(
+                  e: CustomEvent<{ x: number; y: number }>,
+                ) => {
+                  const rect = this.getBoundingClientRect();
+                  this._contextMenu = {
+                    x: e.detail.x - rect.left,
+                    y: e.detail.y - rect.top,
+                  };
+                }}></ao-canvas>
+              ${this._contextMenu
+                ? html`<ww-context-menu
+                    .x=${this._contextMenu.x}
+                    .y=${this._contextMenu.y}
+                    @clipboard-action=${(
+                      e: CustomEvent<{ action: ClipboardAction }>,
+                    ) => {
+                      this.canvas?.runClipboardAction(e.detail.action);
+                    }}
+                    @close-context-menu=${() =>
+                      this._closeContextMenu()}></ww-context-menu>`
+                : nothing}`
+          : nothing,
+      )}
       ${renderPrintOrganizer(this.doc, printEntries)}
       ${renderPages(printEntries, this._openPage)}
     </div>`;
