@@ -17,7 +17,6 @@ import { SubscribeController } from "../../state/subscribe";
 import { repeat } from "lit/directives/repeat.js";
 import {
   AnchorRendering,
-  ColorPreview,
   EdgePosition,
   Id,
   Point,
@@ -51,7 +50,6 @@ import {
   renderDrawEdgePreview,
 } from "./modes/draw-edge";
 import { findNearestAnchor, SnapHighlighter } from "./snap";
-import { applyColorPreviewDom } from "./dom-sync";
 import { LabelEditController, EDITOR_CLASS } from "./label-edit";
 import { LongPressController } from "./long-press";
 import { localized, msg } from "@lit/localize";
@@ -495,10 +493,6 @@ export class AoCanvas extends LitElementWw {
   toggleDrawEdge(): void {
     if (this.drawingEdge) this._resetMode();
     else startDrawEdgeMode(this._modeContext);
-  }
-
-  previewColor(preview: ColorPreview): void {
-    applyColorPreviewDom(this.renderRoot, this.doc, preview);
   }
 
   private _onPointerMove(e: PointerEvent): void {

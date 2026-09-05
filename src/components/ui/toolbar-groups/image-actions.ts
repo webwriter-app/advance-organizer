@@ -7,12 +7,11 @@ import { html, nothing, PropertyValues, type TemplateResult } from "lit";
 import { SubscribeController } from "../../../state/subscribe";
 import { actionsStyles } from "./toolbar-actions.styles";
 import { Id, ImageStyle, StrokeStyle } from "../../../model/types";
-import { onPickedColor, previewColor } from "../../../utils/color-preview";
 import { localized, msg } from "@lit/localize";
+import { WwColorPicker } from "../color-picker";
 
 import SlButton from "@shoelace-style/shoelace/dist/components/button/button.component.js";
 import SlButtonGroup from "@shoelace-style/shoelace/dist/components/button-group/button-group.component.js";
-import SlColorPicker from "@shoelace-style/shoelace/dist/components/color-picker/color-picker.component.js";
 import SlDropdown from "@shoelace-style/shoelace/dist/components/dropdown/dropdown.component.js";
 import SlIcon from "@shoelace-style/shoelace/dist/components/icon/icon.component.js";
 import SlMenu from "@shoelace-style/shoelace/dist/components/menu/menu.component.js";
@@ -35,7 +34,7 @@ export class AoImageActionsGroup extends LitElementWw {
   static override scopedElements = {
     "sl-button": SlButton,
     "sl-button-group": SlButtonGroup,
-    "sl-color-picker": SlColorPicker,
+    "ww-color-picker": WwColorPicker,
     "sl-dropdown": SlDropdown,
     "sl-icon": SlIcon,
     "sl-menu": SlMenu,
@@ -74,14 +73,10 @@ export class AoImageActionsGroup extends LitElementWw {
             <sl-icon label=${msg("Stroke color")} .src=${iconFill}></sl-icon>
           </sl-button>
         </sl-tooltip>
-        <sl-color-picker
+        <ww-color-picker
           .value=${stroke}
-          opacity
-          inline
-          @sl-input=${onPickedColor((color) => this._previewBorderColor(color))}
-          @sl-change=${onPickedColor((color) =>
-            this._updateBorderColor(color),
-          )}></sl-color-picker>
+          @input=${(e: CustomEvent<string>) =>
+            this._updateBorderColor(e.detail)}></ww-color-picker>
       </sl-dropdown>
       <sl-dropdown>
         <sl-tooltip slot="trigger" tabindex="-1" content=${msg("Stroke width")}>
@@ -133,13 +128,6 @@ export class AoImageActionsGroup extends LitElementWw {
     }
   }
 
-  private _previewBorderColor(color: string): void {
-    if (this.selection.isEmpty() || !this.selection.allOfSameKind()) {
-      return;
-    }
-
-    previewColor(this, this.selection.entries, "stroke", color);
-  }
 
   private _updateBorderColor(color: string): void {
     if (this.selection.isEmpty() || !this.selection.allOfSameKind()) {

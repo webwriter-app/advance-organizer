@@ -15,12 +15,11 @@ import {
 } from "../../../model/types";
 import { NODE_PRESETS, presetLabel, presetStyle } from "../../../model/presets";
 import { renderShapePreview } from "../../canvas/node";
-import { onPickedColor, previewColor } from "../../../utils/color-preview";
 import { localized, msg } from "@lit/localize";
+import { WwColorPicker } from "../color-picker";
 
 import SlButton from "@shoelace-style/shoelace/dist/components/button/button.component.js";
 import SlButtonGroup from "@shoelace-style/shoelace/dist/components/button-group/button-group.component.js";
-import SlColorPicker from "@shoelace-style/shoelace/dist/components/color-picker/color-picker.component.js";
 import SlDivider from "@shoelace-style/shoelace/dist/components/divider/divider.component.js";
 import SlDropdown from "@shoelace-style/shoelace/dist/components/dropdown/dropdown.component.js";
 import SlIcon from "@shoelace-style/shoelace/dist/components/icon/icon.component.js";
@@ -48,7 +47,7 @@ export class AoNodeActionsGroup extends LitElementWw {
   static override scopedElements = {
     "sl-button": SlButton,
     "sl-button-group": SlButtonGroup,
-    "sl-color-picker": SlColorPicker,
+    "ww-color-picker": WwColorPicker,
     "sl-divider": SlDivider,
     "sl-dropdown": SlDropdown,
     "sl-icon": SlIcon,
@@ -197,14 +196,11 @@ export class AoNodeActionsGroup extends LitElementWw {
             <sl-icon label=${msg("Fill")} .src=${iconFill}></sl-icon>
           </sl-button>
         </sl-tooltip>
-        <sl-color-picker
+        <ww-color-picker
           .value=${fill}
-          opacity
-          inline
-          @sl-input=${onPickedColor((color) => this._previewNodeColor(color))}
-          @sl-change=${onPickedColor((color) =>
-            this._updateNodeColor(color),
-          )}></sl-color-picker>
+          tinted
+          @input=${(e: CustomEvent<string>) =>
+            this._updateNodeColor(e.detail)}></ww-color-picker>
       </sl-dropdown>
       <sl-dropdown>
         <sl-tooltip slot="trigger" tabindex="-1" content=${msg("Border")}>
@@ -232,15 +228,10 @@ export class AoNodeActionsGroup extends LitElementWw {
           <sl-menu-item value="border-dotted">${msg("Dotted")}</sl-menu-item>
           <sl-divider></sl-divider>
           <sl-menu-label>${msg("Border color")}</sl-menu-label>
-          <sl-color-picker
+          <ww-color-picker
             .value=${stroke}
-            inline
-            @sl-input=${onPickedColor((color) =>
-              this._previewBorderColor(color),
-            )}
-            @sl-change=${onPickedColor((color) =>
-              this._updateBorderColor(color),
-            )}></sl-color-picker>
+            @input=${(e: CustomEvent<string>) =>
+              this._updateBorderColor(e.detail)}></ww-color-picker>
         </sl-menu>
       </sl-dropdown>`;
   }
@@ -270,13 +261,6 @@ export class AoNodeActionsGroup extends LitElementWw {
     }
   }
 
-  private _previewNodeColor(color: string): void {
-    if (this.selection.isEmpty() || !this.selection.allOfSameKind()) {
-      return;
-    }
-
-    previewColor(this, this.selection.entries, "fill", color);
-  }
 
   private _updateNodeColor(color: string): void {
     if (this.selection.isEmpty() || !this.selection.allOfSameKind()) {
@@ -302,13 +286,6 @@ export class AoNodeActionsGroup extends LitElementWw {
     }
   }
 
-  private _previewBorderColor(color: string): void {
-    if (this.selection.isEmpty() || !this.selection.allOfSameKind()) {
-      return;
-    }
-
-    previewColor(this, this.selection.entries, "stroke", color);
-  }
 
   private _updateBorderColor(color: string): void {
     if (this.selection.isEmpty() || !this.selection.allOfSameKind()) {

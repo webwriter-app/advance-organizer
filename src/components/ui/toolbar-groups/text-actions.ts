@@ -7,13 +7,12 @@ import { html, nothing, PropertyValues, type TemplateResult } from "lit";
 import { SubscribeController } from "../../../state/subscribe";
 import { actionsStyles } from "./toolbar-actions.styles";
 import { Label } from "../../../model/types";
-import { onPickedColor, previewColor } from "../../../utils/color-preview";
 import { localized, msg } from "@lit/localize";
 import { MOD_LABEL } from "../../../state/keyboard";
+import { WwColorPicker } from "../color-picker";
 
 import SlButton from "@shoelace-style/shoelace/dist/components/button/button.component.js";
 import SlButtonGroup from "@shoelace-style/shoelace/dist/components/button-group/button-group.component.js";
-import SlColorPicker from "@shoelace-style/shoelace/dist/components/color-picker/color-picker.component.js";
 import SlDropdown from "@shoelace-style/shoelace/dist/components/dropdown/dropdown.component.js";
 import SlIcon from "@shoelace-style/shoelace/dist/components/icon/icon.component.js";
 import SlRange from "@shoelace-style/shoelace/dist/components/range/range.component.js";
@@ -37,7 +36,7 @@ export class AoTextActionsGroup extends LitElementWw {
   static override scopedElements = {
     "sl-button": SlButton,
     "sl-button-group": SlButtonGroup,
-    "sl-color-picker": SlColorPicker,
+    "ww-color-picker": WwColorPicker,
     "sl-dropdown": SlDropdown,
     "sl-icon": SlIcon,
     "sl-range": SlRange,
@@ -129,16 +128,10 @@ export class AoTextActionsGroup extends LitElementWw {
             <sl-icon label=${msg("Text color")} .src=${iconTextColor}></sl-icon>
           </sl-button>
         </sl-tooltip>
-        <sl-color-picker
+        <ww-color-picker
           .value=${color}
-          opacity
-          inline
-          @sl-input=${onPickedColor((picked) =>
-            this._previewLabelColor(picked),
-          )}
-          @sl-change=${onPickedColor((picked) =>
-            this._updateLabelStyle({ color: picked }),
-          )}></sl-color-picker>
+          @input=${(e: CustomEvent<string>) =>
+            this._updateLabelStyle({ color: e.detail })}></ww-color-picker>
       </sl-dropdown>
       <sl-dropdown>
         <sl-tooltip slot="trigger" tabindex="-1" content=${msg("Font size")}>
@@ -161,13 +154,6 @@ export class AoTextActionsGroup extends LitElementWw {
     </sl-button-group>`;
   }
 
-  private _previewLabelColor(color: string): void {
-    if (this.selection.isEmpty()) {
-      return;
-    }
-
-    previewColor(this, this.selection.entries, "label-color", color);
-  }
 
   // TODO: Only update DOM on input for the font size, update state only on change
   private _updateLabelStyle(style: Partial<Omit<Label, "text">>): void {
