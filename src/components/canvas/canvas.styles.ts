@@ -23,11 +23,6 @@ export const canvasStyles = css`
     outline: none;
   }
 
-  svg:focus-visible {
-    outline: var(--sl-focus-ring);
-    outline-offset: var(--sl-focus-ring-offset);
-  }
-
   ao-zoom-controls {
     z-index: 10;
   }
