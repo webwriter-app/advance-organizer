@@ -189,6 +189,13 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
   @property({ type: Array, reflect: true })
   accessor images: Image[] = [];
 
+  // Used to differentiate between own changes and changes from outside when properties change
+  private _publishedDocument?: {
+    nodes: Node[];
+    edges: Edge[];
+    images: Image[];
+  };
+
   @state()
   private accessor _openPage: Id | null = null;
 
@@ -206,6 +213,18 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
   constructor() {
     super();
     new KeyboardController(this);
+    this.doc.subscribe(() => {
+      const snapshot = {
+        nodes: this.doc.nodes,
+        edges: this.doc.edges,
+        images: this.doc.images,
+      };
+
+      this._publishedDocument = snapshot;
+      this.nodes = snapshot.nodes;
+      this.edges = snapshot.edges;
+      this.images = snapshot.images;
+    });
   }
 
   /** @internal */
@@ -303,15 +322,6 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
     void pickAndInsertImages(this.canvas.insertPosition(), this.canvas);
   };
 
-  protected override firstUpdated(changedProperties: PropertyValues): void {
-    super.firstUpdated(changedProperties);
-    this.doc.subscribe(() => {
-      this.nodes = this.doc.nodes;
-      this.edges = this.doc.edges;
-      this.images = this.doc.images;
-    });
-  }
-
   protected override willUpdate(changedProperties: PropertyValues): void {
     super.willUpdate(changedProperties);
     if (this._openPage !== null && !this.pages.hasPage(this._openPage)) {
@@ -325,11 +335,11 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
       changedProperties.has("edges") ||
       changedProperties.has("images")
     ) {
-      // TODO: Check if this check is really necessary or if we can always call load
+      const published = this._publishedDocument;
       if (
-        JSON.stringify(this.nodes) !== JSON.stringify(this.doc.nodes) ||
-        JSON.stringify(this.edges) !== JSON.stringify(this.doc.edges) ||
-        JSON.stringify(this.images) !== JSON.stringify(this.doc.images)
+        this.nodes !== published?.nodes ||
+        this.edges !== published?.edges ||
+        this.images !== published?.images
       ) {
         this.doc.load(this.nodes, this.edges, this.images);
       }
