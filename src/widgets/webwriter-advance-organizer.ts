@@ -4,14 +4,14 @@ import { customElement, property, query, state } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
 import { styles } from "./webwriter-advance-organizer.styles";
 
-import { AoToolbar } from "../components/ui/toolbar";
+import { AoToolbar } from "../components/toolbar/toolbar";
 import { AoContextMenu } from "../components/ui/context-menu";
 import { AoCanvas } from "../components/canvas/canvas";
 import { labelStyles } from "../components/canvas/canvas.styles";
 
 import shoelaceTheme from "@shoelace-style/shoelace/dist/themes/light.styles.js";
-import { AoNodeActionsGroup } from "../components/ui/toolbar-groups/node-actions";
-import { AoPageActionsGroup } from "../components/ui/toolbar-groups/page-actions";
+import { AoNodeActionsGroup } from "../components/toolbar/toolbar-groups/node-actions";
+import { AoPageActionsGroup } from "../components/toolbar/toolbar-groups/page-actions";
 import { provide } from "@lit/context";
 import {
   documentContext,
@@ -21,22 +21,22 @@ import {
 import { DocumentController } from "../state/document";
 import { SelectionController } from "../state/selection";
 import { Edge, Id, Image, Node } from "../model/types";
-import { AoPageEditActionsGroup } from "../components/ui/toolbar-groups/page-edit-actions";
-import { AoPageInfoActionsGroup } from "../components/ui/toolbar-groups/page-info-actions";
+import { AoPageEditActionsGroup } from "../components/toolbar/toolbar-groups/page-edit-actions";
+import { AoPageInfoActionsGroup } from "../components/toolbar/toolbar-groups/page-info-actions";
 import { PageController } from "../state/page";
 import { KeyboardController } from "../state/keyboard";
 import { insertNode, pickAndInsertImages } from "../components/canvas/insert";
-import { AoCreateActionsGroup } from "../components/ui/toolbar-groups/create-actions";
-import { AoEdgeActionsGroup } from "../components/ui/toolbar-groups/edge-actions";
+import { AoCreateActionsGroup } from "../components/toolbar/toolbar-groups/create-actions";
+import { AoEdgeActionsGroup } from "../components/toolbar/toolbar-groups/edge-actions";
 import { ClipboardAction } from "../utils/clipboard";
-import { AoImageActionsGroup } from "../components/ui/toolbar-groups/image-actions";
+import { AoImageActionsGroup } from "../components/toolbar/toolbar-groups/image-actions";
 import {
   getPrintEntries,
   renderPages,
   renderPrintOrganizer,
 } from "../components/print/print";
-import { AoTextActionsGroup } from "../components/ui/toolbar-groups/text-actions";
-import { AoHelpActionsGroup } from "../components/ui/toolbar-groups/help-actions";
+import { AoTextActionsGroup } from "../components/toolbar/toolbar-groups/text-actions";
+import { AoHelpActionsGroup } from "../components/toolbar/toolbar-groups/help-actions";
 
 // @ts-ignore
 import LOCALIZE from "../../localization/generated";
@@ -396,7 +396,8 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
       return nothing;
     }
 
-    return html`<ao-toolbar class=${classMap({ "page-view": this._openPage !== null })}>
+    return html`<ao-toolbar
+      class=${classMap({ "page-view": this._openPage !== null })}>
       ${this._openPage === null
         ? html`<ao-create-actions
               .drawingEdge=${this._drawingEdge}

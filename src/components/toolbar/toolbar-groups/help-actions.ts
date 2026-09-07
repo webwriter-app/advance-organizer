@@ -1,9 +1,6 @@
-import { consume } from "@lit/context";
 import { LitElementWw } from "@webwriter/lit";
-import { selectionContext } from "../../../state/contexts";
 import { SelectionController } from "../../../state/selection";
-import { css, html, PropertyValues, type TemplateResult } from "lit";
-import { SubscribeController } from "../../../state/subscribe";
+import { css, html, type TemplateResult } from "lit";
 import { actionsStyles } from "./toolbar-actions.styles";
 import { MOD_LABEL } from "../../../state/keyboard";
 import { localized, msg } from "@lit/localize";
@@ -159,6 +156,6 @@ export class AoHelpActionsGroup extends LitElementWw {
   }
 
   private _key(label: string): TemplateResult {
-    return html`<span class="key">${label}</span>`;
+    return html`<span>${label}</span>`;
   }
 }

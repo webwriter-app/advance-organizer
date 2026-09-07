@@ -28,7 +28,7 @@ import {
   STROKE_STYLE_ICONS,
 } from "./previews";
 import { localized, msg } from "@lit/localize";
-import { AoColorPicker } from "../color-picker";
+import { AoColorPicker } from "../../ui/color-picker";
 
 import SlButton from "@shoelace-style/shoelace/dist/components/button/button.component.js";
 import SlButtonGroup from "@shoelace-style/shoelace/dist/components/button-group/button-group.component.js";
