@@ -24,7 +24,6 @@
                 "text": "string | null"
               },
               "default": "null",
-              "description": "The `id` of the node this page belongs to. A page without a `node-id`, or with one\r\nthat no node uses, is never shown.",
               "attribute": "node-id",
               "reflects": true
             }
@@ -36,7 +35,6 @@
                 "text": "string | null"
               },
               "default": "null",
-              "description": "The `id` of the node this page belongs to. A page without a `node-id`, or with one\r\nthat no node uses, is never shown.",
               "fieldName": "nodeId"
             }
           ],
@@ -75,7 +73,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A visual advance organizer: a canvas of labeled boxes, connecting arrows and images\r\nthat gives learners an overview of a topic before they study it in detail.",
+          "description": "A visual advance organizer: a canvas of labeled boxes, connecting arrows and images\nthat gives learners an overview of a topic before they study it in detail.",
           "name": "WebwriterAdvanceOrganizer",
           "slots": [
             {
@@ -90,8 +88,8 @@
               "type": {
                 "text": "Node[]"
               },
-              "default": "[ { id: \"1\", label: { text: \"Node 1\" }, position: { x: 500, y: 300 }, dimension: { width: 100, height: 300 }, style: { shape: \"diamond\", fill: \"lightblue\", stroke: \"blue\", strokeWidth: 2, strokeStyle: \"dotted\", }, kind: \"node\", }, { id: \"2\", label: { text: \"Node 2\" }, position: { x: 200, y: 200 }, dimension: { width: 100, height: 100 }, style: { shape: \"ellipse\", fill: \"lightgreen\", stroke: \"green\", strokeWidth: 2, strokeStyle: \"dashed\", }, kind: \"node\", }, { id: \"3\", label: { text: \"Node 3\" }, position: { x: 250, y: 400 }, dimension: { width: 200, height: 100 }, style: { shape: \"rectangle\", fill: \"lightcoral\", stroke: \"red\", strokeWidth: 2, }, kind: \"node\", }, ]",
-              "description": "The nodes of the advance organizer. Each node has an `id` that edges refer to and that\r\nlinks it to the page with that `node-id`, a `position` and `dimension` in canvas\r\ncoordinates, a `label` and a `style`.",
+              "default": "[]",
+              "description": "The nodes of the advance organizer. Each node has an `id` that edges refer to and that\nlinks it to the page with that `node-id`, a `position` and `dimension` in canvas\ncoordinates, a `label` and a `style`.",
               "attribute": "nodes",
               "reflects": true
             },
@@ -101,8 +99,8 @@
               "type": {
                 "text": "Edge[]"
               },
-              "default": "[ { id: \"e1\", kind: \"edge\", source: \"1\", target: \"2\", sourcePosition: \"left\", targetPosition: \"right\", style: { stroke: \"purple\", strokeWidth: 2, strokeStyle: \"dashed\", markerStart: \"arrow\", markerEnd: \"arrow\", }, label: { text: \"connects to\", bold: true, }, }, { id: \"e2\", kind: \"edge\", source: \"1\", target: \"3\", sourcePosition: \"bottom\", targetPosition: \"right\", style: { stroke: \"orange\", strokeWidth: 3, strokeStyle: \"dotted\", markerEnd: \"arrow\", }, label: { text: \"leads to\", italic: true, }, }, { id: \"e3\", kind: \"edge\", source: \"2\", target: \"3\", sourcePosition: \"bottom\", targetPosition: \"top\", style: { stroke: \"teal\", strokeWidth: 1, markerEnd: \"arrow\", }, label: { text: \"points to\", underline: true, }, }, ]",
-              "description": "The edges of the advance organizer. Each edge refers to its `source` and `target`\r\nnode by `id`, anchored at a fixed side of the node (`sourcePosition`/`targetPosition`),\r\nand can carry a `label` and a `style` including arrow heads at either end.",
+              "default": "[]",
+              "description": "The edges of the advance organizer. Each edge refers to its `source` and `target`\nnode by `id`, anchored at a fixed side of the node (`sourcePosition`/`targetPosition`),\nand can carry a `label` and a `style` including arrow heads at either end.",
               "attribute": "edges",
               "reflects": true
             },
@@ -113,9 +111,17 @@
                 "text": "Image[]"
               },
               "default": "[]",
-              "description": "The images placed on the canvas. Each image has a `position` and `dimension` in canvas\r\ncoordinates and a `src` stored as a data URL.",
+              "description": "The images placed on the canvas. Each image has a `position` and `dimension` in canvas\ncoordinates and a `src` stored as a data URL.",
               "attribute": "images",
               "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "_publishedDocument",
+              "type": {
+                "text": "{\n    nodes: Node[];\n    edges: Edge[];\n    images: Image[];\n  } | undefined"
+              },
+              "privacy": "private"
             },
             {
               "kind": "field",
@@ -261,8 +267,8 @@
               "type": {
                 "text": "Node[]"
               },
-              "default": "[ { id: \"1\", label: { text: \"Node 1\" }, position: { x: 500, y: 300 }, dimension: { width: 100, height: 300 }, style: { shape: \"diamond\", fill: \"lightblue\", stroke: \"blue\", strokeWidth: 2, strokeStyle: \"dotted\", }, kind: \"node\", }, { id: \"2\", label: { text: \"Node 2\" }, position: { x: 200, y: 200 }, dimension: { width: 100, height: 100 }, style: { shape: \"ellipse\", fill: \"lightgreen\", stroke: \"green\", strokeWidth: 2, strokeStyle: \"dashed\", }, kind: \"node\", }, { id: \"3\", label: { text: \"Node 3\" }, position: { x: 250, y: 400 }, dimension: { width: 200, height: 100 }, style: { shape: \"rectangle\", fill: \"lightcoral\", stroke: \"red\", strokeWidth: 2, }, kind: \"node\", }, ]",
-              "description": "The nodes of the advance organizer. Each node has an `id` that edges refer to and that\r\nlinks it to the page with that `node-id`, a `position` and `dimension` in canvas\r\ncoordinates, a `label` and a `style`.",
+              "default": "[]",
+              "description": "The nodes of the advance organizer. Each node has an `id` that edges refer to and that\nlinks it to the page with that `node-id`, a `position` and `dimension` in canvas\ncoordinates, a `label` and a `style`.",
               "fieldName": "nodes"
             },
             {
@@ -270,8 +276,8 @@
               "type": {
                 "text": "Edge[]"
               },
-              "default": "[ { id: \"e1\", kind: \"edge\", source: \"1\", target: \"2\", sourcePosition: \"left\", targetPosition: \"right\", style: { stroke: \"purple\", strokeWidth: 2, strokeStyle: \"dashed\", markerStart: \"arrow\", markerEnd: \"arrow\", }, label: { text: \"connects to\", bold: true, }, }, { id: \"e2\", kind: \"edge\", source: \"1\", target: \"3\", sourcePosition: \"bottom\", targetPosition: \"right\", style: { stroke: \"orange\", strokeWidth: 3, strokeStyle: \"dotted\", markerEnd: \"arrow\", }, label: { text: \"leads to\", italic: true, }, }, { id: \"e3\", kind: \"edge\", source: \"2\", target: \"3\", sourcePosition: \"bottom\", targetPosition: \"top\", style: { stroke: \"teal\", strokeWidth: 1, markerEnd: \"arrow\", }, label: { text: \"points to\", underline: true, }, }, ]",
-              "description": "The edges of the advance organizer. Each edge refers to its `source` and `target`\r\nnode by `id`, anchored at a fixed side of the node (`sourcePosition`/`targetPosition`),\r\nand can carry a `label` and a `style` including arrow heads at either end.",
+              "default": "[]",
+              "description": "The edges of the advance organizer. Each edge refers to its `source` and `target`\nnode by `id`, anchored at a fixed side of the node (`sourcePosition`/`targetPosition`),\nand can carry a `label` and a `style` including arrow heads at either end.",
               "fieldName": "edges"
             },
             {
@@ -280,7 +286,7 @@
                 "text": "Image[]"
               },
               "default": "[]",
-              "description": "The images placed on the canvas. Each image has a `position` and `dimension` in canvas\r\ncoordinates and a `src` stored as a data URL.",
+              "description": "The images placed on the canvas. Each image has a `position` and `dimension` in canvas\ncoordinates and a `src` stored as a data URL.",
               "fieldName": "images"
             }
           ],

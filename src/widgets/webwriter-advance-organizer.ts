@@ -76,49 +76,7 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
    * coordinates, a `label` and a `style`.
    */
   @property({ type: Array, reflect: true })
-  accessor nodes: Node[] = [
-    {
-      id: "1",
-      label: { text: "Node 1" },
-      position: { x: 500, y: 300 },
-      dimension: { width: 100, height: 300 },
-      style: {
-        shape: "diamond",
-        fill: "lightblue",
-        stroke: "blue",
-        strokeWidth: 2,
-        strokeStyle: "dotted",
-      },
-      kind: "node",
-    },
-    {
-      id: "2",
-      label: { text: "Node 2" },
-      position: { x: 200, y: 200 },
-      dimension: { width: 100, height: 100 },
-      style: {
-        shape: "ellipse",
-        fill: "lightgreen",
-        stroke: "green",
-        strokeWidth: 2,
-        strokeStyle: "dashed",
-      },
-      kind: "node",
-    },
-    {
-      id: "3",
-      label: { text: "Node 3" },
-      position: { x: 250, y: 400 },
-      dimension: { width: 200, height: 100 },
-      style: {
-        shape: "rectangle",
-        fill: "lightcoral",
-        stroke: "red",
-        strokeWidth: 2,
-      },
-      kind: "node",
-    },
-  ];
+  accessor nodes: Node[] = [];
 
   /**
    * The edges of the advance organizer. Each edge refers to its `source` and `target`
@@ -126,62 +84,7 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
    * and can carry a `label` and a `style` including arrow heads at either end.
    */
   @property({ type: Array, reflect: true })
-  accessor edges: Edge[] = [
-    {
-      id: "e1",
-      kind: "edge",
-      source: "1",
-      target: "2",
-      sourcePosition: "left",
-      targetPosition: "right",
-      style: {
-        stroke: "purple",
-        strokeWidth: 2,
-        strokeStyle: "dashed",
-        markerStart: "arrow",
-        markerEnd: "arrow",
-      },
-      label: {
-        text: "connects to",
-        bold: true,
-      },
-    },
-    {
-      id: "e2",
-      kind: "edge",
-      source: "1",
-      target: "3",
-      sourcePosition: "bottom",
-      targetPosition: "right",
-      style: {
-        stroke: "orange",
-        strokeWidth: 3,
-        strokeStyle: "dotted",
-        markerEnd: "arrow",
-      },
-      label: {
-        text: "leads to",
-        italic: true,
-      },
-    },
-    {
-      id: "e3",
-      kind: "edge",
-      source: "2",
-      target: "3",
-      sourcePosition: "bottom",
-      targetPosition: "top",
-      style: {
-        stroke: "teal",
-        strokeWidth: 1,
-        markerEnd: "arrow",
-      },
-      label: {
-        text: "points to",
-        underline: true,
-      },
-    },
-  ];
+  accessor edges: Edge[] = [];
 
   /**
    * The images placed on the canvas. Each image has a `position` and `dimension` in canvas

@@ -35,8 +35,8 @@ npm install @webwriter/advance-organizer
 ## Fields
 | Name (Attribute Name) | Type | Description | Default | Reflects |
 | :-------------------: | :--: | :---------: | :-----: | :------: |
-| `nodes` (`nodes`) | `Node[]` | The nodes of the advance organizer. Each node has an `id` that edges refer to and that<br>links it to a page of the same `id`, a `position` and `dimension` in canvas coordinates,<br>a `label` and a `style`. | `[ { id: "1", label: { text: "Node 1" }, position: { x: 500, y: 300 }, dimension: { width: 100, height: 300 }, style: { shape: "diamond", fill: "lightblue", stroke: "blue", strokeWidth: 2, strokeStyle: "dotted", }, kind: "node", }, { id: "2", label: { text: "Node 2" }, position: { x: 200, y: 200 }, dimension: { width: 100, height: 100 }, style: { shape: "ellipse", fill: "lightgreen", stroke: "green", strokeWidth: 2, strokeStyle: "dashed", }, kind: "node", }, { id: "3", label: { text: "Node 3" }, position: { x: 250, y: 400 }, dimension: { width: 200, height: 100 }, style: { shape: "rectangle", fill: "lightcoral", stroke: "red", strokeWidth: 2, }, kind: "node", }, ]` | ✓ |
-| `edges` (`edges`) | `Edge[]` | The edges of the advance organizer. Each edge refers to its `source` and `target`<br>node by `id`, anchored at a fixed side of the node (`sourcePosition`/`targetPosition`),<br>and can carry a `label` and a `style` including arrow heads at either end. | `[ { id: "e1", kind: "edge", source: "1", target: "2", sourcePosition: "left", targetPosition: "right", style: { stroke: "purple", strokeWidth: 2, strokeStyle: "dashed", markerStart: "arrow", markerEnd: "arrow", }, label: { text: "connects to", bold: true, }, }, { id: "e2", kind: "edge", source: "1", target: "3", sourcePosition: "bottom", targetPosition: "right", style: { stroke: "orange", strokeWidth: 3, strokeStyle: "dotted", markerEnd: "arrow", }, label: { text: "leads to", italic: true, }, }, { id: "e3", kind: "edge", source: "2", target: "3", sourcePosition: "bottom", targetPosition: "top", style: { stroke: "teal", strokeWidth: 1, markerEnd: "arrow", }, label: { text: "points to", underline: true, }, }, ]` | ✓ |
+| `nodes` (`nodes`) | `Node[]` | The nodes of the advance organizer. Each node has an `id` that edges refer to and that<br>links it to the page with that `node-id`, a `position` and `dimension` in canvas<br>coordinates, a `label` and a `style`. | `[]` | ✓ |
+| `edges` (`edges`) | `Edge[]` | The edges of the advance organizer. Each edge refers to its `source` and `target`<br>node by `id`, anchored at a fixed side of the node (`sourcePosition`/`targetPosition`),<br>and can carry a `label` and a `style` including arrow heads at either end. | `[]` | ✓ |
 | `images` (`images`) | `Image[]` | The images placed on the canvas. Each image has a `position` and `dimension` in canvas<br>coordinates and a `src` stored as a data URL. | `[]` | ✓ |
 
 *Fields including [properties](https://developer.mozilla.org/en-US/docs/Glossary/Property/JavaScript) and [attributes](https://developer.mozilla.org/en-US/docs/Glossary/Attribute) define the current state of the widget and offer customization options.*
@@ -62,7 +62,7 @@ npm install @webwriter/advance-organizer
 ## `WebwriterAdvanceOrganizerPage` (`<webwriter-advance-organizer-page>`)
 A page of a `<webwriter-advance-organizer>`: the content shown when a learner clicks on
 the node it belongs to. Pages are children of the advance organizer and are linked to a
-node by giving them the `id` of that node.
+node by their `node-id`.
 
 A page holds arbitrary content – text, images, other widgets – and stays hidden until
 its node is opened. Pages are managed by the advance organizer, adding a page to a node
@@ -89,6 +89,13 @@ npm install @webwriter/advance-organizer
 <webwriter-advance-organizer-page></webwriter-advance-organizer-page>
 ```
 
+## Fields
+| Name (Attribute Name) | Type | Description | Default | Reflects |
+| :-------------------: | :--: | :---------: | :-----: | :------: |
+| `nodeId` (`node-id`) | `string \| null` | - | `null` | ✓ |
+
+*Fields including [properties](https://developer.mozilla.org/en-US/docs/Glossary/Property/JavaScript) and [attributes](https://developer.mozilla.org/en-US/docs/Glossary/Attribute) define the current state of the widget and offer customization options.*
+
 ## Slots
 | Name | Description | Content Type |
 | :--: | :---------: | :----------: |
@@ -105,7 +112,7 @@ npm install @webwriter/advance-organizer
 
 *The [editing config](https://webwriter.app/docs/packages/configuring/#editingconfig) defines how explorable authoring tools such as [WebWriter](https://webwriter.app) treat the widget.*
 
-*No public fields, methods, events, custom CSS properties, or CSS parts.*
+*No public methods, events, custom CSS properties, or CSS parts.*
 
 
 ---
