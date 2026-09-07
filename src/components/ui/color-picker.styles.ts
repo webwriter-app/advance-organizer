@@ -5,18 +5,17 @@ export const colorPickerStyles = css`
     --swatch-size: 1.5em;
     --swatch-padding: var(--sl-spacing-x-small);
 
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(5, max-content);
     justify-content: center;
-    /* Two rows of five swatches. */
-    max-width: calc(5 * (var(--swatch-size) + 2 * var(--swatch-padding)));
+    width: max-content;
+    padding: var(--swatch-padding);
   }
 
   button {
     display: flex;
     border: none;
     background: none;
-    /* Buttons do not inherit the host font size, so the em sizes would not match. */
     font-size: inherit;
     margin: 0;
     padding: var(--swatch-padding);

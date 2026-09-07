@@ -7,6 +7,7 @@ import { html, nothing, PropertyValues, type TemplateResult } from "lit";
 import { SubscribeController } from "../../../state/subscribe";
 import { actionsStyles } from "./toolbar-actions.styles";
 import { Label } from "../../../model/types";
+import { renderColorIcon } from "./previews";
 import { localized, msg } from "@lit/localize";
 import { MOD_LABEL } from "../../../state/keyboard";
 import { WwColorPicker } from "../color-picker";
@@ -15,15 +16,18 @@ import SlButton from "@shoelace-style/shoelace/dist/components/button/button.com
 import SlButtonGroup from "@shoelace-style/shoelace/dist/components/button-group/button-group.component.js";
 import SlDropdown from "@shoelace-style/shoelace/dist/components/dropdown/dropdown.component.js";
 import SlIcon from "@shoelace-style/shoelace/dist/components/icon/icon.component.js";
-import SlRange from "@shoelace-style/shoelace/dist/components/range/range.component.js";
 import SlTooltip from "@shoelace-style/shoelace/dist/components/tooltip/tooltip.component.js";
 import SlMenu from "@shoelace-style/shoelace/dist/components/menu/menu.component.js";
+import SlMenuItem from "@shoelace-style/shoelace/dist/components/menu-item/menu-item.component.js";
 
 import iconBold from "@tabler/icons/outline/bold.svg";
 import iconItalic from "@tabler/icons/outline/italic.svg";
 import iconUnderline from "@tabler/icons/outline/underline.svg";
-import iconTextColor from "@tabler/icons/outline/text-color.svg";
+import iconLetterA from "@tabler/icons/outline/letter-a.svg";
 import iconTextSize from "@tabler/icons/outline/text-size.svg";
+
+const FONT_SIZES: readonly number[] = [10, 12, 14, 16, 18, 24, 32, 48];
+const DEFAULT_FONT_SIZE = 18;
 
 @localized()
 export class AoTextActionsGroup extends LitElementWw {
@@ -39,9 +43,9 @@ export class AoTextActionsGroup extends LitElementWw {
     "ww-color-picker": WwColorPicker,
     "sl-dropdown": SlDropdown,
     "sl-icon": SlIcon,
-    "sl-range": SlRange,
     "sl-tooltip": SlTooltip,
     "sl-menu": SlMenu,
+    "sl-menu-item": SlMenuItem,
   };
 
   protected override firstUpdated(_changedProperties: PropertyValues): void {
@@ -95,7 +99,7 @@ export class AoTextActionsGroup extends LitElementWw {
     const italic = labels.every((label) => label.italic);
     const underline = labels.every((label) => label.underline);
     const color = first.color || "#000000";
-    const fontSize = first.fontSize ?? 18;
+    const fontSize = first.fontSize ?? DEFAULT_FONT_SIZE;
 
     return html`<sl-button-group label=${msg("Text edits")}>
       <sl-tooltip content="${msg("Bold")} (${MOD_LABEL}+B)">
@@ -125,13 +129,15 @@ export class AoTextActionsGroup extends LitElementWw {
       <sl-dropdown>
         <sl-tooltip slot="trigger" tabindex="-1" content=${msg("Text color")}>
           <sl-button size="small" caret>
-            <sl-icon label=${msg("Text color")} .src=${iconTextColor}></sl-icon>
+            ${renderColorIcon(iconLetterA, color, msg("Text color"))}
           </sl-button>
         </sl-tooltip>
-        <ww-color-picker
-          .value=${color}
-          @input=${(e: CustomEvent<string>) =>
-            this._updateLabelStyle({ color: e.detail })}></ww-color-picker>
+        <sl-menu class="colors">
+          <ww-color-picker
+            .value=${color}
+            @input=${(e: CustomEvent<string>) =>
+              this._updateLabelStyle({ color: e.detail })}></ww-color-picker>
+        </sl-menu>
       </sl-dropdown>
       <sl-dropdown>
         <sl-tooltip slot="trigger" tabindex="-1" content=${msg("Font size")}>
@@ -139,23 +145,27 @@ export class AoTextActionsGroup extends LitElementWw {
             <sl-icon label=${msg("Font size")} .src=${iconTextSize}></sl-icon>
           </sl-button>
         </sl-tooltip>
-        <sl-menu>
-          <sl-range
-            .value=${fontSize}
-            min="8"
-            max="48"
-            @sl-input=${(e: CustomEvent) => {
-              if (e.target instanceof SlRange) {
-                this._updateLabelStyle({ fontSize: e.target.value });
-              }
-            }}></sl-range
-        ></sl-menu>
+        <sl-menu @sl-select=${(e: CustomEvent) => this._onFontSizeSelect(e)}>
+          ${FONT_SIZES.map(
+            (size) =>
+              html`<sl-menu-item
+                type="checkbox"
+                value=${size}
+                ?checked=${size === fontSize}
+                >${size}</sl-menu-item
+              >`,
+          )}
+        </sl-menu>
       </sl-dropdown>
     </sl-button-group>`;
   }
 
+  private _onFontSizeSelect(e: CustomEvent): void {
+    const item = e.detail.item as SlMenuItem;
+    item.checked = true;
+    this._updateLabelStyle({ fontSize: Number(item.value) });
+  }
 
-  // TODO: Only update DOM on input for the font size, update state only on change
   private _updateLabelStyle(style: Partial<Omit<Label, "text">>): void {
     if (this.selection.isEmpty()) {
       return;

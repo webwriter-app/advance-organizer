@@ -7,6 +7,8 @@ import { html, nothing, PropertyValues, type TemplateResult } from "lit";
 import { SubscribeController } from "../../../state/subscribe";
 import { actionsStyles } from "./toolbar-actions.styles";
 import { EdgeMarker, EdgeStyle, StrokeStyle } from "../../../model/types";
+import { STROKE_STYLES, strokeStyleLabel } from "../../../model/labels";
+import { renderColorIcon, STROKE_STYLE_ICONS } from "./previews";
 import { localized, msg } from "@lit/localize";
 import { WwColorPicker } from "../color-picker";
 
@@ -21,9 +23,8 @@ import SlMenuLabel from "@shoelace-style/shoelace/dist/components/menu-label/men
 import SlRange from "@shoelace-style/shoelace/dist/components/range/range.component.js";
 import SlTooltip from "@shoelace-style/shoelace/dist/components/tooltip/tooltip.component.js";
 
-import iconStrokeWidth from "@tabler/icons/outline/stroke-straight.svg";
 import iconFill from "@tabler/icons/outline/bucket-droplet.svg";
-import iconBorderStyle from "@tabler/icons/outline/border-style-2.svg";
+import iconStroke from "@tabler/icons/outline/border-style-2.svg";
 import iconArrowNone from "@tabler/icons/outline/minus.svg";
 import iconArrowForward from "@tabler/icons/outline/arrow-right.svg";
 import iconArrowReverse from "@tabler/icons/outline/arrow-left.svg";
@@ -107,46 +108,46 @@ export class AoEdgeActionsGroup extends LitElementWw {
       <sl-dropdown>
         <sl-tooltip slot="trigger" tabindex="-1" content=${msg("Stroke color")}>
           <sl-button size="small" caret>
-            <sl-icon label=${msg("Stroke color")} .src=${iconFill}></sl-icon>
+            ${renderColorIcon(iconFill, stroke, msg("Stroke color"))}
           </sl-button>
         </sl-tooltip>
-        <ww-color-picker
-          .value=${stroke}
-          @input=${(e: CustomEvent<string>) =>
-            this._updateEdgeColor(e.detail)}></ww-color-picker>
+        <sl-menu class="colors">
+          <ww-color-picker
+            .value=${stroke}
+            @input=${(e: CustomEvent<string>) =>
+              this._updateEdgeColor(e.detail)}></ww-color-picker>
+        </sl-menu>
       </sl-dropdown>
       <sl-dropdown>
-        <sl-tooltip slot="trigger" tabindex="-1" content=${msg("Stroke width")}>
+        <sl-tooltip slot="trigger" tabindex="-1" content=${msg("Stroke")}>
           <sl-button size="small" caret>
-            <sl-icon
-              label=${msg("Stroke width")}
-              .src=${iconStrokeWidth}></sl-icon>
-          </sl-button>
-        </sl-tooltip>
-        <sl-range
-          .value=${strokeWidth}
-          min="0"
-          max="16"
-          @sl-input=${(e: CustomEvent) => {
-            if (e.target instanceof SlRange) {
-              this._updateEdgeWidth(e.target.value);
-            }
-          }}></sl-range>
-      </sl-dropdown>
-      <sl-dropdown>
-        <sl-tooltip slot="trigger" tabindex="-1" content=${msg("Stroke style")}>
-          <sl-button size="small" caret>
-            <sl-icon
-              label=${msg("Stroke style")}
-              .src=${iconBorderStyle}></sl-icon>
+            <sl-icon label=${msg("Stroke")} .src=${iconStroke}></sl-icon>
           </sl-button>
         </sl-tooltip>
         <sl-menu
           @sl-select=${(e: CustomEvent) =>
             this._updateEdgeStyle(e.detail.item.value)}>
-          <sl-menu-item value="solid">${msg("Solid")}</sl-menu-item>
-          <sl-menu-item value="dashed">${msg("Dashed")}</sl-menu-item>
-          <sl-menu-item value="dotted">${msg("Dotted")}</sl-menu-item>
+          <sl-menu-label>${msg("Stroke width")}</sl-menu-label>
+          <sl-range
+            .value=${strokeWidth}
+            min="1"
+            max="16"
+            @sl-input=${(e: CustomEvent) => {
+              if (e.target instanceof SlRange) {
+                this._updateEdgeWidth(e.target.value);
+              }
+            }}></sl-range>
+          <sl-divider></sl-divider>
+          <sl-menu-label>${msg("Stroke style")}</sl-menu-label>
+          ${STROKE_STYLES.map(
+            (strokeStyle) =>
+              html`<sl-menu-item value=${strokeStyle}>
+                <sl-icon
+                  slot="prefix"
+                  .src=${STROKE_STYLE_ICONS[strokeStyle]}></sl-icon>
+                ${strokeStyleLabel(strokeStyle)}
+              </sl-menu-item>`,
+          )}
         </sl-menu>
       </sl-dropdown>
       <sl-dropdown>
@@ -201,7 +202,6 @@ export class AoEdgeActionsGroup extends LitElementWw {
       this.doc.updateEdgeStyle(id, { strokeStyle });
     }
   }
-
 
   private _updateEdgeColor(color: string): void {
     if (this.selection.isEmpty() || !this.selection.allOfSameKind()) {

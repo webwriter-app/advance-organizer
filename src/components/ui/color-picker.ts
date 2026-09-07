@@ -52,6 +52,15 @@ export class WwColorPicker extends LitElementWw {
 
   static override styles = colorPickerStyles;
 
+  constructor() {
+    super();
+    this.addEventListener("keydown", (e: KeyboardEvent) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.stopPropagation();
+      }
+    });
+  }
+
   protected override render(): TemplateResult {
     const colors = this.tinted ? WwColorPicker.TINTS : WwColorPicker.COLORS;
     const current = normalizeColor(this.value);

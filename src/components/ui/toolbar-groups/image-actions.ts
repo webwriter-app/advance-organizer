@@ -7,6 +7,8 @@ import { html, nothing, PropertyValues, type TemplateResult } from "lit";
 import { SubscribeController } from "../../../state/subscribe";
 import { actionsStyles } from "./toolbar-actions.styles";
 import { Id, ImageStyle, StrokeStyle } from "../../../model/types";
+import { STROKE_STYLES, strokeStyleLabel } from "../../../model/labels";
+import { renderColorIcon, STROKE_STYLE_ICONS } from "./previews";
 import { localized, msg } from "@lit/localize";
 import { WwColorPicker } from "../color-picker";
 
@@ -14,14 +16,15 @@ import SlButton from "@shoelace-style/shoelace/dist/components/button/button.com
 import SlButtonGroup from "@shoelace-style/shoelace/dist/components/button-group/button-group.component.js";
 import SlDropdown from "@shoelace-style/shoelace/dist/components/dropdown/dropdown.component.js";
 import SlIcon from "@shoelace-style/shoelace/dist/components/icon/icon.component.js";
+import SlDivider from "@shoelace-style/shoelace/dist/components/divider/divider.component.js";
 import SlMenu from "@shoelace-style/shoelace/dist/components/menu/menu.component.js";
 import SlMenuItem from "@shoelace-style/shoelace/dist/components/menu-item/menu-item.component.js";
+import SlMenuLabel from "@shoelace-style/shoelace/dist/components/menu-label/menu-label.component.js";
 import SlRange from "@shoelace-style/shoelace/dist/components/range/range.component.js";
 import SlTooltip from "@shoelace-style/shoelace/dist/components/tooltip/tooltip.component.js";
 
-import iconStrokeWidth from "@tabler/icons/outline/stroke-straight.svg";
-import iconFill from "@tabler/icons/outline/bucket-droplet.svg";
-import iconBorderStyle from "@tabler/icons/outline/border-style-2.svg";
+import iconBorderStyle from "@tabler/icons/outline/border-style.svg";
+import iconStroke from "@tabler/icons/outline/border-style-2.svg";
 
 @localized()
 export class AoImageActionsGroup extends LitElementWw {
@@ -35,10 +38,12 @@ export class AoImageActionsGroup extends LitElementWw {
     "sl-button": SlButton,
     "sl-button-group": SlButtonGroup,
     "ww-color-picker": WwColorPicker,
+    "sl-divider": SlDivider,
     "sl-dropdown": SlDropdown,
     "sl-icon": SlIcon,
     "sl-menu": SlMenu,
     "sl-menu-item": SlMenuItem,
+    "sl-menu-label": SlMenuLabel,
     "sl-range": SlRange,
     "sl-tooltip": SlTooltip,
   };
@@ -70,46 +75,46 @@ export class AoImageActionsGroup extends LitElementWw {
       <sl-dropdown>
         <sl-tooltip slot="trigger" tabindex="-1" content=${msg("Stroke color")}>
           <sl-button size="small" caret>
-            <sl-icon label=${msg("Stroke color")} .src=${iconFill}></sl-icon>
+            ${renderColorIcon(iconBorderStyle, stroke, msg("Stroke color"))}
           </sl-button>
         </sl-tooltip>
-        <ww-color-picker
-          .value=${stroke}
-          @input=${(e: CustomEvent<string>) =>
-            this._updateBorderColor(e.detail)}></ww-color-picker>
+        <sl-menu class="colors">
+          <ww-color-picker
+            .value=${stroke}
+            @input=${(e: CustomEvent<string>) =>
+              this._updateBorderColor(e.detail)}></ww-color-picker>
+        </sl-menu>
       </sl-dropdown>
       <sl-dropdown>
-        <sl-tooltip slot="trigger" tabindex="-1" content=${msg("Stroke width")}>
+        <sl-tooltip slot="trigger" tabindex="-1" content=${msg("Stroke")}>
           <sl-button size="small" caret>
-            <sl-icon
-              label=${msg("Stroke width")}
-              .src=${iconStrokeWidth}></sl-icon>
-          </sl-button>
-        </sl-tooltip>
-        <sl-range
-          .value=${strokeWidth}
-          min="0"
-          max="16"
-          @sl-input=${(e: CustomEvent) => {
-            if (e.target instanceof SlRange) {
-              this._updateBorderWidth(e.target.value);
-            }
-          }}></sl-range>
-      </sl-dropdown>
-      <sl-dropdown>
-        <sl-tooltip slot="trigger" tabindex="-1" content=${msg("Stroke style")}>
-          <sl-button size="small" caret>
-            <sl-icon
-              label=${msg("Stroke style")}
-              .src=${iconBorderStyle}></sl-icon>
+            <sl-icon label=${msg("Stroke")} .src=${iconStroke}></sl-icon>
           </sl-button>
         </sl-tooltip>
         <sl-menu
           @sl-select=${(e: CustomEvent) =>
             this._updateBorderStyle(e.detail.item.value)}>
-          <sl-menu-item value="solid">${msg("Solid")}</sl-menu-item>
-          <sl-menu-item value="dashed">${msg("Dashed")}</sl-menu-item>
-          <sl-menu-item value="dotted">${msg("Dotted")}</sl-menu-item>
+          <sl-menu-label>${msg("Stroke width")}</sl-menu-label>
+          <sl-range
+            .value=${strokeWidth}
+            min="0"
+            max="16"
+            @sl-input=${(e: CustomEvent) => {
+              if (e.target instanceof SlRange) {
+                this._updateBorderWidth(e.target.value);
+              }
+            }}></sl-range>
+          <sl-divider></sl-divider>
+          <sl-menu-label>${msg("Stroke style")}</sl-menu-label>
+          ${STROKE_STYLES.map(
+            (strokeStyle) =>
+              html`<sl-menu-item value=${strokeStyle}>
+                <sl-icon
+                  slot="prefix"
+                  .src=${STROKE_STYLE_ICONS[strokeStyle]}></sl-icon>
+                ${strokeStyleLabel(strokeStyle)}
+              </sl-menu-item>`,
+          )}
         </sl-menu>
       </sl-dropdown>
     </sl-button-group>`;
@@ -127,7 +132,6 @@ export class AoImageActionsGroup extends LitElementWw {
       });
     }
   }
-
 
   private _updateBorderColor(color: string): void {
     if (this.selection.isEmpty() || !this.selection.allOfSameKind()) {

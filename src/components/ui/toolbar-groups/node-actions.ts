@@ -14,7 +14,18 @@ import {
   StrokeStyle,
 } from "../../../model/types";
 import { NODE_PRESETS, presetLabel, presetStyle } from "../../../model/presets";
+import {
+  SHAPES,
+  shapeLabel,
+  STROKE_STYLES,
+  strokeStyleLabel,
+} from "../../../model/labels";
 import { renderShapePreview } from "../../canvas/node";
+import {
+  renderColorIcon,
+  renderShapeIcon,
+  STROKE_STYLE_ICONS,
+} from "./previews";
 import { localized, msg } from "@lit/localize";
 import { WwColorPicker } from "../color-picker";
 
@@ -29,7 +40,6 @@ import SlMenuLabel from "@shoelace-style/shoelace/dist/components/menu-label/men
 import SlRange from "@shoelace-style/shoelace/dist/components/range/range.component.js";
 import SlTooltip from "@shoelace-style/shoelace/dist/components/tooltip/tooltip.component.js";
 
-import iconShape from "@tabler/icons/outline/circle-square.svg";
 import iconFill from "@tabler/icons/outline/bucket-droplet.svg";
 import iconBorder from "@tabler/icons/outline/border-style.svg";
 import iconCustom from "@tabler/icons/outline/adjustments.svg";
@@ -72,6 +82,7 @@ export class AoNodeActionsGroup extends LitElementWw {
       }
 
       .shape-preview {
+        display: block;
         width: 3.5em;
         height: 1.75em;
         flex: none;
@@ -81,7 +92,7 @@ export class AoNodeActionsGroup extends LitElementWw {
         margin-right: var(--sl-spacing-x-small);
       }
 
-      sl-menu-item sl-icon[slot="prefix"] {
+      sl-menu.presets sl-menu-item sl-icon[slot="prefix"] {
         width: 3.5em;
       }
 
@@ -179,28 +190,34 @@ export class AoNodeActionsGroup extends LitElementWw {
     return html`<sl-dropdown>
         <sl-tooltip slot="trigger" tabindex="-1" content=${msg("Shape")}>
           <sl-button size="small" caret>
-            <sl-icon label=${msg("Shape")} .src=${iconShape}></sl-icon>
+            ${renderShapeIcon(node.style.shape)}
           </sl-button>
         </sl-tooltip>
         <sl-menu
           @sl-select=${(e: CustomEvent) =>
             this._updateNodeShape(e.detail.item.value)}>
-          <sl-menu-item value="rectangle">${msg("Rectangle")}</sl-menu-item>
-          <sl-menu-item value="ellipse">${msg("Ellipse")}</sl-menu-item>
-          <sl-menu-item value="diamond">${msg("Diamond")}</sl-menu-item>
+          ${SHAPES.map(
+            (shape) =>
+              html`<sl-menu-item value=${shape}>
+                <span slot="prefix">${renderShapeIcon(shape)}</span>
+                ${shapeLabel(shape)}
+              </sl-menu-item>`,
+          )}
         </sl-menu>
       </sl-dropdown>
       <sl-dropdown>
         <sl-tooltip slot="trigger" tabindex="-1" content=${msg("Fill")}>
           <sl-button size="small" caret>
-            <sl-icon label=${msg("Fill")} .src=${iconFill}></sl-icon>
+            ${renderColorIcon(iconFill, fill, msg("Fill"))}
           </sl-button>
         </sl-tooltip>
-        <ww-color-picker
-          .value=${fill}
-          tinted
-          @input=${(e: CustomEvent<string>) =>
-            this._updateNodeColor(e.detail)}></ww-color-picker>
+        <sl-menu class="colors">
+          <ww-color-picker
+            .value=${fill}
+            tinted
+            @input=${(e: CustomEvent<string>) =>
+              this._updateNodeColor(e.detail)}></ww-color-picker>
+        </sl-menu>
       </sl-dropdown>
       <sl-dropdown>
         <sl-tooltip slot="trigger" tabindex="-1" content=${msg("Border")}>
@@ -223,9 +240,15 @@ export class AoNodeActionsGroup extends LitElementWw {
             }}></sl-range>
           <sl-divider></sl-divider>
           <sl-menu-label>${msg("Border type")}</sl-menu-label>
-          <sl-menu-item value="border-solid">${msg("Solid")}</sl-menu-item>
-          <sl-menu-item value="border-dashed">${msg("Dashed")}</sl-menu-item>
-          <sl-menu-item value="border-dotted">${msg("Dotted")}</sl-menu-item>
+          ${STROKE_STYLES.map(
+            (strokeStyle) =>
+              html`<sl-menu-item value="border-${strokeStyle}">
+                <sl-icon
+                  slot="prefix"
+                  .src=${STROKE_STYLE_ICONS[strokeStyle]}></sl-icon>
+                ${strokeStyleLabel(strokeStyle)}
+              </sl-menu-item>`,
+          )}
           <sl-divider></sl-divider>
           <sl-menu-label>${msg("Border color")}</sl-menu-label>
           <ww-color-picker
