@@ -22,7 +22,12 @@ export function selectionPayload(
   if (stores.editingId) return null;
 
   const items = stores.doc.collectItems(stores.selection.entries);
-  if (items.nodes.length === 0 && items.images.length === 0) return null;
+  if (
+    items.nodes.length === 0 &&
+    items.images.length === 0 &&
+    items.edges.length === 0
+  )
+    return null;
 
   const pages: Record<Id, string> = {};
   for (const node of items.nodes) {

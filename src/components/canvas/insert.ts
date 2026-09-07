@@ -1,4 +1,11 @@
-import { Bounds, Dimension, Id, Node, NodeStyle, Point } from "../../model/types";
+import {
+  Bounds,
+  Dimension,
+  Id,
+  Node,
+  NodeStyle,
+  Point,
+} from "../../model/types";
 import { DEFAULT_PRESET, presetStyle } from "../../model/presets";
 import type { DocumentController } from "../../state/document";
 import type { PageController } from "../../state/page";
@@ -45,6 +52,8 @@ export function insertPayload(
     const content = payload.pages[oldId];
     if (content) stores.pages.addPage(newId, content);
   }
+
+  if (newIds.size === 0) return;
 
   stores.selection.select(newIds);
 }

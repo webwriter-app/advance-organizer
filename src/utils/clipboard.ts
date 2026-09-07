@@ -99,12 +99,11 @@ function parsePayload(text: string): ClipboardPayload | null {
 
   const nodes = asArray(parsed["nodes"]).filter(isNode);
   const images = asArray(parsed["images"]).filter(isImage);
-  if (nodes.length === 0 && images.length === 0) return null;
+  const edges = asArray(parsed["edges"]).filter(isEdge);
+  if (nodes.length === 0 && images.length === 0 && edges.length === 0)
+    return null;
 
   const nodeIds = new Set(nodes.map((n) => n.id));
-  const edges = asArray(parsed["edges"])
-    .filter(isEdge)
-    .filter((e) => nodeIds.has(e.source) && nodeIds.has(e.target));
 
   const pages: Record<Id, string> = {};
   const rawPages = parsed["pages"];

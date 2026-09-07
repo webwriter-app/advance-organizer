@@ -82,19 +82,7 @@ export class DocumentController extends Observable {
     if (!this._nodes.has(edge.source) || !this._nodes.has(edge.target))
       return null;
     // Prevent adding an edge if an edge already exists between the same source and target anchors
-    for (const e of this._edges.values()) {
-      if (
-        (e.source === edge.source &&
-          e.sourcePosition === edge.sourcePosition &&
-          e.target === edge.target &&
-          e.targetPosition === edge.targetPosition) ||
-        (e.source === edge.target &&
-          e.sourcePosition === edge.targetPosition &&
-          e.target === edge.source &&
-          e.targetPosition === edge.sourcePosition)
-      )
-        return null;
-    }
+    if (this._hasEdgeAt(edge)) return null;
 
     const id = crypto.randomUUID();
     const newEdge: Edge = { ...edge, id, kind: "edge" };
@@ -154,7 +142,10 @@ export class DocumentController extends Observable {
           this._images.set(newId, {
             ...image,
             id: newId,
-            position: { x: image.position.x + 20, y: image.position.y + 20 },
+            position: {
+              x: image.position.x + INSERT_GAP,
+              y: image.position.y + INSERT_GAP,
+            },
           });
         }
       }
@@ -202,10 +193,7 @@ export class DocumentController extends Observable {
       }
     }
 
-    const nodeIds = new Set(nodes.map((n) => n.id));
-    const edges = [...this._edges.values()].filter(
-      (e) => ids.has(e.id) && nodeIds.has(e.source) && nodeIds.has(e.target),
-    );
+    const edges = [...this._edges.values()].filter((e) => ids.has(e.id));
 
     return { nodes, edges, images };
   }
@@ -218,7 +206,7 @@ export class DocumentController extends Observable {
     nodeIdMap: Map<Id, Id>;
   } {
     const boxItems: BoxItem[] = [...items.nodes, ...items.images];
-    if (boxItems.length === 0)
+    if (boxItems.length === 0 && items.edges.length === 0)
       return { newIds: new Set(), nodeIdMap: new Map() };
 
     const newIds: Set<Id> = new Set();
@@ -253,19 +241,18 @@ export class DocumentController extends Observable {
       });
     }
 
+    const endpoint = (id: Id): Id | null =>
+      nodeIdMap.get(id) ?? (this._nodes.has(id) ? id : null);
+
     for (const edge of items.edges) {
-      const source = nodeIdMap.get(edge.source);
-      const target = nodeIdMap.get(edge.target);
-      if (!source || !target) continue;
+      const source = endpoint(edge.source);
+      const target = endpoint(edge.target);
+      if (!source || !target || source === target) continue;
+      const reconnected = { ...edge, kind: "edge" as const, source, target };
+      if (this._hasEdgeAt(reconnected)) continue;
       const newId = crypto.randomUUID();
       newIds.add(newId);
-      this._edges.set(newId, {
-        ...edge,
-        id: newId,
-        kind: "edge",
-        source,
-        target,
-      });
+      this._edges.set(newId, { ...reconnected, id: newId });
     }
 
     this.notify();
@@ -275,6 +262,25 @@ export class DocumentController extends Observable {
   freePosition(position: Point): Point {
     const offset = this._pasteOffset([{ position }]);
     return { x: position.x + offset, y: position.y + offset };
+  }
+
+  private _hasEdgeAt(
+    edge: Pick<Edge, "source" | "sourcePosition" | "target" | "targetPosition">,
+  ): boolean {
+    for (const e of this._edges.values()) {
+      if (
+        (e.source === edge.source &&
+          e.sourcePosition === edge.sourcePosition &&
+          e.target === edge.target &&
+          e.targetPosition === edge.targetPosition) ||
+        (e.source === edge.target &&
+          e.sourcePosition === edge.targetPosition &&
+          e.target === edge.source &&
+          e.targetPosition === edge.sourcePosition)
+      )
+        return true;
+    }
+    return false;
   }
 
   private _pasteShift(
