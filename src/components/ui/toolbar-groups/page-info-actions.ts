@@ -40,6 +40,7 @@ export class AoPageInfoActionsGroup extends LitElementWw {
     css`
       :host {
         min-width: 0;
+        flex-wrap: nowrap;
       }
     `,
   ];

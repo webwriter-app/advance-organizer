@@ -3,9 +3,14 @@ import { css } from "lit";
 export const actionsStyles = css`
   :host {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: var(--sl-spacing-x-small);
     color: var(--sl-color-neutral-700);
+  }
+
+  sl-button-group::part(base) {
+    flex-wrap: wrap;
   }
 
   sl-tooltip {

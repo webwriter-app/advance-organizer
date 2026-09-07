@@ -1,6 +1,7 @@
 import { html, nothing, PropertyValues, TemplateResult } from "lit";
 import { LitElementWw } from "@webwriter/lit";
 import { customElement, property, query, state } from "lit/decorators.js";
+import { classMap } from "lit/directives/class-map.js";
 import { styles } from "./webwriter-advance-organizer.styles";
 
 import { WwToolbar } from "../components/ui/toolbar";
@@ -395,7 +396,7 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
       return nothing;
     }
 
-    return html`<ww-toolbar>
+    return html`<ww-toolbar class=${classMap({ "page-view": this._openPage !== null })}>
       ${this._openPage === null
         ? html`<ao-create-actions
               .drawingEdge=${this._drawingEdge}

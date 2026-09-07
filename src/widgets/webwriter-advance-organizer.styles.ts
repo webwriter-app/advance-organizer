@@ -113,6 +113,10 @@ export const styles = css`
     flex: 1;
   }
 
+  ww-toolbar.page-view {
+    flex-wrap: nowrap;
+  }
+
   /* --- PRINT VIEW --- */
 
   .print-organizer {
