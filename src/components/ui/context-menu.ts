@@ -31,7 +31,7 @@ import iconDuplicate from "@tabler/icons/outline/copy-plus.svg";
 import iconDelete from "@tabler/icons/outline/trash.svg";
 
 @localized()
-export class WwContextMenu extends LitElementWw {
+export class AoContextMenu extends LitElementWw {
   @consume({ context: documentContext })
   accessor doc!: DocumentController;
 

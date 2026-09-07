@@ -12,7 +12,7 @@ export interface ColorOption {
 }
 
 @localized()
-export class WwColorPicker extends LitElementWw {
+export class AoColorPicker extends LitElementWw {
   // `--sl-color-*-600`, `gray-950` for black as fixed values
   static get COLORS(): readonly ColorOption[] {
     return [
@@ -63,7 +63,7 @@ export class WwColorPicker extends LitElementWw {
   }
 
   protected override render(): TemplateResult {
-    const colors = this.tinted ? WwColorPicker.TINTS : WwColorPicker.COLORS;
+    const colors = this.tinted ? AoColorPicker.TINTS : AoColorPicker.COLORS;
     const current = normalizeColor(this.value);
 
     return html`${colors.map(

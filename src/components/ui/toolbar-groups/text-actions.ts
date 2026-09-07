@@ -11,7 +11,7 @@ import { DEFAULT_BLACK } from "../../../model/colors";
 import { renderColorIcon } from "./previews";
 import { localized, msg } from "@lit/localize";
 import { MOD_LABEL } from "../../../state/keyboard";
-import { WwColorPicker } from "../color-picker";
+import { AoColorPicker } from "../color-picker";
 
 import SlButton from "@shoelace-style/shoelace/dist/components/button/button.component.js";
 import SlButtonGroup from "@shoelace-style/shoelace/dist/components/button-group/button-group.component.js";
@@ -41,7 +41,7 @@ export class AoTextActionsGroup extends LitElementWw {
   static override scopedElements = {
     "sl-button": SlButton,
     "sl-button-group": SlButtonGroup,
-    "ww-color-picker": WwColorPicker,
+    "ao-color-picker": AoColorPicker,
     "sl-dropdown": SlDropdown,
     "sl-icon": SlIcon,
     "sl-tooltip": SlTooltip,
@@ -134,10 +134,10 @@ export class AoTextActionsGroup extends LitElementWw {
           </sl-button>
         </sl-tooltip>
         <sl-menu class="colors">
-          <ww-color-picker
+          <ao-color-picker
             .value=${color}
             @input=${(e: CustomEvent<string>) =>
-              this._updateLabelStyle({ color: e.detail })}></ww-color-picker>
+              this._updateLabelStyle({ color: e.detail })}></ao-color-picker>
         </sl-menu>
       </sl-dropdown>
       <sl-dropdown>

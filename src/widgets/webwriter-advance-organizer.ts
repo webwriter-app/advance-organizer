@@ -4,8 +4,8 @@ import { customElement, property, query, state } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
 import { styles } from "./webwriter-advance-organizer.styles";
 
-import { WwToolbar } from "../components/ui/toolbar";
-import { WwContextMenu } from "../components/ui/context-menu";
+import { AoToolbar } from "../components/ui/toolbar";
+import { AoContextMenu } from "../components/ui/context-menu";
 import { AoCanvas } from "../components/canvas/canvas";
 import { labelStyles } from "../components/canvas/canvas.styles";
 
@@ -239,8 +239,8 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
    * @internal
    */
   static override scopedElements = {
-    "ww-toolbar": WwToolbar,
-    "ww-context-menu": WwContextMenu,
+    "ao-toolbar": AoToolbar,
+    "ao-context-menu": AoContextMenu,
     "ao-canvas": AoCanvas,
 
     "ao-create-actions": AoCreateActionsGroup,
@@ -396,7 +396,7 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
       return nothing;
     }
 
-    return html`<ww-toolbar class=${classMap({ "page-view": this._openPage !== null })}>
+    return html`<ao-toolbar class=${classMap({ "page-view": this._openPage !== null })}>
       ${this._openPage === null
         ? html`<ao-create-actions
               .drawingEdge=${this._drawingEdge}
@@ -439,7 +439,7 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
                     }
                   }}></ao-page-edit-actions>`
               : nothing}`}
-    </ww-toolbar>`;
+    </ao-toolbar>`;
   }
 
   protected override render(): TemplateResult {
@@ -465,7 +465,7 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
                   };
                 }}></ao-canvas>
               ${this._contextMenu
-                ? html`<ww-context-menu
+                ? html`<ao-context-menu
                     .x=${this._contextMenu.x}
                     .y=${this._contextMenu.y}
                     @clipboard-action=${(
@@ -474,7 +474,7 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
                       this.canvas?.runClipboardAction(e.detail.action);
                     }}
                     @close-context-menu=${() =>
-                      this._closeContextMenu()}></ww-context-menu>`
+                      this._closeContextMenu()}></ao-context-menu>`
                 : nothing}`
           : nothing,
       )}

@@ -11,7 +11,7 @@ import { STROKE_STYLES, strokeStyleLabel } from "../../../model/labels";
 import { DEFAULT_BLACK } from "../../../model/colors";
 import { renderColorIcon, STROKE_STYLE_ICONS } from "./previews";
 import { localized, msg } from "@lit/localize";
-import { WwColorPicker } from "../color-picker";
+import { AoColorPicker } from "../color-picker";
 
 import SlButton from "@shoelace-style/shoelace/dist/components/button/button.component.js";
 import SlButtonGroup from "@shoelace-style/shoelace/dist/components/button-group/button-group.component.js";
@@ -38,7 +38,7 @@ export class AoImageActionsGroup extends LitElementWw {
   static override scopedElements = {
     "sl-button": SlButton,
     "sl-button-group": SlButtonGroup,
-    "ww-color-picker": WwColorPicker,
+    "ao-color-picker": AoColorPicker,
     "sl-divider": SlDivider,
     "sl-dropdown": SlDropdown,
     "sl-icon": SlIcon,
@@ -80,10 +80,10 @@ export class AoImageActionsGroup extends LitElementWw {
           </sl-button>
         </sl-tooltip>
         <sl-menu class="colors">
-          <ww-color-picker
+          <ao-color-picker
             .value=${stroke}
             @input=${(e: CustomEvent<string>) =>
-              this._updateBorderColor(e.detail)}></ww-color-picker>
+              this._updateBorderColor(e.detail)}></ao-color-picker>
         </sl-menu>
       </sl-dropdown>
       <sl-dropdown>

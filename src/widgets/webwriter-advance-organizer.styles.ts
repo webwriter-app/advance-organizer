@@ -113,7 +113,7 @@ export const styles = css`
     flex: 1;
   }
 
-  ww-toolbar.page-view {
+  ao-toolbar.page-view {
     flex-wrap: nowrap;
   }
 
@@ -136,9 +136,9 @@ export const styles = css`
       height: auto;
     }
 
-    ww-toolbar,
+    ao-toolbar,
     ao-canvas,
-    ww-context-menu {
+    ao-context-menu {
       display: none;
     }
 
