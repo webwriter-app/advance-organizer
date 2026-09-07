@@ -26,7 +26,7 @@ const NEW_NODE_STYLE: NodeStyle = presetStyle(DEFAULT_PRESET);
 export function insertNode(position: Point, stores: ItemStores): Node {
   const node = stores.doc.addNode({
     dimension: NEW_NODE_DIMENSION,
-    label: { text: msg("New node") },
+    label: { text: msg("New concept") },
     position: stores.doc.freePosition(position),
     style: NEW_NODE_STYLE,
   });

@@ -1,7 +1,7 @@
 {
   "name": "@webwriter/advance-organizer",
   "version": "0.0.1",
-  "description": "Create visual advance organizers to introduce new topics. Link nodes to further content that learners can open with a click.",
+  "description": "Create visual advance organizers to introduce new topics. Link concepts to further content that learners can open with a click.",
   "keywords": [
     "webwriter-widget",
     "advance-organizer",

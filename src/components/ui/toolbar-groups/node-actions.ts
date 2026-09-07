@@ -134,13 +134,13 @@ export class AoNodeActionsGroup extends LitElementWw {
 
     const preset = this._sharedPreset(nodes);
 
-    return html`<sl-button-group label=${msg("Node edits")}>
+    return html`<sl-button-group label=${msg("Concept edits")}>
       <sl-dropdown>
-        <sl-tooltip slot="trigger" tabindex="-1" content=${msg("Node preset")}>
+        <sl-tooltip slot="trigger" tabindex="-1" content=${msg("Concept preset")}>
           <sl-button size="small" caret>
             ${preset === CUSTOM
               ? html`<sl-icon
-                  label=${msg("Node preset")}
+                  label=${msg("Concept preset")}
                   .src=${iconCustom}></sl-icon>`
               : renderShapePreview(first.style)}
           </sl-button>

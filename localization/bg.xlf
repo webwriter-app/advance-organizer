@@ -26,7 +26,9 @@
         <target>Изтрий</target>
       </trans-unit>
       <trans-unit id="saa987c09599e0f9a">
-        <source>Drop <x id="0" equiv-text="${this.imageCount}"/> images here</source>
+        <source>Drop 
+          <x id="0" equiv-text="${this.imageCount}"/> images here
+        </source>
         <target>Положи 
           изображенията от 
           <x id="0" equiv-text="${this.imageCount}"/> тук
@@ -40,21 +42,9 @@
         <source>Add elements</source>
         <target>Добавяне на елементи</target>
       </trans-unit>
-      <trans-unit id="se63c78875f5b2178">
-        <source>Add node</source>
-        <target>Добавете възел</target>
-      </trans-unit>
-      <trans-unit id="sceb35fbe10efb7a1">
-        <source>Add edge</source>
-        <target>Добавете ръб</target>
-      </trans-unit>
       <trans-unit id="s5fd300106abf0f0e">
         <source>Add picture</source>
         <target>Добавете картинка</target>
-      </trans-unit>
-      <trans-unit id="scbd0cdcee3a38719">
-        <source>Edge edits</source>
-        <target>Редактиране на ръбове</target>
       </trans-unit>
       <trans-unit id="s2afc172e45ceaabe">
         <source>Stroke color</source>
@@ -83,10 +73,6 @@
       <trans-unit id="sb9762427948cf2b3">
         <source>Image edits</source>
         <target>Редактиране на изображения</target>
-      </trans-unit>
-      <trans-unit id="s74de6dd63f44c218">
-        <source>Node edits</source>
-        <target>Редактиране на възли</target>
       </trans-unit>
       <trans-unit id="s2de969afacdaa7a6">
         <source>Shape</source>
@@ -184,10 +170,6 @@
         <source>Zoom in</source>
         <target>Увеличаване</target>
       </trans-unit>
-      <trans-unit id="s2d46e4d6c4292d93">
-        <source>New node</source>
-        <target>Нов възел</target>
-      </trans-unit>
       <trans-unit id="s821f2ff928cf5899">
         <source>Arrowheads</source>
         <target>Върхове на стрели</target>
@@ -235,6 +217,122 @@
       <trans-unit id="s1c8cc3603762c768">
         <source>Zoom in and out</source>
         <target>Увеличаване и намаляване</target>
+      </trans-unit>
+      <trans-unit id="sb3a97475cf766cba">
+        <source>Add concepts via the toolbar above.</source>
+        <target>Добавете понятия чрез лентата с инструменти отгоре.</target>
+      </trans-unit>
+      <trans-unit id="s637ca9e5a893dcf5">
+        <source>New concept</source>
+        <target>Нова концепция</target>
+      </trans-unit>
+      <trans-unit id="s5e3cb80d43a34044">
+        <source>Black</source>
+        <target>Черно</target>
+      </trans-unit>
+      <trans-unit id="s8e985aeeca6a8166">
+        <source>White</source>
+        <target>Бяло</target>
+      </trans-unit>
+      <trans-unit id="s9ff1de19feac1b7c">
+        <source>Red</source>
+        <target>Червено</target>
+      </trans-unit>
+      <trans-unit id="s8f450dd0b7bdb8cb">
+        <source>Orange</source>
+        <target>Оранжево</target>
+      </trans-unit>
+      <trans-unit id="s6baf78886c99db89">
+        <source>Yellow</source>
+        <target>Жълто</target>
+      </trans-unit>
+      <trans-unit id="scf00d78fd5953f1c">
+        <source>Green</source>
+        <target>Зелено</target>
+      </trans-unit>
+      <trans-unit id="s9b3c2f9cc32d565a">
+        <source>Cyan</source>
+        <target>Циан</target>
+      </trans-unit>
+      <trans-unit id="secf3d3a7c1693e2d">
+        <source>Blue</source>
+        <target>Синьо</target>
+      </trans-unit>
+      <trans-unit id="s109991b0423f1512">
+        <source>Violet</source>
+        <target>Лилаво</target>
+      </trans-unit>
+      <trans-unit id="se9beed19c6a38fed">
+        <source>Pink</source>
+        <target>Розово</target>
+      </trans-unit>
+      <trans-unit id="s25fcab7e4563067a">
+        <source>Gray</source>
+        <target>Сиво</target>
+      </trans-unit>
+      <trans-unit id="sda787d99adea97e0">
+        <source>Add concept</source>
+        <target>Добави понятие</target>
+      </trans-unit>
+      <trans-unit id="sbe113db3717be2d8">
+        <source>Add relation</source>
+        <target>Добави връзка</target>
+      </trans-unit>
+      <trans-unit id="sef601e085690ef34">
+        <source>Relation edits</source>
+        <target>Редактиране на връзката</target>
+      </trans-unit>
+      <trans-unit id="s8e5cbbecf3c94675">
+        <source>Stroke</source>
+        <target>Контур</target>
+      </trans-unit>
+      <trans-unit id="saa7d7cc808f0a35a">
+        <source>Concept edits</source>
+        <target>Редактиране на концепция</target>
+      </trans-unit>
+      <trans-unit id="se87e58cabf0417aa">
+        <source>Concept preset</source>
+        <target>Предварително зададена концепция</target>
+      </trans-unit>
+      <trans-unit id="sf0cab2483f66aa2e">
+        <source>Custom</source>
+        <target>По избор</target>
+      </trans-unit>
+      <trans-unit id="sdca5284f30b50177">
+        <source>Main topic</source>
+        <target>Основна тема</target>
+      </trans-unit>
+      <trans-unit id="s86dda4d3d5269d34">
+        <source>Subtopic</source>
+        <target>Подтема</target>
+      </trans-unit>
+      <trans-unit id="s8daa1db5187d4ad4">
+        <source>Detail</source>
+        <target>Подробности</target>
+      </trans-unit>
+      <trans-unit id="s2470dafb1ae8a017">
+        <source>Term</source>
+        <target>Термин</target>
+      </trans-unit>
+      <trans-unit id="s81a0c184b9a59377">
+        <source>Topic A</source>
+        <target>Тема А</target>
+      </trans-unit>
+      <trans-unit id="s81a0c284b9a5952a">
+        <source>Topic B</source>
+        <target>Тема Б</target>
+      </trans-unit>
+      <trans-unit id="s81a0c384b9a596dd">
+        <source>Topic C</source>
+        <target>Тема В</target>
+      </trans-unit>
+      <trans-unit id="s81a0bc84b9a58af8">
+        <source>Topic D</source>
+        <target>Тема Г</target>
+      </trans-unit>
+      <trans-unit id="s81a0bd84b9a58cab">
+        <source>Topic E</source>
+        <target>Тема Е</target>
       </trans-unit>
     </body>
   </file>

@@ -1,7 +1,7 @@
 # Advance Organizer (`@webwriter/advance-organizer@0.0.1`)
 [License: MIT](LICENSE) | Version: 0.0.1
 
-Create visual advance organizers to introduce new topics. Link nodes to further content that learners can open with a click.
+Create visual advance organizers to introduce new topics. Link concepts to further content that learners can open with a click.
 
 
 

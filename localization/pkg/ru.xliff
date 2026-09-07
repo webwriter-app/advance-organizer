@@ -1,6 +1,6 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.1" srcLang="en" trgLang="ru">
 <file id="." original=".">
-<unit id="description"><segment><source>Create visual advance organizers to introduce new topics. Link nodes to further content that learners can open with a click.</source><target>Создавайте наглядные вводные схемы для ознакомления с новыми темами. Связывайте узлы с дополнительным материалом, который учащиеся могут открыть одним щелчком мыши.</target></segment></unit>
+<unit id="description"><segment><source>Create visual advance organizers to introduce new topics. Link concepts to further content that learners can open with a click.</source><target>Создавайте наглядные вводные схемы для ознакомления с новыми темами. Связывайте узлы с дополнительным материалом, который учащиеся могут открыть одним щелчком мыши.</target></segment></unit>
 </file>
 </xliff>

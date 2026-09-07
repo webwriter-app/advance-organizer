@@ -104,7 +104,7 @@ export class AoEdgeActionsGroup extends LitElementWw {
     const strokeWidth = item.style.strokeWidth ?? 1;
     const arrowheads = getArrowheadOption(item.style);
 
-    return html`<sl-button-group label=${msg("Edge edits")}>
+    return html`<sl-button-group label=${msg("Relation edits")}>
       <sl-dropdown>
         <sl-tooltip slot="trigger" tabindex="-1" content=${msg("Stroke color")}>
           <sl-button size="small" caret>

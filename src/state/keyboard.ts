@@ -104,10 +104,10 @@ export class KeyboardController implements ReactiveController {
     }
 
     switch (e.key.toLowerCase()) {
-      case "n":
+      case "c":
         if (!e.repeat) insertNode(canvas.insertPosition(), canvas);
         return true;
-      case "e":
+      case "r":
         if (!e.repeat) canvas.toggleDrawEdge();
         return true;
       case "i":

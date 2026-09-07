@@ -1,5 +1,5 @@
 <xliff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 http://docs.oasis-open.org/xliff/v1.2/os/xliff-core-1.2-strict.xsd" xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="lit-localize-inputs" datatype="plaintext" source-language="en" target-language="zh-Hant">
+  <file original="lit-localize-inputs" datatype="plaintext" source-language="en" target-language="zh-hant">
     <body>
       <trans-unit id="s0bc31719aa7a8f43">
         <source>Cut</source>
@@ -26,7 +26,9 @@
         <target>刪除</target>
       </trans-unit>
       <trans-unit id="saa987c09599e0f9a">
-        <source>Drop <x id="0" equiv-text="${this.imageCount}"/> images here</source>
+        <source>Drop 
+          <x id="0" equiv-text="${this.imageCount}"/> images here
+        </source>
         <target>將 
           <x id="0" equiv-text="${this.imageCount}"/> 圖片拖放至此
         </target>
@@ -39,21 +41,9 @@
         <source>Add elements</source>
         <target>新增元素</target>
       </trans-unit>
-      <trans-unit id="se63c78875f5b2178">
-        <source>Add node</source>
-        <target>新增節點</target>
-      </trans-unit>
-      <trans-unit id="sceb35fbe10efb7a1">
-        <source>Add edge</source>
-        <target>新增邊</target>
-      </trans-unit>
       <trans-unit id="s5fd300106abf0f0e">
         <source>Add picture</source>
         <target>新增圖片</target>
-      </trans-unit>
-      <trans-unit id="scbd0cdcee3a38719">
-        <source>Edge edits</source>
-        <target>邊緣編輯</target>
       </trans-unit>
       <trans-unit id="s2afc172e45ceaabe">
         <source>Stroke color</source>
@@ -82,10 +72,6 @@
       <trans-unit id="sb9762427948cf2b3">
         <source>Image edits</source>
         <target>圖片編輯</target>
-      </trans-unit>
-      <trans-unit id="s74de6dd63f44c218">
-        <source>Node edits</source>
-        <target>節點編輯</target>
       </trans-unit>
       <trans-unit id="s2de969afacdaa7a6">
         <source>Shape</source>
@@ -183,10 +169,6 @@
         <source>Zoom in</source>
         <target>縮小</target>
       </trans-unit>
-      <trans-unit id="s2d46e4d6c4292d93">
-        <source>New node</source>
-        <target>新節點</target>
-      </trans-unit>
       <trans-unit id="s821f2ff928cf5899">
         <source>Arrowheads</source>
         <target>箭頭</target>
@@ -234,6 +216,122 @@
       <trans-unit id="s1c8cc3603762c768">
         <source>Zoom in and out</source>
         <target>放大與縮小</target>
+      </trans-unit>
+      <trans-unit id="sb3a97475cf766cba">
+        <source>Add concepts via the toolbar above.</source>
+        <target>透過上方工具列新增概念。</target>
+      </trans-unit>
+      <trans-unit id="s637ca9e5a893dcf5">
+        <source>New concept</source>
+        <target>新概念</target>
+      </trans-unit>
+      <trans-unit id="s5e3cb80d43a34044">
+        <source>Black</source>
+        <target>黑色</target>
+      </trans-unit>
+      <trans-unit id="s8e985aeeca6a8166">
+        <source>White</source>
+        <target>白色</target>
+      </trans-unit>
+      <trans-unit id="s9ff1de19feac1b7c">
+        <source>Red</source>
+        <target>紅色</target>
+      </trans-unit>
+      <trans-unit id="s8f450dd0b7bdb8cb">
+        <source>Orange</source>
+        <target>橘色</target>
+      </trans-unit>
+      <trans-unit id="s6baf78886c99db89">
+        <source>Yellow</source>
+        <target>黃色</target>
+      </trans-unit>
+      <trans-unit id="scf00d78fd5953f1c">
+        <source>Green</source>
+        <target>綠色</target>
+      </trans-unit>
+      <trans-unit id="s9b3c2f9cc32d565a">
+        <source>Cyan</source>
+        <target>青色</target>
+      </trans-unit>
+      <trans-unit id="secf3d3a7c1693e2d">
+        <source>Blue</source>
+        <target>藍色</target>
+      </trans-unit>
+      <trans-unit id="s109991b0423f1512">
+        <source>Violet</source>
+        <target>紫色</target>
+      </trans-unit>
+      <trans-unit id="se9beed19c6a38fed">
+        <source>Pink</source>
+        <target>粉紅</target>
+      </trans-unit>
+      <trans-unit id="s25fcab7e4563067a">
+        <source>Gray</source>
+        <target>灰色</target>
+      </trans-unit>
+      <trans-unit id="sda787d99adea97e0">
+        <source>Add concept</source>
+        <target>新增概念</target>
+      </trans-unit>
+      <trans-unit id="sbe113db3717be2d8">
+        <source>Add relation</source>
+        <target>新增關聯</target>
+      </trans-unit>
+      <trans-unit id="sef601e085690ef34">
+        <source>Relation edits</source>
+        <target>關係編輯</target>
+      </trans-unit>
+      <trans-unit id="s8e5cbbecf3c94675">
+        <source>Stroke</source>
+        <target>筆畫</target>
+      </trans-unit>
+      <trans-unit id="saa7d7cc808f0a35a">
+        <source>Concept edits</source>
+        <target>概念編輯</target>
+      </trans-unit>
+      <trans-unit id="se87e58cabf0417aa">
+        <source>Concept preset</source>
+        <target>概念預設</target>
+      </trans-unit>
+      <trans-unit id="sf0cab2483f66aa2e">
+        <source>Custom</source>
+        <target>自訂</target>
+      </trans-unit>
+      <trans-unit id="sdca5284f30b50177">
+        <source>Main topic</source>
+        <target>主要主題</target>
+      </trans-unit>
+      <trans-unit id="s86dda4d3d5269d34">
+        <source>Subtopic</source>
+        <target>子主題</target>
+      </trans-unit>
+      <trans-unit id="s8daa1db5187d4ad4">
+        <source>Detail</source>
+        <target>詳細資訊</target>
+      </trans-unit>
+      <trans-unit id="s2470dafb1ae8a017">
+        <source>Term</source>
+        <target>術語</target>
+      </trans-unit>
+      <trans-unit id="s81a0c184b9a59377">
+        <source>Topic A</source>
+        <target>主題 A</target>
+      </trans-unit>
+      <trans-unit id="s81a0c284b9a5952a">
+        <source>Topic B</source>
+        <target>主題 B</target>
+      </trans-unit>
+      <trans-unit id="s81a0c384b9a596dd">
+        <source>Topic C</source>
+        <target>主題 C</target>
+      </trans-unit>
+      <trans-unit id="s81a0bc84b9a58af8">
+        <source>Topic D</source>
+        <target>主題 D</target>
+      </trans-unit>
+      <trans-unit id="s81a0bd84b9a58cab">
+        <source>Topic E</source>
+        <target>主題 E</target>
       </trans-unit>
     </body>
   </file>
