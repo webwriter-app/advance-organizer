@@ -91,9 +91,7 @@ export class AoImageActionsGroup extends LitElementWw {
             <sl-icon label=${msg("Stroke")} .src=${iconStroke}></sl-icon>
           </sl-button>
         </sl-tooltip>
-        <sl-menu
-          @sl-select=${(e: CustomEvent) =>
-            this._updateBorderStyle(e.detail.item.value)}>
+        <sl-menu @sl-select=${(e: CustomEvent) => this._onBorderStyleSelect(e)}>
           <sl-menu-label>${msg("Stroke width")}</sl-menu-label>
           <sl-range
             .value=${strokeWidth}
@@ -108,7 +106,12 @@ export class AoImageActionsGroup extends LitElementWw {
           <sl-menu-label>${msg("Stroke style")}</sl-menu-label>
           ${STROKE_STYLES.map(
             (strokeStyle) =>
-              html`<sl-menu-item value=${strokeStyle}>
+              html`<sl-menu-item
+                type="checkbox"
+                value=${strokeStyle}
+                ?checked=${
+                  strokeStyle === (item.style?.strokeStyle ?? "solid")
+                }>
                 <sl-icon
                   slot="prefix"
                   .src=${STROKE_STYLE_ICONS[strokeStyle]}></sl-icon>
@@ -118,6 +121,12 @@ export class AoImageActionsGroup extends LitElementWw {
         </sl-menu>
       </sl-dropdown>
     </sl-button-group>`;
+  }
+
+  private _onBorderStyleSelect(e: CustomEvent): void {
+    const item = e.detail.item as SlMenuItem;
+    item.checked = true;
+    this._updateBorderStyle(item.value as StrokeStyle);
   }
 
   private _updateBorderStyle(strokeStyle: StrokeStyle): void {

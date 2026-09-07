@@ -65,6 +65,8 @@ export type EdgeRouting = "straight";
 
 export type EdgeMarker = "none" | "arrow";
 
+export type ArrowheadOption = "none" | "forward" | "reverse" | "bidirectional";
+
 export interface EdgeStyle {
   readonly stroke?: string;
   readonly strokeWidth?: number;
@@ -118,4 +120,3 @@ export type AnchorRendering =
   | { kind: "none" }
   | { kind: "all"; skipNodeId?: Id }
   | { kind: "single"; nodeId: Id; position: EdgePosition };
-

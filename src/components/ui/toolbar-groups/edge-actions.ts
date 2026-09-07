@@ -6,8 +6,18 @@ import { SelectionController } from "../../../state/selection";
 import { html, nothing, PropertyValues, type TemplateResult } from "lit";
 import { SubscribeController } from "../../../state/subscribe";
 import { actionsStyles } from "./toolbar-actions.styles";
-import { EdgeMarker, EdgeStyle, StrokeStyle } from "../../../model/types";
-import { STROKE_STYLES, strokeStyleLabel } from "../../../model/labels";
+import {
+  ArrowheadOption,
+  EdgeMarker,
+  EdgeStyle,
+  StrokeStyle,
+} from "../../../model/types";
+import {
+  ARROWHEAD_OPTIONS,
+  arrowheadLabel,
+  STROKE_STYLES,
+  strokeStyleLabel,
+} from "../../../model/labels";
 import { renderColorIcon, STROKE_STYLE_ICONS } from "./previews";
 import { localized, msg } from "@lit/localize";
 import { WwColorPicker } from "../color-picker";
@@ -29,8 +39,6 @@ import iconArrowNone from "@tabler/icons/outline/minus.svg";
 import iconArrowForward from "@tabler/icons/outline/arrow-right.svg";
 import iconArrowReverse from "@tabler/icons/outline/arrow-left.svg";
 import iconArrowBidirectional from "@tabler/icons/outline/arrows-horizontal.svg";
-
-type ArrowheadOption = "none" | "forward" | "reverse" | "bidirectional";
 
 const ARROWHEAD_ICONS: Record<ArrowheadOption, string> = {
   none: iconArrowNone,
@@ -124,9 +132,7 @@ export class AoEdgeActionsGroup extends LitElementWw {
             <sl-icon label=${msg("Stroke")} .src=${iconStroke}></sl-icon>
           </sl-button>
         </sl-tooltip>
-        <sl-menu
-          @sl-select=${(e: CustomEvent) =>
-            this._updateEdgeStyle(e.detail.item.value)}>
+        <sl-menu @sl-select=${(e: CustomEvent) => this._onStrokeStyleSelect(e)}>
           <sl-menu-label>${msg("Stroke width")}</sl-menu-label>
           <sl-range
             .value=${strokeWidth}
@@ -141,7 +147,10 @@ export class AoEdgeActionsGroup extends LitElementWw {
           <sl-menu-label>${msg("Stroke style")}</sl-menu-label>
           ${STROKE_STYLES.map(
             (strokeStyle) =>
-              html`<sl-menu-item value=${strokeStyle}>
+              html`<sl-menu-item
+                type="checkbox"
+                value=${strokeStyle}
+                ?checked=${strokeStyle === (item.style.strokeStyle ?? "solid")}>
                 <sl-icon
                   slot="prefix"
                   .src=${STROKE_STYLE_ICONS[strokeStyle]}></sl-icon>
@@ -158,28 +167,28 @@ export class AoEdgeActionsGroup extends LitElementWw {
               .src=${ARROWHEAD_ICONS[arrowheads]}></sl-icon>
           </sl-button>
         </sl-tooltip>
-        <sl-menu
-          @sl-select=${(e: CustomEvent) =>
-            this._updateArrowheads(e.detail.item.value)}>
-          <sl-menu-item value="none">
-            <sl-icon slot="prefix" .src=${iconArrowNone}></sl-icon>
-            ${msg("None")}
-          </sl-menu-item>
-          <sl-menu-item value="forward">
-            <sl-icon slot="prefix" .src=${iconArrowForward}></sl-icon>
-            ${msg("Forward")}
-          </sl-menu-item>
-          <sl-menu-item value="reverse">
-            <sl-icon slot="prefix" .src=${iconArrowReverse}></sl-icon>
-            ${msg("Reverse")}
-          </sl-menu-item>
-          <sl-menu-item value="bidirectional">
-            <sl-icon slot="prefix" .src=${iconArrowBidirectional}></sl-icon>
-            ${msg("Bidirectional")}
-          </sl-menu-item>
+        <sl-menu @sl-select=${(e: CustomEvent) => this._onArrowheadsSelect(e)}>
+          ${ARROWHEAD_OPTIONS.map(
+            (option) =>
+              html`<sl-menu-item
+                type="checkbox"
+                value=${option}
+                ?checked=${option === arrowheads}>
+                <sl-icon
+                  slot="prefix"
+                  .src=${ARROWHEAD_ICONS[option]}></sl-icon>
+                ${arrowheadLabel(option)}
+              </sl-menu-item>`,
+          )}
         </sl-menu>
       </sl-dropdown>
     </sl-button-group>`;
+  }
+
+  private _onArrowheadsSelect(e: CustomEvent): void {
+    const item = e.detail.item as SlMenuItem;
+    item.checked = true;
+    this._updateArrowheads(item.value as ArrowheadOption);
   }
 
   private _updateArrowheads(option: ArrowheadOption): void {
@@ -191,6 +200,12 @@ export class AoEdgeActionsGroup extends LitElementWw {
     for (const id of this.selection.entries) {
       this.doc.updateEdgeStyle(id, markers);
     }
+  }
+
+  private _onStrokeStyleSelect(e: CustomEvent): void {
+    const item = e.detail.item as SlMenuItem;
+    item.checked = true;
+    this._updateEdgeStyle(item.value as StrokeStyle);
   }
 
   private _updateEdgeStyle(strokeStyle: StrokeStyle): void {

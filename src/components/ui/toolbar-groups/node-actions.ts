@@ -193,12 +193,13 @@ export class AoNodeActionsGroup extends LitElementWw {
             ${renderShapeIcon(node.style.shape)}
           </sl-button>
         </sl-tooltip>
-        <sl-menu
-          @sl-select=${(e: CustomEvent) =>
-            this._updateNodeShape(e.detail.item.value)}>
+        <sl-menu @sl-select=${(e: CustomEvent) => this._onShapeSelect(e)}>
           ${SHAPES.map(
             (shape) =>
-              html`<sl-menu-item value=${shape}>
+              html`<sl-menu-item
+                type="checkbox"
+                value=${shape}
+                ?checked=${shape === (node.style.shape ?? "rectangle")}>
                 <span slot="prefix">${renderShapeIcon(shape)}</span>
                 ${shapeLabel(shape)}
               </sl-menu-item>`,
@@ -225,9 +226,7 @@ export class AoNodeActionsGroup extends LitElementWw {
             <sl-icon label=${msg("Border")} .src=${iconBorder}></sl-icon>
           </sl-button>
         </sl-tooltip>
-        <sl-menu
-          @sl-select=${(e: CustomEvent) =>
-            this._updateNodeBorder(e.detail.item.value)}>
+        <sl-menu @sl-select=${(e: CustomEvent) => this._onBorderSelect(e)}>
           <sl-menu-label>${msg("Border width")}</sl-menu-label>
           <sl-range
             .value=${strokeWidth}
@@ -242,7 +241,10 @@ export class AoNodeActionsGroup extends LitElementWw {
           <sl-menu-label>${msg("Border type")}</sl-menu-label>
           ${STROKE_STYLES.map(
             (strokeStyle) =>
-              html`<sl-menu-item value="border-${strokeStyle}">
+              html`<sl-menu-item
+                type="checkbox"
+                value="border-${strokeStyle}"
+                ?checked=${strokeStyle === (node.style.strokeStyle ?? "solid")}>
                 <sl-icon
                   slot="prefix"
                   .src=${STROKE_STYLE_ICONS[strokeStyle]}></sl-icon>
@@ -274,6 +276,12 @@ export class AoNodeActionsGroup extends LitElementWw {
     }
   }
 
+  private _onShapeSelect(e: CustomEvent): void {
+    const item = e.detail.item as SlMenuItem;
+    item.checked = true;
+    this._updateNodeShape(item.value as NodeShape);
+  }
+
   private _updateNodeShape(shape: NodeShape): void {
     if (this.selection.isEmpty() || !this.selection.allOfSameKind()) {
       return;
@@ -284,7 +292,6 @@ export class AoNodeActionsGroup extends LitElementWw {
     }
   }
 
-
   private _updateNodeColor(color: string): void {
     if (this.selection.isEmpty() || !this.selection.allOfSameKind()) {
       return;
@@ -293,6 +300,12 @@ export class AoNodeActionsGroup extends LitElementWw {
     for (const id of this.selection.entries) {
       this.doc.updateNodeStyle(id, { fill: color });
     }
+  }
+
+  private _onBorderSelect(e: CustomEvent): void {
+    const item = e.detail.item as SlMenuItem;
+    item.checked = true;
+    this._updateNodeBorder(item.value);
   }
 
   private _updateNodeBorder(value: string): void {
@@ -308,7 +321,6 @@ export class AoNodeActionsGroup extends LitElementWw {
       }
     }
   }
-
 
   private _updateBorderColor(color: string): void {
     if (this.selection.isEmpty() || !this.selection.allOfSameKind()) {
