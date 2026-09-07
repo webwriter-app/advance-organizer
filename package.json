@@ -1,6 +1,6 @@
 {
   "name": "@webwriter/advance-organizer",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Create visual advance organizers to introduce new topics. Link concepts to further content that learners can open with a click.",
   "keywords": [
     "webwriter-widget",
@@ -57,6 +57,7 @@
   ],
   "license": "MIT",
   "author": "Constantin Birken",
+  "repository": "github:webwriter-app/advance-organizer",
   "scripts": {
     "prepublishOnly": "npx @webwriter/build",
     "dev": "npx @webwriter/build dev",

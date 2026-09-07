@@ -73,7 +73,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A visual advance organizer: a canvas of labeled boxes, connecting arrows and images\nthat gives learners an overview of a topic before they study it in detail.",
+          "description": "A visual advance organizer: a canvas of labeled boxes, connecting arrows and images\r\nthat gives learners an overview of a topic before they study it in detail.",
           "name": "WebwriterAdvanceOrganizer",
           "slots": [
             {
@@ -89,7 +89,7 @@
                 "text": "Node[]"
               },
               "default": "[]",
-              "description": "The nodes of the advance organizer. Each node has an `id` that edges refer to and that\nlinks it to the page with that `node-id`, a `position` and `dimension` in canvas\ncoordinates, a `label` and a `style`.",
+              "description": "The nodes of the advance organizer. Each node has an `id` that edges refer to and that\r\nlinks it to the page with that `node-id`, a `position` and `dimension` in canvas\r\ncoordinates, a `label` and a `style`.",
               "attribute": "nodes",
               "reflects": true
             },
@@ -100,7 +100,7 @@
                 "text": "Edge[]"
               },
               "default": "[]",
-              "description": "The edges of the advance organizer. Each edge refers to its `source` and `target`\nnode by `id`, anchored at a fixed side of the node (`sourcePosition`/`targetPosition`),\nand can carry a `label` and a `style` including arrow heads at either end.",
+              "description": "The edges of the advance organizer. Each edge refers to its `source` and `target`\r\nnode by `id`, anchored at a fixed side of the node (`sourcePosition`/`targetPosition`),\r\nand can carry a `label` and a `style` including arrow heads at either end.",
               "attribute": "edges",
               "reflects": true
             },
@@ -111,7 +111,7 @@
                 "text": "Image[]"
               },
               "default": "[]",
-              "description": "The images placed on the canvas. Each image has a `position` and `dimension` in canvas\ncoordinates and a `src` stored as a data URL.",
+              "description": "The images placed on the canvas. Each image has a `position` and `dimension` in canvas\r\ncoordinates and a `src` stored as a data URL.",
               "attribute": "images",
               "reflects": true
             },
@@ -119,7 +119,7 @@
               "kind": "field",
               "name": "_publishedDocument",
               "type": {
-                "text": "{\n    nodes: Node[];\n    edges: Edge[];\n    images: Image[];\n  } | undefined"
+                "text": "{\r\n    nodes: Node[];\r\n    edges: Edge[];\r\n    images: Image[];\r\n  } | undefined"
               },
               "privacy": "private"
             },
@@ -268,7 +268,7 @@
                 "text": "Node[]"
               },
               "default": "[]",
-              "description": "The nodes of the advance organizer. Each node has an `id` that edges refer to and that\nlinks it to the page with that `node-id`, a `position` and `dimension` in canvas\ncoordinates, a `label` and a `style`.",
+              "description": "The nodes of the advance organizer. Each node has an `id` that edges refer to and that\r\nlinks it to the page with that `node-id`, a `position` and `dimension` in canvas\r\ncoordinates, a `label` and a `style`.",
               "fieldName": "nodes"
             },
             {
@@ -277,7 +277,7 @@
                 "text": "Edge[]"
               },
               "default": "[]",
-              "description": "The edges of the advance organizer. Each edge refers to its `source` and `target`\nnode by `id`, anchored at a fixed side of the node (`sourcePosition`/`targetPosition`),\nand can carry a `label` and a `style` including arrow heads at either end.",
+              "description": "The edges of the advance organizer. Each edge refers to its `source` and `target`\r\nnode by `id`, anchored at a fixed side of the node (`sourcePosition`/`targetPosition`),\r\nand can carry a `label` and a `style` including arrow heads at either end.",
               "fieldName": "edges"
             },
             {
@@ -286,7 +286,7 @@
                 "text": "Image[]"
               },
               "default": "[]",
-              "description": "The images placed on the canvas. Each image has a `position` and `dimension` in canvas\ncoordinates and a `src` stored as a data URL.",
+              "description": "The images placed on the canvas. Each image has a `position` and `dimension` in canvas\r\ncoordinates and a `src` stored as a data URL.",
               "fieldName": "images"
             }
           ],

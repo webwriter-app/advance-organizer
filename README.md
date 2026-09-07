@@ -1,5 +1,5 @@
-# Advance Organizer (`@webwriter/advance-organizer@0.0.1`)
-[License: MIT](LICENSE) | Version: 0.0.1
+# Advance Organizer (`@webwriter/advance-organizer@1.0.0`)
+[License: MIT](LICENSE) | Version: 1.0.0
 
 Create visual advance organizers to introduce new topics. Link concepts to further content that learners can open with a click.
 
