@@ -7,6 +7,7 @@ import {
   NodeStyle,
   Point,
 } from "../../model/types";
+import { DEFAULT_BLACK } from "../../model/colors";
 import { getStrokeDashArray } from "./helper";
 import { renderLabel } from "./label";
 
@@ -84,7 +85,7 @@ function renderShape(
     <g
       class="shape"
       fill="${style.fill || "lightgray"}"
-      stroke="${style.stroke || "black"}"
+      stroke="${style.stroke || DEFAULT_BLACK}"
       stroke-width="${style.strokeWidth ?? 1}"
       stroke-dasharray="${getStrokeDashArray(style.strokeStyle, style.strokeWidth)}"
     >${shape}</g>`;

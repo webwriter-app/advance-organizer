@@ -8,6 +8,7 @@ import { SubscribeController } from "../../../state/subscribe";
 import { actionsStyles } from "./toolbar-actions.styles";
 import { Id, ImageStyle, StrokeStyle } from "../../../model/types";
 import { STROKE_STYLES, strokeStyleLabel } from "../../../model/labels";
+import { DEFAULT_BLACK } from "../../../model/colors";
 import { renderColorIcon, STROKE_STYLE_ICONS } from "./previews";
 import { localized, msg } from "@lit/localize";
 import { WwColorPicker } from "../color-picker";
@@ -68,7 +69,7 @@ export class AoImageActionsGroup extends LitElementWw {
     if (item?.kind !== "image") {
       return nothing;
     }
-    const stroke = item.style?.stroke || "#000000";
+    const stroke = item.style?.stroke || DEFAULT_BLACK;
     const strokeWidth = item.style?.strokeWidth ?? 0;
 
     return html`<sl-button-group label=${msg("Image edits")}>
@@ -109,9 +110,8 @@ export class AoImageActionsGroup extends LitElementWw {
               html`<sl-menu-item
                 type="checkbox"
                 value=${strokeStyle}
-                ?checked=${
-                  strokeStyle === (item.style?.strokeStyle ?? "solid")
-                }>
+                ?checked=${strokeStyle ===
+                (item.style?.strokeStyle ?? "solid")}>
                 <sl-icon
                   slot="prefix"
                   .src=${STROKE_STYLE_ICONS[strokeStyle]}></sl-icon>

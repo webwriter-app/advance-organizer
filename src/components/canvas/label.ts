@@ -1,5 +1,6 @@
 import { svg, type TemplateResult } from "lit";
 import { Dimension, Id, Label, Point } from "../../model/types";
+import { DEFAULT_BLACK } from "../../model/colors";
 
 export function renderLabel(
   id: Id,
@@ -41,7 +42,7 @@ export function renderLabel(
 
 function labelCss(label: Label): string {
   const parts: string[] = [];
-  if (label.color) parts.push(`color: ${label.color}`);
+  parts.push(`color: ${label.color || DEFAULT_BLACK}`);
   if (label.fontSize) parts.push(`font-size: ${label.fontSize}px`);
   if (label.bold) parts.push("font-weight: bold");
   if (label.italic) parts.push("font-style: italic");

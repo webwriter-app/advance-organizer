@@ -14,6 +14,7 @@ import {
   StrokeStyle,
 } from "../../../model/types";
 import { NODE_PRESETS, presetLabel, presetStyle } from "../../../model/presets";
+import { DEFAULT_BLACK } from "../../../model/colors";
 import {
   SHAPES,
   shapeLabel,
@@ -136,7 +137,10 @@ export class AoNodeActionsGroup extends LitElementWw {
 
     return html`<sl-button-group label=${msg("Concept edits")}>
       <sl-dropdown>
-        <sl-tooltip slot="trigger" tabindex="-1" content=${msg("Concept preset")}>
+        <sl-tooltip
+          slot="trigger"
+          tabindex="-1"
+          content=${msg("Concept preset")}>
           <sl-button size="small" caret>
             ${preset === CUSTOM
               ? html`<sl-icon
@@ -184,7 +188,7 @@ export class AoNodeActionsGroup extends LitElementWw {
 
   private _renderCustomActions(node: Node): TemplateResult {
     const fill = node.style.fill || "#ffffff";
-    const stroke = node.style.stroke || "#000000";
+    const stroke = node.style.stroke || DEFAULT_BLACK;
     const strokeWidth = node.style.strokeWidth ?? 1;
 
     return html`<sl-dropdown>

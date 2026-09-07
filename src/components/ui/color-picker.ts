@@ -4,6 +4,7 @@ import { property } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
 import { localized, msg } from "@lit/localize";
 import { colorPickerStyles } from "./color-picker.styles";
+import { DEFAULT_BLACK } from "../../model/colors";
 
 export interface ColorOption {
   readonly label: string;
@@ -15,7 +16,7 @@ export class WwColorPicker extends LitElementWw {
   // `--sl-color-*-600`, `gray-950` for black as fixed values
   static get COLORS(): readonly ColorOption[] {
     return [
-      { label: msg("Black"), color: "#131316" },
+      { label: msg("Black"), color: DEFAULT_BLACK },
       { label: msg("White"), color: "#ffffff" },
       { label: msg("Red"), color: "#dc2626" },
       { label: msg("Orange"), color: "#ea580c" },

@@ -1,5 +1,6 @@
 import { svg, type TemplateResult } from "lit";
 import { type Edge, type EdgeStyle, type Point } from "../../model/types";
+import { DEFAULT_BLACK } from "../../model/colors";
 import { DocumentController } from "../../state/document";
 import {
   getArrowPath,
@@ -61,7 +62,7 @@ function renderEdgeLine(
   end: Point,
   style: EdgeStyle,
 ): TemplateResult {
-  const color = style.stroke ?? "black";
+  const color = style.stroke ?? DEFAULT_BLACK;
   const strokeWidth = style.strokeWidth ?? 1;
   return svg`
     <line

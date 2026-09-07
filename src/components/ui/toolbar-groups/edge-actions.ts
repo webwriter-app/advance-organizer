@@ -12,6 +12,7 @@ import {
   EdgeStyle,
   StrokeStyle,
 } from "../../../model/types";
+import { DEFAULT_BLACK } from "../../../model/colors";
 import {
   ARROWHEAD_OPTIONS,
   arrowheadLabel,
@@ -108,7 +109,7 @@ export class AoEdgeActionsGroup extends LitElementWw {
     if (item?.kind !== "edge") {
       return nothing;
     }
-    const stroke = item.style.stroke || "#000000";
+    const stroke = item.style.stroke || DEFAULT_BLACK;
     const strokeWidth = item.style.strokeWidth ?? 1;
     const arrowheads = getArrowheadOption(item.style);
 

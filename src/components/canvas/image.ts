@@ -1,5 +1,6 @@
 import { svg, type TemplateResult } from "lit";
 import { Image } from "../../model/types";
+import { DEFAULT_BLACK } from "../../model/colors";
 import { getStrokeDashArray } from "./helper";
 
 export function renderImage(img: Image): TemplateResult {
@@ -32,7 +33,7 @@ export function renderImage(img: Image): TemplateResult {
         height="${img.dimension.height}"
         fill="none"
         pointer-events="none"
-        stroke="${img.style?.stroke || "#000000"}"
+        stroke="${img.style?.stroke || DEFAULT_BLACK}"
         stroke-width="${strokeWidth}"
         stroke-dasharray="${getStrokeDashArray(img.style?.strokeStyle, strokeWidth)}"
       />

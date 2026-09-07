@@ -7,6 +7,7 @@ import { html, nothing, PropertyValues, type TemplateResult } from "lit";
 import { SubscribeController } from "../../../state/subscribe";
 import { actionsStyles } from "./toolbar-actions.styles";
 import { Label } from "../../../model/types";
+import { DEFAULT_BLACK } from "../../../model/colors";
 import { renderColorIcon } from "./previews";
 import { localized, msg } from "@lit/localize";
 import { MOD_LABEL } from "../../../state/keyboard";
@@ -98,7 +99,7 @@ export class AoTextActionsGroup extends LitElementWw {
     const bold = labels.every((label) => label.bold);
     const italic = labels.every((label) => label.italic);
     const underline = labels.every((label) => label.underline);
-    const color = first.color || "#000000";
+    const color = first.color || DEFAULT_BLACK;
     const fontSize = first.fontSize ?? DEFAULT_FONT_SIZE;
 
     return html`<sl-button-group label=${msg("Text edits")}>
