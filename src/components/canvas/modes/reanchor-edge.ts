@@ -1,5 +1,5 @@
 import { Id, Point } from "../../../model/types";
-import { applyReanchorDom } from "../dom-sync";
+import { applyReanchorDom, restoreEdgeEndpointDom } from "../dom-sync";
 import { computeEdgePoints } from "../helper";
 import { findSnapTarget } from "../snap";
 import { ModeContext, ModeHandlers, ModeOf } from "./types";
@@ -79,7 +79,8 @@ export const reanchorEdgeHandlers: ModeHandlers<"reanchor-edge"> = {
       );
     }
   },
-  onCancel(_mode, ctx) {
+  onCancel(mode, ctx) {
     ctx.snap.clear(ctx.root);
+    restoreEdgeEndpointDom(ctx.root, ctx.doc, mode.edgeId, mode.endpoint);
   },
 };

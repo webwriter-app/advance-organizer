@@ -268,7 +268,6 @@ function updateEdgeLabelDom(
   labelFo.setAttribute("height", String(dimension.height));
 }
 
-
 export function applyRectangleSelectDom(
   root: ParentNode,
   bounds: Bounds,
@@ -295,4 +294,39 @@ export function applySelectionPreviewDom(root: ParentNode, ids: Set<Id>): void {
     const id = el.dataset["previewId"];
     el.setAttribute("visibility", id && ids.has(id) ? "visible" : "hidden");
   }
+}
+
+export function restoreItemsDom(
+  root: ParentNode,
+  doc: DocumentController,
+  ids: Iterable<Id>,
+): void {
+  for (const id of ids) {
+    const item = doc.get(id);
+    if (!item || (item.kind !== "node" && item.kind !== "image")) continue;
+    applyResizeDom(root, doc, id, item.position, item.dimension);
+  }
+}
+
+export function restoreEdgeEndpointDom(
+  root: ParentNode,
+  doc: DocumentController,
+  edgeId: Id,
+  endpoint: "source" | "target",
+): void {
+  const edge = doc.get(edgeId);
+  if (!edge || edge.kind !== "edge") return;
+  const source = doc.get(edge.source);
+  const target = doc.get(edge.target);
+  if (source?.kind !== "node" || target?.kind !== "node") return;
+
+  const { start, end } = computeEdgePoints(source, target, edge);
+  applyReanchorDom(
+    root,
+    doc,
+    edgeId,
+    endpoint,
+    endpoint === "source" ? start : end,
+    endpoint === "source" ? end : start,
+  );
 }

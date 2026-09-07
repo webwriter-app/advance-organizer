@@ -297,7 +297,8 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
     const canvas = this._canvasTarget(e);
     if (!canvas) return null;
     const path = e.composedPath();
-    return path[0] === this || path.includes(canvas) ? canvas : null;
+    if (path[0] === this || path.includes(canvas)) return canvas;
+    return e.key === "Escape" && canvas.drawingEdge ? canvas : null;
   }
 
   private _onCopy = (e: ClipboardEvent): void => {

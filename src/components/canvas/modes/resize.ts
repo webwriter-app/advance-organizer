@@ -1,5 +1,5 @@
 import { Dimension, Id, Point, ResizeHandle } from "../../../model/types";
-import { applyResizeDom } from "../dom-sync";
+import { applyResizeDom, restoreItemsDom } from "../dom-sync";
 import { HANDLE_CURSORS, MIN_NODE_SIZE } from "../helper";
 import { ModeContext, ModeHandlers, ModeOf } from "./types";
 
@@ -130,8 +130,9 @@ export const resizeHandlers: ModeHandlers<"resize"> = {
     );
     ctx.doc.resizeItem(mode.itemId, newPos, newDim);
   },
-  onCancel(_mode, ctx) {
+  onCancel(mode, ctx) {
     ctx.host.classList.remove("resizing");
     ctx.host.style.removeProperty("--ao-resize-cursor");
+    restoreItemsDom(ctx.root, ctx.doc, [mode.itemId]);
   },
 };

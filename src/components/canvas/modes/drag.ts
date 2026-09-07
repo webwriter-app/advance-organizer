@@ -1,5 +1,5 @@
 import { Id, Point } from "../../../model/types";
-import { applyDragDom } from "../dom-sync";
+import { applyDragDom, restoreItemsDom } from "../dom-sync";
 import { ModeContext, ModeHandlers, ModeOf } from "./types";
 
 export function beginDrag(e: PointerEvent, ctx: ModeContext): void {
@@ -44,5 +44,8 @@ export const dragHandlers: ModeHandlers<"drag"> = {
     if (pointer.x === mode.start.x && pointer.y === mode.start.y) return;
     const finalPositions = resolveDrag(mode, pointer, ctx.zoom.scale);
     ctx.doc.moveItems(finalPositions);
+  },
+  onCancel(mode, ctx) {
+    restoreItemsDom(ctx.root, ctx.doc, mode.startPositions.keys());
   },
 };
