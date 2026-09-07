@@ -69,6 +69,7 @@ export class WwContextMenu extends LitElementWw {
   override connectedCallback(): void {
     super.connectedCallback();
     this.addEventListener("pointerdown", this._onBackdropPointerDown);
+    this.addEventListener("wheel", this._onBackdropWheel);
     this.addEventListener("contextmenu", this._onBackdropContextMenu);
     this.addEventListener("keydown", this._onKeydown);
   }
@@ -76,6 +77,7 @@ export class WwContextMenu extends LitElementWw {
   override disconnectedCallback(): void {
     super.disconnectedCallback();
     this.removeEventListener("pointerdown", this._onBackdropPointerDown);
+    this.removeEventListener("wheel", this._onBackdropWheel);
     this.removeEventListener("contextmenu", this._onBackdropContextMenu);
     this.removeEventListener("keydown", this._onKeydown);
   }
@@ -122,7 +124,8 @@ export class WwContextMenu extends LitElementWw {
         auto-size="vertical"
         auto-size-padding="4"
         .anchor=${this._anchor}
-        @pointerdown=${(e: Event) => e.stopPropagation()}>
+        @pointerdown=${(e: Event) => e.stopPropagation()}
+        @wheel=${(e: Event) => e.stopPropagation()}>
         <sl-menu @sl-select=${this._handleMenuSelect}>
           <sl-menu-item id="cut" ?disabled=${this.selection.isEmpty()}>
             <sl-icon slot="prefix" .src=${iconCut}></sl-icon>
@@ -156,6 +159,10 @@ export class WwContextMenu extends LitElementWw {
   }
 
   private _onBackdropPointerDown = (): void => {
+    this._close();
+  };
+
+  private _onBackdropWheel = (): void => {
     this._close();
   };
 

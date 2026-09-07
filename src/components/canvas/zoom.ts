@@ -121,6 +121,20 @@ export class ZoomController implements ReactiveController {
     return true;
   }
 
+  private _isOverMenu(e: WheelEvent): boolean {
+    const path = e.composedPath();
+    if (!this._svg || path.includes(this._svg)) return false;
+    const widget = this._widget();
+    return !!widget && path[0] !== widget && path.includes(widget);
+  }
+
+  private _widget(): Element | null {
+    const canvasRoot = this._svg?.getRootNode();
+    const canvas = canvasRoot instanceof ShadowRoot ? canvasRoot.host : null;
+    const widgetRoot = canvas?.getRootNode();
+    return widgetRoot instanceof ShadowRoot ? widgetRoot.host : null;
+  }
+
   private _onWheel = (e: WheelEvent): void => {
     const rect = this._svg?.getBoundingClientRect();
     if (!rect || !this._panzoom) return;
@@ -131,6 +145,7 @@ export class ZoomController implements ReactiveController {
       e.clientY > rect.bottom
     )
       return;
+    if (this._isOverMenu(e)) return;
 
     e.preventDefault();
     e.stopPropagation();
