@@ -27,8 +27,8 @@
         <target>刪除</target>
       </trans-unit>
       <trans-unit id="saa987c09599e0f9a">
-        <source>Drop <x id="0" equiv-text="${this.imageCount}" /> images here</source>
-<target>將 <x id="0" equiv-text="${this.imageCount}" /> 張圖片拖到這裡</target></trans-unit>
+        <source>Drop <x id="0" equiv-text="${this.imageCount}"/> images here</source>
+<target>將 <x id="0" equiv-text="${this.imageCount}"/> 張圖片拖到這裡</target></trans-unit>
       <trans-unit id="sd6f0f760e3bb3148">
         <source>Drop 1 image here</source>
         <target>將 1 張圖片拖放至此</target>

@@ -27,8 +27,8 @@
         <target>삭제</target>
       </trans-unit>
       <trans-unit id="saa987c09599e0f9a">
-        <source>Drop <x id="0" equiv-text="${this.imageCount}" /> images here</source>
-<target>여기에 이미지 <x id="0" equiv-text="${this.imageCount}" />개 놓기</target></trans-unit>
+        <source>Drop <x id="0" equiv-text="${this.imageCount}"/> images here</source>
+<target>여기에 이미지 <x id="0" equiv-text="${this.imageCount}"/>개 놓기</target></trans-unit>
       <trans-unit id="sd6f0f760e3bb3148">
         <source>Drop 1 image here</source>
         <target>이미지 1개를 여기에 드래그하세요</target>
