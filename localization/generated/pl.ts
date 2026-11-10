@@ -2,7 +2,7 @@
     // Do not modify this file by hand!
     // Re-generate this file by running lit-localize
 
-    
+
     import {str} from '@lit/localize';
 
     /* eslint-disable no-irregular-whitespace */
@@ -12,6 +12,7 @@
       's0520016b18aadf60': `Dwukierunkowe`,
 's0bc31719aa7a8f43': `Wytnij`,
 's109991b0423f1512': `Fioletowy`,
+'s163eda8ddbb113ba': `Organizator`,
 's1c8cc3603762c768': `Powiększ i pomniejsz`,
 's236ae937cbcd6a39': `Powiększ`,
 's2470dafb1ae8a017': `Termin`,
@@ -37,6 +38,7 @@
 's669b18c6d2d9c95b': `Brak`,
 's6a7f201c8d3fdb35': `Działania pomocy`,
 's6baf78886c99db89': `Żółty`,
+'s781e64ea47044bd9': `Dodaj obraz`,
 's7fd3469f78111589': `Otwórz menu kontekstowe`,
 's81a0bc84b9a58af8': `Temat D`,
 's81a0bd84b9a58cab': `Temat E`,
@@ -59,10 +61,7 @@
 's9ff1de19feac1b7c': `Czerwony`,
 'sa30f1981fd1cd441': `Rozmiar czcionki`,
 'saa7d7cc808f0a35a': `Edytowanie pojęcia`,
-'saa987c09599e0f9a': str`Przeciągnij 
-          obrazy z 
-          ${0} tutaj
-        `,
+'saa987c09599e0f9a': str`Upuść tutaj ${0} obrazów`,
 'sabe465e6eb12f208': `Kolor obramowania`,
 'sabfeef1e4511a839': `Działania na stronie`,
 'sad17444d283ef2db': `Powiązana strona`,
@@ -95,4 +94,3 @@
 'sfac15b89e0668996': `Powiel`,
 'sfe31d1c784d29ef4': `Ciągła`,
     };
-  

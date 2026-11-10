@@ -2,7 +2,7 @@
     // Do not modify this file by hand!
     // Re-generate this file by running lit-localize
 
-    
+
     import {str} from '@lit/localize';
 
     /* eslint-disable no-irregular-whitespace */
@@ -12,6 +12,7 @@
       's0520016b18aadf60': `Bidirecțional`,
 's0bc31719aa7a8f43': `Tăiere`,
 's109991b0423f1512': `Violet`,
+'s163eda8ddbb113ba': `Organizator`,
 's1c8cc3603762c768': `Măriți și micșorați`,
 's236ae937cbcd6a39': `Mărire`,
 's2470dafb1ae8a017': `Termen`,
@@ -37,6 +38,7 @@
 's669b18c6d2d9c95b': `Niciuna`,
 's6a7f201c8d3fdb35': `Acțiuni de ajutor`,
 's6baf78886c99db89': `Galben`,
+'s781e64ea47044bd9': `Adaugă o imagine`,
 's7fd3469f78111589': `Deschide meniul contextual`,
 's81a0bc84b9a58af8': `Subiectul D`,
 's81a0bd84b9a58cab': `Subiectul E`,
@@ -59,10 +61,7 @@
 's9ff1de19feac1b7c': `Roșu`,
 'sa30f1981fd1cd441': `Dimensiunea fontului`,
 'saa7d7cc808f0a35a': `Modificări concept`,
-'saa987c09599e0f9a': str`Trage 
-          imaginile de pe 
-          ${0} aici
-        `,
+'saa987c09599e0f9a': str`Plasează aici ${0} imagini`,
 'sabe465e6eb12f208': `Culoarea chenarului`,
 'sabfeef1e4511a839': `Acțiuni pagină`,
 'sad17444d283ef2db': `Pagină asociată`,
@@ -95,4 +94,3 @@
 'sfac15b89e0668996': `Duplicare`,
 'sfe31d1c784d29ef4': `Continuu`,
     };
-  

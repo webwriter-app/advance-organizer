@@ -39,8 +39,8 @@ import { AoTextActionsGroup } from "../components/toolbar/toolbar-groups/text-ac
 import { AoHelpActionsGroup } from "../components/toolbar/toolbar-groups/help-actions";
 
 // @ts-ignore
-import LOCALIZE from "../../localization/generated";
-import { localized } from "@lit/localize";
+import type { MsgFn } from "@lit/localize";
+import { createLocalizer, effectiveLanguage, sourceMsg } from "../../localization/localizer";
 import { cache } from "lit/directives/cache.js";
 import { readData, writeData } from "../utils/data";
 
@@ -50,19 +50,31 @@ import { readData, writeData } from "../utils/data";
  *
  * @slot - The pages of the advance organizer, as `<webwriter-advance-organizer-page>` elements.
  */
-@localized()
+
 @customElement("webwriter-advance-organizer")
 export class WebwriterAdvanceOrganizer extends LitElementWw {
-  static dataType = "application/json";
-  readonly actions = WebwriterAdvanceOrganizer.actions;
-  static actions = {
-    addNode: { label: { _: "Add concept" }, group: "organizer", icon: "Add", intent: "default" },
-    addImage: { label: { _: "Add image" }, group: "organizer", icon: "Image", intent: "default" },
-  };
+  // Inherited language must not be reflected as an authored attribute.
+  static override properties = { lang: { attribute: false, noAccessor: true } };
+  override get lang(): string { return effectiveLanguage(this); }
+  override set lang(value: string) { this.setAttribute("lang", value); }
 
-  static optionGroups = {
-    organizer: { label: { _: "Organizer" }, collapsible: true, advanced: false },
-  };
+  static dataType = "application/json";
+  readonly actions = WebwriterAdvanceOrganizer.makeActions(sourceMsg);
+  private static makeActions(msg: MsgFn) {
+    return {
+        addNode: { label: { _: msg("Add concept") }, group: "organizer", icon: "Add", intent: "default" },
+        addImage: { label: { _: msg("Add image") }, group: "organizer", icon: "Image", intent: "default" },
+    };
+  }
+  static override actions = WebwriterAdvanceOrganizer.makeActions(sourceMsg);
+
+  private static makeOptionGroups(msg: MsgFn) {
+    return {
+        organizer: { label: { _: msg("Organizer") }, collapsible: true, advanced: false },
+    };
+  }
+  static optionGroups = WebwriterAdvanceOrganizer.makeOptionGroups(sourceMsg);
+  readonly optionGroups = WebwriterAdvanceOrganizer.makeOptionGroups(sourceMsg);
 
   /** @internal */
   @provide({
@@ -124,7 +136,11 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
   @query("ao-canvas")
   private accessor canvas!: AoCanvas | null;
 
-  protected override localize = LOCALIZE;
+  protected override localize = createLocalizer(this, () => {
+      Object.assign(this.actions, WebwriterAdvanceOrganizer.makeActions(this.msg));
+      Object.assign(this.optionGroups, WebwriterAdvanceOrganizer.makeOptionGroups(this.msg));
+  });
+  readonly msg = this.localize.msg;
 
   constructor() {
     super();

@@ -2,7 +2,7 @@
     // Do not modify this file by hand!
     // Re-generate this file by running lit-localize
 
-    
+
     import {str} from '@lit/localize';
 
     /* eslint-disable no-irregular-whitespace */
@@ -12,6 +12,7 @@
       's0520016b18aadf60': `Dviejų krypčių`,
 's0bc31719aa7a8f43': `Iškirpti`,
 's109991b0423f1512': `Violetinė`,
+'s163eda8ddbb113ba': `Tvarkyklė`,
 's1c8cc3603762c768': `Padidinti ir sumažinti`,
 's236ae937cbcd6a39': `Padidinti`,
 's2470dafb1ae8a017': `Terminas`,
@@ -37,6 +38,7 @@
 's669b18c6d2d9c95b': `Nėra`,
 's6a7f201c8d3fdb35': `Pagalbos veiksmai`,
 's6baf78886c99db89': `Geltona`,
+'s781e64ea47044bd9': `Pridėti vaizdą`,
 's7fd3469f78111589': `Atidaryti kontekstinį meniu`,
 's81a0bc84b9a58af8': `Tema D`,
 's81a0bd84b9a58cab': `Tema E`,
@@ -59,9 +61,7 @@
 's9ff1de19feac1b7c': `Raudona`,
 'sa30f1981fd1cd441': `Šrifto dydis`,
 'saa7d7cc808f0a35a': `Sąvokos redagavimas`,
-'saa987c09599e0f9a': str`Paleiskite 
-          ${0} paveikslėlius čia
-        `,
+'saa987c09599e0f9a': str`Nuvilkite čia vaizdus (skaičius: ${0})`,
 'sabe465e6eb12f208': `Apvado spalva`,
 'sabfeef1e4511a839': `Puslapio veiksmai`,
 'sad17444d283ef2db': `Susijęs puslapis`,
@@ -94,4 +94,3 @@
 'sfac15b89e0668996': `Duplikuoti`,
 'sfe31d1c784d29ef4': `Vienalytė`,
     };
-  

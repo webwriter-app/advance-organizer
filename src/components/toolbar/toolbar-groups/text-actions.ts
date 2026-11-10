@@ -1,3 +1,4 @@
+import { connectMessages } from "../../../../localization/localizer";
 import { consume } from "@lit/context";
 import { LitElementWw } from "@webwriter/lit";
 import { documentContext, selectionContext } from "../../../state/contexts";
@@ -9,7 +10,6 @@ import { actionsStyles } from "./toolbar-actions.styles";
 import { Label } from "../../../model/types";
 import { DEFAULT_BLACK } from "../../../model/colors";
 import { renderColorIcon } from "./previews";
-import { localized, msg } from "@lit/localize";
 import { MOD_LABEL } from "../../../state/keyboard";
 import { AoColorPicker } from "../../ui/color-picker";
 
@@ -30,8 +30,8 @@ import iconTextSize from "@tabler/icons/outline/text-size.svg";
 const FONT_SIZES: readonly number[] = [10, 12, 14, 16, 18, 24, 32, 48];
 const DEFAULT_FONT_SIZE = 18;
 
-@localized()
 export class AoTextActionsGroup extends LitElementWw {
+  protected readonly msg = connectMessages(this);
   @consume({ context: documentContext })
   accessor doc!: DocumentController;
 
@@ -102,35 +102,35 @@ export class AoTextActionsGroup extends LitElementWw {
     const color = first.color || DEFAULT_BLACK;
     const fontSize = first.fontSize ?? DEFAULT_FONT_SIZE;
 
-    return html`<sl-button-group label=${msg("Text edits")}>
-      <sl-tooltip content="${msg("Bold")} (${MOD_LABEL}+B)">
+    return html`<sl-button-group label=${this.msg("Text edits")}>
+      <sl-tooltip content="${this.msg("Bold")} (${MOD_LABEL}+B)">
         <sl-button
           size="small"
           class=${bold ? "active" : ""}
           @click=${() => this._updateLabelStyle({ bold: !bold })}>
-          <sl-icon label=${msg("Bold")} .src=${iconBold}></sl-icon>
+          <sl-icon label=${this.msg("Bold")} .src=${iconBold}></sl-icon>
         </sl-button>
       </sl-tooltip>
-      <sl-tooltip content="${msg("Italic")} (${MOD_LABEL}+I)">
+      <sl-tooltip content="${this.msg("Italic")} (${MOD_LABEL}+I)">
         <sl-button
           size="small"
           class=${italic ? "active" : ""}
           @click=${() => this._updateLabelStyle({ italic: !italic })}>
-          <sl-icon label=${msg("Italic")} .src=${iconItalic}></sl-icon>
+          <sl-icon label=${this.msg("Italic")} .src=${iconItalic}></sl-icon>
         </sl-button>
       </sl-tooltip>
-      <sl-tooltip content="${msg("Underline")} (${MOD_LABEL}+U)">
+      <sl-tooltip content="${this.msg("Underline")} (${MOD_LABEL}+U)">
         <sl-button
           size="small"
           class=${underline ? "active" : ""}
           @click=${() => this._updateLabelStyle({ underline: !underline })}>
-          <sl-icon label=${msg("Underline")} .src=${iconUnderline}></sl-icon>
+          <sl-icon label=${this.msg("Underline")} .src=${iconUnderline}></sl-icon>
         </sl-button>
       </sl-tooltip>
       <sl-dropdown>
-        <sl-tooltip slot="trigger" tabindex="-1" content=${msg("Text color")}>
+        <sl-tooltip slot="trigger" tabindex="-1" content=${this.msg("Text color")}>
           <sl-button size="small" caret>
-            ${renderColorIcon(iconLetterA, color, msg("Text color"))}
+            ${renderColorIcon(iconLetterA, color, this.msg("Text color"))}
           </sl-button>
         </sl-tooltip>
         <sl-menu class="colors">
@@ -141,9 +141,9 @@ export class AoTextActionsGroup extends LitElementWw {
         </sl-menu>
       </sl-dropdown>
       <sl-dropdown>
-        <sl-tooltip slot="trigger" tabindex="-1" content=${msg("Font size")}>
+        <sl-tooltip slot="trigger" tabindex="-1" content=${this.msg("Font size")}>
           <sl-button size="small" caret>
-            <sl-icon label=${msg("Font size")} .src=${iconTextSize}></sl-icon>
+            <sl-icon label=${this.msg("Font size")} .src=${iconTextSize}></sl-icon>
           </sl-button>
         </sl-tooltip>
         <sl-menu @sl-select=${(e: CustomEvent) => this._onFontSizeSelect(e)}>

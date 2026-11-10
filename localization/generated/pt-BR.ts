@@ -2,7 +2,7 @@
     // Do not modify this file by hand!
     // Re-generate this file by running lit-localize
 
-    
+
     import {str} from '@lit/localize';
 
     /* eslint-disable no-irregular-whitespace */
@@ -12,6 +12,7 @@
       's0520016b18aadf60': `Bidirecional`,
 's0bc31719aa7a8f43': `Cortar`,
 's109991b0423f1512': `Violeta`,
+'s163eda8ddbb113ba': `Organizador`,
 's1c8cc3603762c768': `Aumentar e diminuir o zoom`,
 's236ae937cbcd6a39': `Ampliar`,
 's2470dafb1ae8a017': `Termo`,
@@ -37,6 +38,7 @@
 's669b18c6d2d9c95b': `Nenhuma`,
 's6a7f201c8d3fdb35': `Ações de ajuda`,
 's6baf78886c99db89': `Amarelo`,
+'s781e64ea47044bd9': `Adicionar imagem`,
 's7fd3469f78111589': `Abrir menu de contexto`,
 's81a0bc84b9a58af8': `Tema D`,
 's81a0bd84b9a58cab': `Tema E`,
@@ -59,10 +61,7 @@
 's9ff1de19feac1b7c': `Vermelho`,
 'sa30f1981fd1cd441': `Tamanho da fonte`,
 'saa7d7cc808f0a35a': `Edições de conceito`,
-'saa987c09599e0f9a': str`Arraste 
-          imagens do 
-          ${0} para cá
-        `,
+'saa987c09599e0f9a': str`Solte ${0} imagens aqui`,
 'sabe465e6eb12f208': `Cor da borda`,
 'sabfeef1e4511a839': `Ações da página`,
 'sad17444d283ef2db': `Página relacionada`,
@@ -95,4 +94,3 @@
 'sfac15b89e0668996': `Duplicar`,
 'sfe31d1c784d29ef4': `Sólido`,
     };
-  

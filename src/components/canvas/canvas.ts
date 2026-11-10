@@ -1,3 +1,4 @@
+import { connectMessages } from "../../../localization/localizer";
 import { LitElementWw } from "@webwriter/lit";
 import { html, nothing, PropertyValues, type TemplateResult } from "lit";
 import { labelStyles, canvasStyles } from "./canvas.styles";
@@ -52,10 +53,9 @@ import {
 import { findNearestAnchor, SnapHighlighter } from "./snap";
 import { LabelEditController, EDITOR_CLASS } from "./label-edit";
 import { LongPressController } from "./long-press";
-import { localized, msg } from "@lit/localize";
 
-@localized()
 export class AoCanvas extends LitElementWw {
+  readonly msg = connectMessages(this);
   static override scopedElements = {
     "ao-zoom-controls": AoZoomControls,
     "ao-drag-overlay": AoDragOverlay,
@@ -289,7 +289,7 @@ export class AoCanvas extends LitElementWw {
       </ao-zoom-controls>
       ${this.editable && this.doc.isEmpty()
         ? html`<div class="empty-hint">
-            ${msg("Add concepts via the toolbar above.")}
+            ${this.msg("Add concepts via the toolbar above.")}
           </div>`
         : nothing}
       ${this._dropController.imageCount === null

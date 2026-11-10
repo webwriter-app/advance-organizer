@@ -1,15 +1,16 @@
+import { connectMessages } from "../../../localization/localizer";
 import { LitElementWw } from "@webwriter/lit";
 import { dragOverlayStyles } from "./drag-overlay.styles";
 import { html, type TemplateResult } from "lit";
 import { property } from "lit/decorators.js";
-import { localized, msg, str } from "@lit/localize";
+import { str } from "@lit/localize";
 
 import SlIcon from "@shoelace-style/shoelace/dist/components/icon/icon.component.js";
 
 import photoPlus from "@tabler/icons/outline/photo-plus.svg";
 
-@localized()
 export class AoDragOverlay extends LitElementWw {
+  protected readonly msg = connectMessages(this);
   static override scopedElements = {
     "sl-icon": SlIcon,
   };
@@ -24,8 +25,8 @@ export class AoDragOverlay extends LitElementWw {
       <div class="border">
         <sl-icon .src=${photoPlus}></sl-icon>
         ${this.imageCount > 1
-          ? msg(str`Drop ${this.imageCount} images here`)
-          : msg("Drop 1 image here")}
+          ? this.msg(str`Drop ${this.imageCount} images here`)
+          : this.msg("Drop 1 image here")}
       </div>
     </div>`;
   }

@@ -1,9 +1,9 @@
+import { connectMessages } from "../../../../localization/localizer";
 import { LitElementWw } from "@webwriter/lit";
 import { SelectionController } from "../../../state/selection";
 import { css, html, type TemplateResult } from "lit";
 import { actionsStyles } from "./toolbar-actions.styles";
 import { MOD_LABEL } from "../../../state/keyboard";
-import { localized, msg } from "@lit/localize";
 
 import SlButton from "@shoelace-style/shoelace/dist/components/button/button.component.js";
 import SlButtonGroup from "@shoelace-style/shoelace/dist/components/button-group/button-group.component.js";
@@ -26,8 +26,8 @@ const BUTTON_HIGHLIGHT: Record<MousePart, string> = {
 const WHEEL_HIGHLIGHT =
   "M12 4a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1 -3 0v-3a1.5 1.5 0 0 1 1.5 -1.5z";
 
-@localized()
 export class AoHelpActionsGroup extends LitElementWw {
+  protected readonly msg = connectMessages(this);
   static override scopedElements = {
     "sl-button": SlButton,
     "sl-button-group": SlButtonGroup,
@@ -103,28 +103,28 @@ export class AoHelpActionsGroup extends LitElementWw {
   }
 
   protected override render(): TemplateResult {
-    return html`<sl-button-group label=${msg("Help actions")}>
+    return html`<sl-button-group label=${this.msg("Help actions")}>
       <sl-dropdown placement="bottom-end">
-        <sl-tooltip slot="trigger" content=${msg("Help")}>
+        <sl-tooltip slot="trigger" content=${this.msg("Help")}>
           <sl-button size="small">
-            <sl-icon label=${msg("Help")} .src=${iconHelp}></sl-icon>
+            <sl-icon label=${this.msg("Help")} .src=${iconHelp}></sl-icon>
           </sl-button>
         </sl-tooltip>
         <sl-menu>
           <dl>
-            ${this._gesture([this._mouse("left")], msg("Select an element"))}
+            ${this._gesture([this._mouse("left")], this.msg("Select an element"))}
             ${this._gesture(
               [this._mouse("left"), this._icon(iconDrag)],
-              msg("Move the selection"),
+              this.msg("Move the selection"),
             )}
-            ${this._gesture([this._mouse("right")], msg("Open context menu"))}
+            ${this._gesture([this._mouse("right")], this.msg("Open context menu"))}
             ${this._gesture(
               [this._mouse("wheel"), this._icon(iconDrag)],
-              msg("Pan the canvas"),
+              this.msg("Pan the canvas"),
             )}
             ${this._gesture(
               [this._key(MOD_LABEL), this._mouse("wheel")],
-              msg("Zoom in and out"),
+              this.msg("Zoom in and out"),
             )}
           </dl>
         </sl-menu>

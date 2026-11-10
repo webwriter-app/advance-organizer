@@ -1,4 +1,5 @@
-<xliff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 http://docs.oasis-open.org/xliff/v1.2/os/xliff-core-1.2-strict.xsd" xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 http://docs.oasis-open.org/xliff/v1.2/os/xliff-core-1.2-strict.xsd" version="1.2">
   <file original="lit-localize-inputs" datatype="plaintext" source-language="en" target-language="ar">
     <body>
       <trans-unit id="s0bc31719aa7a8f43">
@@ -26,14 +27,8 @@
         <target>حذف</target>
       </trans-unit>
       <trans-unit id="saa987c09599e0f9a">
-        <source>Drop 
-          <x id="0" equiv-text="${this.imageCount}"/> images here
-        </source>
-        <target>سحب 
-          صور 
-          <x id="0" equiv-text="${this.imageCount}"/> إلى هنا
-        </target>
-      </trans-unit>
+        <source>Drop <x id="0" equiv-text="${this.imageCount}" /> images here</source>
+<target>أفلِت الصور هنا (العدد: <x id="0" equiv-text="${this.imageCount}" />)</target></trans-unit>
       <trans-unit id="sd6f0f760e3bb3148">
         <source>Drop 1 image here</source>
         <target>اسقط صورة واحدة هنا</target>
@@ -334,6 +329,12 @@
         <source>Topic E</source>
         <target>الموضوع (هـ)</target>
       </trans-unit>
-    </body>
+    <trans-unit id="s781e64ea47044bd9">
+  <source>Add image</source>
+<target>إضافة صورة</target></trans-unit>
+<trans-unit id="s163eda8ddbb113ba">
+  <source>Organizer</source>
+<target>منظّم المفاهيم</target></trans-unit>
+</body>
   </file>
 </xliff>

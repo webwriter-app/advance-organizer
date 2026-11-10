@@ -1,8 +1,8 @@
+import { connectMessages } from "../../../localization/localizer";
 import { LitElementWw } from "@webwriter/lit";
 import { contextMenuStyles } from "./context-menu.styles";
 import { html, PropertyValues, type TemplateResult } from "lit";
 import { property, query } from "lit/decorators.js";
-import { localized, msg } from "@lit/localize";
 
 import SlMenu from "@shoelace-style/shoelace/dist/components/menu/menu.component.js";
 import SlMenuItem from "@shoelace-style/shoelace/dist/components/menu-item/menu-item.component.js";
@@ -30,8 +30,8 @@ import iconPaste from "@tabler/icons/outline/clipboard.svg";
 import iconDuplicate from "@tabler/icons/outline/copy-plus.svg";
 import iconDelete from "@tabler/icons/outline/trash.svg";
 
-@localized()
 export class AoContextMenu extends LitElementWw {
+  protected readonly msg = connectMessages(this);
   @consume({ context: documentContext })
   accessor doc!: DocumentController;
 
@@ -129,29 +129,29 @@ export class AoContextMenu extends LitElementWw {
         <sl-menu @sl-select=${this._handleMenuSelect}>
           <sl-menu-item id="cut" ?disabled=${this.selection.isEmpty()}>
             <sl-icon slot="prefix" .src=${iconCut}></sl-icon>
-            ${msg("Cut")}
+            ${this.msg("Cut")}
             <span slot="suffix" class="shortcut">${MOD_LABEL}+X</span>
           </sl-menu-item>
           <sl-menu-item id="copy" ?disabled=${this.selection.isEmpty()}>
             <sl-icon slot="prefix" .src=${iconCopy}></sl-icon>
-            ${msg("Copy")}
+            ${this.msg("Copy")}
             <span slot="suffix" class="shortcut">${MOD_LABEL}+C</span>
           </sl-menu-item>
           <sl-menu-item id="paste">
             <sl-icon slot="prefix" .src=${iconPaste}></sl-icon>
-            ${msg("Paste")}
+            ${this.msg("Paste")}
             <span slot="suffix" class="shortcut">${MOD_LABEL}+V</span>
           </sl-menu-item>
           <sl-divider></sl-divider>
           <sl-menu-item id="duplicate" ?disabled=${this.selection.isEmpty()}>
             <sl-icon slot="prefix" .src=${iconDuplicate}></sl-icon>
-            ${msg("Duplicate")}
+            ${this.msg("Duplicate")}
             <span slot="suffix" class="shortcut">${MOD_LABEL}+D</span>
           </sl-menu-item>
           <sl-menu-item id="delete" ?disabled=${this.selection.isEmpty()}>
             <sl-icon slot="prefix" .src=${iconDelete}></sl-icon>
-            ${msg("Delete")}
-            <span slot="suffix" class="shortcut">${msg("Del")}</span>
+            ${this.msg("Delete")}
+            <span slot="suffix" class="shortcut">${this.msg("Del")}</span>
           </sl-menu-item>
         </sl-menu>
       </sl-popup>
