@@ -2,7 +2,7 @@
     // Do not modify this file by hand!
     // Re-generate this file by running lit-localize
 
-    
+
     import {str} from '@lit/localize';
 
     /* eslint-disable no-irregular-whitespace */
@@ -12,6 +12,7 @@
       's0520016b18aadf60': `양방향`,
 's0bc31719aa7a8f43': `잘라내기`,
 's109991b0423f1512': `보라`,
+'s163eda8ddbb113ba': `개념 정리`,
 's1c8cc3603762c768': `확대 및 축소`,
 's236ae937cbcd6a39': `확대`,
 's2470dafb1ae8a017': `용어`,
@@ -37,6 +38,7 @@
 's669b18c6d2d9c95b': `없음`,
 's6a7f201c8d3fdb35': `도움말 동작`,
 's6baf78886c99db89': `노랑`,
+'s781e64ea47044bd9': `이미지 추가`,
 's7fd3469f78111589': `컨텍스트 메뉴 열기`,
 's81a0bc84b9a58af8': `주제 D`,
 's81a0bd84b9a58cab': `주제 E`,
@@ -59,9 +61,7 @@
 's9ff1de19feac1b7c': `빨강`,
 'sa30f1981fd1cd441': `글꼴 크기`,
 'saa7d7cc808f0a35a': `개념 편집`,
-'saa987c09599e0f9a': str`여기에 
-          ${0} 이미지를 드래그 앤 드롭하세요
-        `,
+'saa987c09599e0f9a': str`여기에 이미지 ${0}개 놓기`,
 'sabe465e6eb12f208': `테두리 색상`,
 'sabfeef1e4511a839': `페이지 작업`,
 'sad17444d283ef2db': `연결된 페이지`,
@@ -94,4 +94,3 @@
 'sfac15b89e0668996': `복제`,
 'sfe31d1c784d29ef4': `실선`,
     };
-  

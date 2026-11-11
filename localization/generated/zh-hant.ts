@@ -2,7 +2,7 @@
     // Do not modify this file by hand!
     // Re-generate this file by running lit-localize
 
-    
+
     import {str} from '@lit/localize';
 
     /* eslint-disable no-irregular-whitespace */
@@ -12,6 +12,7 @@
       's0520016b18aadf60': `雙向`,
 's0bc31719aa7a8f43': `剪下`,
 's109991b0423f1512': `紫色`,
+'s163eda8ddbb113ba': `概念組織圖`,
 's1c8cc3603762c768': `放大與縮小`,
 's236ae937cbcd6a39': `縮小`,
 's2470dafb1ae8a017': `術語`,
@@ -37,6 +38,7 @@
 's669b18c6d2d9c95b': `無`,
 's6a7f201c8d3fdb35': `操作說明`,
 's6baf78886c99db89': `黃色`,
+'s781e64ea47044bd9': `新增圖片`,
 's7fd3469f78111589': `開啟快顯選單`,
 's81a0bc84b9a58af8': `主題 D`,
 's81a0bd84b9a58cab': `主題 E`,
@@ -59,9 +61,7 @@
 's9ff1de19feac1b7c': `紅色`,
 'sa30f1981fd1cd441': `字體大小`,
 'saa7d7cc808f0a35a': `概念編輯`,
-'saa987c09599e0f9a': str`將 
-          ${0} 圖片拖放至此
-        `,
+'saa987c09599e0f9a': str`將 ${0} 張圖片拖到這裡`,
 'sabe465e6eb12f208': `邊框顏色`,
 'sabfeef1e4511a839': `頁面操作`,
 'sad17444d283ef2db': `關聯頁面`,
@@ -94,4 +94,3 @@
 'sfac15b89e0668996': `複製`,
 'sfe31d1c784d29ef4': `實線`,
     };
-  

@@ -1,3 +1,4 @@
+import { connectMessages } from "../../../../localization/localizer";
 import { consume } from "@lit/context";
 import { LitElementWw } from "@webwriter/lit";
 import { documentContext, selectionContext } from "../../../state/contexts";
@@ -27,7 +28,6 @@ import {
   renderShapeIcon,
   STROKE_STYLE_ICONS,
 } from "./previews";
-import { localized, msg } from "@lit/localize";
 import { AoColorPicker } from "../../ui/color-picker";
 
 import SlButton from "@shoelace-style/shoelace/dist/components/button/button.component.js";
@@ -47,8 +47,8 @@ import iconCustom from "@tabler/icons/outline/adjustments.svg";
 
 const CUSTOM = "custom";
 
-@localized()
 export class AoNodeActionsGroup extends LitElementWw {
+  protected readonly msg = connectMessages(this);
   @consume({ context: documentContext })
   accessor doc!: DocumentController;
 
@@ -135,16 +135,16 @@ export class AoNodeActionsGroup extends LitElementWw {
 
     const preset = this._sharedPreset(nodes);
 
-    return html`<sl-button-group label=${msg("Concept edits")}>
+    return html`<sl-button-group label=${this.msg("Concept edits")}>
       <sl-dropdown>
         <sl-tooltip
           slot="trigger"
           tabindex="-1"
-          content=${msg("Concept preset")}>
+          content=${this.msg("Concept preset")}>
           <sl-button size="small" caret>
             ${preset === CUSTOM
               ? html`<sl-icon
-                  label=${msg("Concept preset")}
+                  label=${this.msg("Concept preset")}
                   .src=${iconCustom}></sl-icon>`
               : renderShapePreview(first.style)}
           </sl-button>
@@ -159,7 +159,7 @@ export class AoNodeActionsGroup extends LitElementWw {
             value=${CUSTOM}
             ?checked=${preset === CUSTOM}>
             <sl-icon slot="prefix" .src=${iconCustom}></sl-icon>
-            ${msg("Custom")}
+            ${this.msg("Custom")}
           </sl-menu-item>
         </sl-menu>
       </sl-dropdown>
@@ -175,7 +175,7 @@ export class AoNodeActionsGroup extends LitElementWw {
           value=${preset.id}
           ?checked=${selected === preset.id}>
           <span slot="prefix">${renderShapePreview(preset.style)}</span>
-          ${presetLabel(preset.id)}
+          ${presetLabel(preset.id, this.msg)}
         </sl-menu-item>`,
     )}`;
   }
@@ -192,7 +192,7 @@ export class AoNodeActionsGroup extends LitElementWw {
     const strokeWidth = node.style.strokeWidth ?? 1;
 
     return html`<sl-dropdown>
-        <sl-tooltip slot="trigger" tabindex="-1" content=${msg("Shape")}>
+        <sl-tooltip slot="trigger" tabindex="-1" content=${this.msg("Shape")}>
           <sl-button size="small" caret>
             ${renderShapeIcon(node.style.shape)}
           </sl-button>
@@ -205,15 +205,15 @@ export class AoNodeActionsGroup extends LitElementWw {
                 value=${shape}
                 ?checked=${shape === (node.style.shape ?? "rectangle")}>
                 <span slot="prefix">${renderShapeIcon(shape)}</span>
-                ${shapeLabel(shape)}
+                ${shapeLabel(shape, this.msg)}
               </sl-menu-item>`,
           )}
         </sl-menu>
       </sl-dropdown>
       <sl-dropdown>
-        <sl-tooltip slot="trigger" tabindex="-1" content=${msg("Fill")}>
+        <sl-tooltip slot="trigger" tabindex="-1" content=${this.msg("Fill")}>
           <sl-button size="small" caret>
-            ${renderColorIcon(iconFill, fill, msg("Fill"))}
+            ${renderColorIcon(iconFill, fill, this.msg("Fill"))}
           </sl-button>
         </sl-tooltip>
         <sl-menu class="colors">
@@ -225,13 +225,13 @@ export class AoNodeActionsGroup extends LitElementWw {
         </sl-menu>
       </sl-dropdown>
       <sl-dropdown>
-        <sl-tooltip slot="trigger" tabindex="-1" content=${msg("Border")}>
+        <sl-tooltip slot="trigger" tabindex="-1" content=${this.msg("Border")}>
           <sl-button size="small" caret>
-            <sl-icon label=${msg("Border")} .src=${iconBorder}></sl-icon>
+            <sl-icon label=${this.msg("Border")} .src=${iconBorder}></sl-icon>
           </sl-button>
         </sl-tooltip>
         <sl-menu @sl-select=${(e: CustomEvent) => this._onBorderSelect(e)}>
-          <sl-menu-label>${msg("Border width")}</sl-menu-label>
+          <sl-menu-label>${this.msg("Border width")}</sl-menu-label>
           <sl-range
             .value=${strokeWidth}
             min="0"
@@ -242,7 +242,7 @@ export class AoNodeActionsGroup extends LitElementWw {
               }
             }}></sl-range>
           <sl-divider></sl-divider>
-          <sl-menu-label>${msg("Border type")}</sl-menu-label>
+          <sl-menu-label>${this.msg("Border type")}</sl-menu-label>
           ${STROKE_STYLES.map(
             (strokeStyle) =>
               html`<sl-menu-item
@@ -252,11 +252,11 @@ export class AoNodeActionsGroup extends LitElementWw {
                 <sl-icon
                   slot="prefix"
                   .src=${STROKE_STYLE_ICONS[strokeStyle]}></sl-icon>
-                ${strokeStyleLabel(strokeStyle)}
+                ${strokeStyleLabel(strokeStyle, this.msg)}
               </sl-menu-item>`,
           )}
           <sl-divider></sl-divider>
-          <sl-menu-label>${msg("Border color")}</sl-menu-label>
+          <sl-menu-label>${this.msg("Border color")}</sl-menu-label>
           <ao-color-picker
             .value=${stroke}
             @input=${(e: CustomEvent<string>) =>
