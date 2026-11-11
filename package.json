@@ -123,7 +123,16 @@
     "widget-lang-si",
     "widget-lang-ml",
     "widget-lang-ps",
-    "widget-lang-my"
+    "widget-lang-my",
+    "widget-lang-yue-Hans",
+    "widget-lang-yue-Hant",
+    "widget-lang-kmr",
+    "widget-lang-kmr-Latn",
+    "widget-lang-kmr-Arab",
+    "widget-lang-ckb",
+    "widget-lang-ckb-Arab",
+    "widget-lang-af-ZA",
+    "widget-lang-af-NA"
   ],
   "license": "MIT",
   "author": "Constantin Birken",

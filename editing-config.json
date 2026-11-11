@@ -105,7 +105,16 @@
       "si": "නව මාතෘකා හඳුන්වාදීමට දෘශ්‍ය පූර්ව සංවිධායක සාදන්න. ඉගෙනුම්කරුවන්ට එක් ක්ලික් කිරීමකින් විවෘත කළ හැකි අමතර අන්තර්ගතයට සංකල්ප සම්බන්ධ කරන්න.",
       "ml": "പുതിയ വിഷയങ്ങൾ അവതരിപ്പിക്കാൻ ദൃശ്യമായ മുൻകൂർ സംഘാടകർ സൃഷ്ടിക്കുക. പഠിതാക്കൾക്ക് ഒരു ക്ലിക്കിൽ തുറക്കാവുന്ന കൂടുതൽ ഉള്ളടക്കത്തിലേക്ക് ആശയങ്ങളെ ബന്ധിപ്പിക്കുക.",
       "ps": "د نویو موضوعاتو د پېژندنې لپاره لیدیز مخکیني تنظیموونکي جوړ کړئ. مفکورې له اضافي منځپانګې سره ونښلوئ چې زده‌کوونکي یې په یوه کلیک پرانیستلی شي.",
-      "my": "အကြောင်းအရာအသစ်များကို မိတ်ဆက်ရန် မြင်သာသော ကြိုတင်စီစဉ်မှုများကို ဖန်တီးပါ။ သင်ယူသူများက တစ်ချက်နှိပ်ရုံဖြင့် ဖွင့်နိုင်သည့် ထပ်ဆောင်းအကြောင်းအရာနှင့် အယူအဆများကို ချိတ်ဆက်ပါ။"
+      "my": "အကြောင်းအရာအသစ်များကို မိတ်ဆက်ရန် မြင်သာသော ကြိုတင်စီစဉ်မှုများကို ဖန်တီးပါ။ သင်ယူသူများက တစ်ချက်နှိပ်ရုံဖြင့် ဖွင့်နိုင်သည့် ထပ်ဆောင်းအကြောင်းအရာနှင့် အယူအဆများကို ချိတ်ဆက်ပါ။",
+      "yue-Hans": "制作视觉化预先组织图，介绍新课题。将概念连结到延伸内容，学习者可以按一下开启。",
+      "yue-Hant": "製作視覺化預先組織圖，介紹新課題。將概念連結到延伸內容，學習者可以按一下開啟。",
+      "kmr": "Ji bo danasîna mijarên nû, rêxistinên pêşîn ên dîtbar çêbikin. Têgehên bi naveroka zêdetir ve girêdin ku xwendekar bi klîkekê dikarin vekin.",
+      "kmr-Latn": "Ji bo danasîna mijarên nû, rêxistinên pêşîn ên dîtbar çêbikin. Têgehên bi naveroka zêdetir ve girêdin ku xwendekar bi klîkekê dikarin vekin.",
+      "kmr-Arab": "ژ بۆ داناسینا مژارێن نوو, رێخستنێن پێشین ئێن دیتبار چێبکن. تێگەهێن ب ناڤەرۆکا زێدەتر ڤە گرێدن کو خوەندەکار ب کلیکەکێ دکارن ڤەکن.",
+      "ckb": "ڕێکخەری پێشوەختەی بینراو دروست بکە بۆ ناساندنی بابەتە نوێیەکان. چەمکەکان بە ناوەڕۆکی زیاترەوە ببەستەوە کە فێرخواز دەتوانێت بە کرتەیەک بیکاتەوە.",
+      "ckb-Arab": "ڕێکخەری پێشوەختەی بینراو دروست بکە بۆ ناساندنی بابەتە نوێیەکان. چەمکەکان بە ناوەڕۆکی زیاترەوە ببەستەوە کە فێرخواز دەتوانێت بە کرتەیەک بیکاتەوە.",
+      "af-ZA": "Skep visuele vooraforganiseerders om nuwe onderwerpe bekend te stel. Koppel begrippe aan verdere inhoud wat leerders met ’n klik kan oopmaak.",
+      "af-NA": "Skep visuele vooraforganiseerders om nuwe onderwerpe bekend te stel. Koppel begrippe aan verdere inhoud wat leerders met ’n klik kan oopmaak."
     },
     "label": {
       "_": "Advance Organizer",
@@ -210,7 +219,16 @@
       "si": "පූර්ව සංවිධායක",
       "ml": "മുൻകൂർ സംഘാടകൻ",
       "ps": "مخکینی تنظیموونکی",
-      "my": "ကြိုတင်စီစဉ်သူ"
+      "my": "ကြိုတင်စီစဉ်သူ",
+      "yue-Hans": "预先组织图",
+      "yue-Hant": "預先組織圖",
+      "kmr": "Rêxistina pêşîn",
+      "kmr-Latn": "Rêxistina pêşîn",
+      "kmr-Arab": "رێخستنا پێشین",
+      "ckb": "پێشکەشکاری پێشوەختە",
+      "ckb-Arab": "پێشکەشکاری پێشوەختە",
+      "af-ZA": "Vooraforganiseerder",
+      "af-NA": "Vooraforganiseerder"
     }
   },
   "./widgets/webwriter-advance-organizer": {
@@ -317,7 +335,16 @@
       "si": "පූර්ව සංවිධායක",
       "ml": "മുൻകൂർ സംഘാടകൻ",
       "ps": "مخکینی تنظیموونکی",
-      "my": "ကြိုတင်စီစဉ်သူ"
+      "my": "ကြိုတင်စီစဉ်သူ",
+      "yue-Hans": "预先组织图",
+      "yue-Hant": "預先組織圖",
+      "kmr": "Rêxistina pêşîn",
+      "kmr-Latn": "Rêxistina pêşîn",
+      "kmr-Arab": "رێخستنا پێشین",
+      "ckb": "پێشکەشکاری پێشوەختە",
+      "ckb-Arab": "پێشکەشکاری پێشوەختە",
+      "af-ZA": "Vooraforganiseerder",
+      "af-NA": "Vooraforganiseerder"
     }
   },
   "./widgets/webwriter-advance-organizer-page": {
@@ -424,7 +451,16 @@
       "si": "පූර්ව සංවිධායක පිටුව",
       "ml": "മുൻകൂർ സംഘാടക പേജ്",
       "ps": "د مخکیني تنظیموونکي پاڼه",
-      "my": "ကြိုတင်စီစဉ်သူ စာမျက်နှာ"
+      "my": "ကြိုတင်စီစဉ်သူ စာမျက်နှာ",
+      "yue-Hans": "预先组织图页面",
+      "yue-Hant": "預先組織圖頁面",
+      "kmr": "Rûpela Rêxistina pêşîn",
+      "kmr-Latn": "Rûpela Rêxistina pêşîn",
+      "kmr-Arab": "رووپەلا رێخستنا پێشین",
+      "ckb": "پەڕەی پێشکەشکاری پێشوەختە",
+      "ckb-Arab": "پەڕەی پێشکەشکاری پێشوەختە",
+      "af-ZA": "Bladsy vir vooraforganiseerder",
+      "af-NA": "Bladsy vir vooraforganiseerder"
     }
   }
 }
