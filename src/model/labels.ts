@@ -1,4 +1,5 @@
-import { msg } from "@lit/localize";
+import type { MsgFn } from "@lit/localize";
+import { sourceMsg } from "../../localization/localizer";
 import { ArrowheadOption, NodeShape, StrokeStyle } from "./types";
 
 export const SHAPES: readonly NodeShape[] = ["rectangle", "ellipse", "diamond"];
@@ -9,7 +10,7 @@ export const STROKE_STYLES: readonly StrokeStyle[] = [
   "dotted",
 ];
 
-export function shapeLabel(shape: NodeShape): string {
+export function shapeLabel(shape: NodeShape, msg: MsgFn = sourceMsg): string {
   switch (shape) {
     case "rectangle":
       return msg("Rectangle");
@@ -20,7 +21,7 @@ export function shapeLabel(shape: NodeShape): string {
   }
 }
 
-export function strokeStyleLabel(strokeStyle: StrokeStyle): string {
+export function strokeStyleLabel(strokeStyle: StrokeStyle, msg: MsgFn = sourceMsg): string {
   switch (strokeStyle) {
     case "solid":
       return msg("Solid");
@@ -38,7 +39,7 @@ export const ARROWHEAD_OPTIONS: readonly ArrowheadOption[] = [
   "bidirectional",
 ];
 
-export function arrowheadLabel(option: ArrowheadOption): string {
+export function arrowheadLabel(option: ArrowheadOption, msg: MsgFn = sourceMsg): string {
   switch (option) {
     case "none":
       return msg("None");

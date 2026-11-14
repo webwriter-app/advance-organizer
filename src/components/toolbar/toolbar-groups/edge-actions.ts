@@ -1,3 +1,4 @@
+import { connectMessages } from "../../../../localization/localizer";
 import { consume } from "@lit/context";
 import { LitElementWw } from "@webwriter/lit";
 import { documentContext, selectionContext } from "../../../state/contexts";
@@ -20,7 +21,6 @@ import {
   strokeStyleLabel,
 } from "../../../model/labels";
 import { renderColorIcon, STROKE_STYLE_ICONS } from "./previews";
-import { localized, msg } from "@lit/localize";
 import { AoColorPicker } from "../../ui/color-picker";
 
 import SlButton from "@shoelace-style/shoelace/dist/components/button/button.component.js";
@@ -67,8 +67,8 @@ function getArrowheadOption(style: EdgeStyle): ArrowheadOption {
   return "none";
 }
 
-@localized()
 export class AoEdgeActionsGroup extends LitElementWw {
+  protected readonly msg = connectMessages(this);
   @consume({ context: documentContext })
   accessor doc!: DocumentController;
 
@@ -113,11 +113,11 @@ export class AoEdgeActionsGroup extends LitElementWw {
     const strokeWidth = item.style.strokeWidth ?? 1;
     const arrowheads = getArrowheadOption(item.style);
 
-    return html`<sl-button-group label=${msg("Relation edits")}>
+    return html`<sl-button-group label=${this.msg("Relation edits")}>
       <sl-dropdown>
-        <sl-tooltip slot="trigger" tabindex="-1" content=${msg("Stroke color")}>
+        <sl-tooltip slot="trigger" tabindex="-1" content=${this.msg("Stroke color")}>
           <sl-button size="small" caret>
-            ${renderColorIcon(iconFill, stroke, msg("Stroke color"))}
+            ${renderColorIcon(iconFill, stroke, this.msg("Stroke color"))}
           </sl-button>
         </sl-tooltip>
         <sl-menu class="colors">
@@ -128,13 +128,13 @@ export class AoEdgeActionsGroup extends LitElementWw {
         </sl-menu>
       </sl-dropdown>
       <sl-dropdown>
-        <sl-tooltip slot="trigger" tabindex="-1" content=${msg("Stroke")}>
+        <sl-tooltip slot="trigger" tabindex="-1" content=${this.msg("Stroke")}>
           <sl-button size="small" caret>
-            <sl-icon label=${msg("Stroke")} .src=${iconStroke}></sl-icon>
+            <sl-icon label=${this.msg("Stroke")} .src=${iconStroke}></sl-icon>
           </sl-button>
         </sl-tooltip>
         <sl-menu @sl-select=${(e: CustomEvent) => this._onStrokeStyleSelect(e)}>
-          <sl-menu-label>${msg("Stroke width")}</sl-menu-label>
+          <sl-menu-label>${this.msg("Stroke width")}</sl-menu-label>
           <sl-range
             .value=${strokeWidth}
             min="1"
@@ -145,7 +145,7 @@ export class AoEdgeActionsGroup extends LitElementWw {
               }
             }}></sl-range>
           <sl-divider></sl-divider>
-          <sl-menu-label>${msg("Stroke style")}</sl-menu-label>
+          <sl-menu-label>${this.msg("Stroke style")}</sl-menu-label>
           ${STROKE_STYLES.map(
             (strokeStyle) =>
               html`<sl-menu-item
@@ -155,16 +155,16 @@ export class AoEdgeActionsGroup extends LitElementWw {
                 <sl-icon
                   slot="prefix"
                   .src=${STROKE_STYLE_ICONS[strokeStyle]}></sl-icon>
-                ${strokeStyleLabel(strokeStyle)}
+                ${strokeStyleLabel(strokeStyle, this.msg)}
               </sl-menu-item>`,
           )}
         </sl-menu>
       </sl-dropdown>
       <sl-dropdown>
-        <sl-tooltip slot="trigger" tabindex="-1" content=${msg("Arrowheads")}>
+        <sl-tooltip slot="trigger" tabindex="-1" content=${this.msg("Arrowheads")}>
           <sl-button size="small" caret>
             <sl-icon
-              label=${msg("Arrowheads")}
+              label=${this.msg("Arrowheads")}
               .src=${ARROWHEAD_ICONS[arrowheads]}></sl-icon>
           </sl-button>
         </sl-tooltip>
@@ -178,7 +178,7 @@ export class AoEdgeActionsGroup extends LitElementWw {
                 <sl-icon
                   slot="prefix"
                   .src=${ARROWHEAD_ICONS[option]}></sl-icon>
-                ${arrowheadLabel(option)}
+                ${arrowheadLabel(option, this.msg)}
               </sl-menu-item>`,
           )}
         </sl-menu>

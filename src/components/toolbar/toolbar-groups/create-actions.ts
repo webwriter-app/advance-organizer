@@ -1,3 +1,4 @@
+import { connectMessages } from "../../../../localization/localizer";
 import { consume } from "@lit/context";
 import { LitElementWw } from "@webwriter/lit";
 import { documentContext, selectionContext } from "../../../state/contexts";
@@ -7,7 +8,6 @@ import { property } from "lit/decorators.js";
 import { SubscribeController } from "../../../state/subscribe";
 import { actionsStyles } from "./toolbar-actions.styles";
 import { SelectionController } from "../../../state/selection";
-import { localized, msg } from "@lit/localize";
 
 import SlButton from "@shoelace-style/shoelace/dist/components/button/button.component.js";
 import SlButtonGroup from "@shoelace-style/shoelace/dist/components/button-group/button-group.component.js";
@@ -18,8 +18,8 @@ import iconAddNode from "@tabler/icons/outline/square-plus-2.svg";
 import iconAddEdge from "@tabler/icons/outline/link-plus.svg";
 import iconAddImage from "@tabler/icons/outline/photo-plus.svg";
 
-@localized()
 export class AoCreateActionsGroup extends LitElementWw {
+  protected readonly msg = connectMessages(this);
   @consume({ context: documentContext })
   accessor doc!: DocumentController;
 
@@ -44,23 +44,23 @@ export class AoCreateActionsGroup extends LitElementWw {
   static override styles = actionsStyles;
 
   protected override render(): TemplateResult {
-    return html`<sl-button-group label=${msg("Add elements")}>
-      <sl-tooltip content="${msg("Add concept")} (C)">
+    return html`<sl-button-group label=${this.msg("Add elements")}>
+      <sl-tooltip content="${this.msg("Add concept")} (C)">
         <sl-button size="small" @click=${this._handleAddNodeClick}>
-          <sl-icon label=${msg("Add concept")} src=${iconAddNode}></sl-icon>
+          <sl-icon label=${this.msg("Add concept")} src=${iconAddNode}></sl-icon>
         </sl-button>
       </sl-tooltip>
-      <sl-tooltip content="${msg("Add relation")} (R)">
+      <sl-tooltip content="${this.msg("Add relation")} (R)">
         <sl-button
           size="small"
           class=${this.drawingEdge ? "active" : ""}
           @click=${this._handleAddEdgeClick}>
-          <sl-icon label=${msg("Add relation")} src=${iconAddEdge}></sl-icon>
+          <sl-icon label=${this.msg("Add relation")} src=${iconAddEdge}></sl-icon>
         </sl-button>
       </sl-tooltip>
-      <sl-tooltip content="${msg("Add picture")} (I)">
+      <sl-tooltip content="${this.msg("Add picture")} (I)">
         <sl-button size="small" @click=${this._handleAddImageClick}>
-          <sl-icon label=${msg("Add picture")} src=${iconAddImage}></sl-icon>
+          <sl-icon label=${this.msg("Add picture")} src=${iconAddImage}></sl-icon>
         </sl-button>
       </sl-tooltip>
     </sl-button-group>`;

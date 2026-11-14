@@ -2,7 +2,7 @@
     // Do not modify this file by hand!
     // Re-generate this file by running lit-localize
 
-    
+
     import {str} from '@lit/localize';
 
     /* eslint-disable no-irregular-whitespace */
@@ -12,6 +12,7 @@
       's0520016b18aadf60': `Bidirectioneel`,
 's0bc31719aa7a8f43': `Knippen`,
 's109991b0423f1512': `Violet`,
+'s163eda8ddbb113ba': `Organizer`,
 's1c8cc3603762c768': `In- en uitzoomen`,
 's236ae937cbcd6a39': `Uitzoomen`,
 's2470dafb1ae8a017': `Term`,
@@ -37,6 +38,7 @@
 's669b18c6d2d9c95b': `Geen`,
 's6a7f201c8d3fdb35': `Help-acties`,
 's6baf78886c99db89': `Geel`,
+'s781e64ea47044bd9': `Afbeelding toevoegen`,
 's7fd3469f78111589': `Contextmenu openen`,
 's81a0bc84b9a58af8': `Onderwerp D`,
 's81a0bd84b9a58cab': `Onderwerp E`,
@@ -59,9 +61,7 @@
 's9ff1de19feac1b7c': `Rood`,
 'sa30f1981fd1cd441': `Lettergrootte`,
 'saa7d7cc808f0a35a': `Concept bewerken`,
-'saa987c09599e0f9a': str`Zet 
-          ${0} afbeeldingen hier neer
-        `,
+'saa987c09599e0f9a': str`Zet hier ${0} afbeeldingen neer`,
 'sabe465e6eb12f208': `Randkleur`,
 'sabfeef1e4511a839': `Pagina-acties`,
 'sad17444d283ef2db': `Gekoppelde pagina`,
@@ -94,4 +94,3 @@
 'sfac15b89e0668996': `Dupliceren`,
 'sfe31d1c784d29ef4': `Volledig`,
     };
-  

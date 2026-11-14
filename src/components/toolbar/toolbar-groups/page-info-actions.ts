@@ -1,3 +1,4 @@
+import { connectMessages } from "../../../../localization/localizer";
 import { consume } from "@lit/context";
 import { LitElementWw } from "@webwriter/lit";
 import { documentContext } from "../../../state/contexts";
@@ -7,7 +8,6 @@ import { SubscribeController } from "../../../state/subscribe";
 import { actionsStyles } from "./toolbar-actions.styles";
 import { property } from "lit/decorators.js";
 import { Id } from "../../../model/types";
-import { localized, msg } from "@lit/localize";
 
 import SlButton from "@shoelace-style/shoelace/dist/components/button/button.component.js";
 import SlButtonGroup from "@shoelace-style/shoelace/dist/components/button-group/button-group.component.js";
@@ -16,8 +16,8 @@ import SlTooltip from "@shoelace-style/shoelace/dist/components/tooltip/tooltip.
 
 import iconArrowLeft from "@tabler/icons/outline/arrow-left.svg";
 
-@localized()
 export class AoPageInfoActionsGroup extends LitElementWw {
+  protected readonly msg = connectMessages(this);
   @consume({ context: documentContext })
   accessor doc!: DocumentController;
 
@@ -53,10 +53,10 @@ export class AoPageInfoActionsGroup extends LitElementWw {
     const node = this.openPageId ? this.doc.get(this.openPageId) : null;
     const label = node?.kind === "node" ? node.label.text : null;
 
-    return html`<sl-button-group label=${msg("Go back")}>
-        <sl-tooltip content=${msg("Go back")}>
+    return html`<sl-button-group label=${this.msg("Go back")}>
+        <sl-tooltip content=${this.msg("Go back")}>
           <sl-button size="small" @click=${this._handleClosePageClick}>
-            <sl-icon label=${msg("Go back")} src=${iconArrowLeft}></sl-icon>
+            <sl-icon label=${this.msg("Go back")} src=${iconArrowLeft}></sl-icon>
           </sl-button>
         </sl-tooltip>
       </sl-button-group>

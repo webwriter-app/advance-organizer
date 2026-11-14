@@ -1,4 +1,5 @@
-import { msg } from "@lit/localize";
+import type { MsgFn } from "@lit/localize";
+import { sourceMsg } from "../../localization/localizer";
 import { NodePresetId, NodeStyle } from "./types";
 
 export type PresetStyle = Required<Omit<NodeStyle, "preset">>;
@@ -108,7 +109,7 @@ export function presetStyle(id: NodePresetId): NodeStyle {
   return { ...(preset ?? NODE_PRESETS[0]!).style, preset: id };
 }
 
-export function presetLabel(id: NodePresetId): string {
+export function presetLabel(id: NodePresetId, msg: MsgFn = sourceMsg): string {
   switch (id) {
     case "main-topic":
       return msg("Main topic");

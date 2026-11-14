@@ -2,7 +2,7 @@
     // Do not modify this file by hand!
     // Re-generate this file by running lit-localize
 
-    
+
     import {str} from '@lit/localize';
 
     /* eslint-disable no-irregular-whitespace */
@@ -12,6 +12,7 @@
       's0520016b18aadf60': `Kaksisuuntainen`,
 's0bc31719aa7a8f43': `Leikkaa`,
 's109991b0423f1512': `Violetti`,
+'s163eda8ddbb113ba': `Jäsennin`,
 's1c8cc3603762c768': `Lähennä ja loitonna`,
 's236ae937cbcd6a39': `Lähennä`,
 's2470dafb1ae8a017': `Termi`,
@@ -37,6 +38,7 @@
 's669b18c6d2d9c95b': `Ei mitään`,
 's6a7f201c8d3fdb35': `Ohjeet`,
 's6baf78886c99db89': `Keltainen`,
+'s781e64ea47044bd9': `Lisää kuva`,
 's7fd3469f78111589': `Avaa kontekstivalikko`,
 's81a0bc84b9a58af8': `Aihe D`,
 's81a0bd84b9a58cab': `Aihe E`,
@@ -59,9 +61,7 @@
 's9ff1de19feac1b7c': `Punainen`,
 'sa30f1981fd1cd441': `Fonttikoko`,
 'saa7d7cc808f0a35a': `Käsitteen muokkaukset`,
-'saa987c09599e0f9a': str`Pudota 
-          ${0} kuvat tähän
-        `,
+'saa987c09599e0f9a': str`Pudota tähän ${0} kuvaa`,
 'sabe465e6eb12f208': `Reunan väri`,
 'sabfeef1e4511a839': `Sivun toiminnot`,
 'sad17444d283ef2db': `Liitetty sivu`,
@@ -94,4 +94,3 @@
 'sfac15b89e0668996': `Kopioi`,
 'sfe31d1c784d29ef4': `Yhtenäinen`,
     };
-  

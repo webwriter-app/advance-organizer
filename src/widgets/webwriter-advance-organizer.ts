@@ -39,9 +39,10 @@ import { AoTextActionsGroup } from "../components/toolbar/toolbar-groups/text-ac
 import { AoHelpActionsGroup } from "../components/toolbar/toolbar-groups/help-actions";
 
 // @ts-ignore
-import LOCALIZE from "../../localization/generated";
-import { localized } from "@lit/localize";
+import type { MsgFn } from "@lit/localize";
+import { createLocalizer, effectiveLanguage, sourceMsg } from "../../localization/localizer";
 import { cache } from "lit/directives/cache.js";
+import { readData, writeData } from "../utils/data";
 
 /**
  * A visual advance organizer: a canvas of labeled boxes, connecting arrows and images
@@ -49,9 +50,32 @@ import { cache } from "lit/directives/cache.js";
  *
  * @slot - The pages of the advance organizer, as `<webwriter-advance-organizer-page>` elements.
  */
-@localized()
+
 @customElement("webwriter-advance-organizer")
 export class WebwriterAdvanceOrganizer extends LitElementWw {
+  // Inherited language must not be reflected as an authored attribute.
+  static override properties = { lang: { attribute: false, noAccessor: true } };
+  override get lang(): string { return effectiveLanguage(this); }
+  override set lang(value: string) { this.setAttribute("lang", value); }
+
+  static dataType = "application/json";
+  readonly actions = WebwriterAdvanceOrganizer.makeActions(sourceMsg);
+  private static makeActions(msg: MsgFn) {
+    return {
+        addNode: { label: { _: msg("Add concept") }, group: "organizer", icon: "Add", intent: "default" },
+        addImage: { label: { _: msg("Add image") }, group: "organizer", icon: "Image", intent: "default" },
+    };
+  }
+  static override actions = WebwriterAdvanceOrganizer.makeActions(sourceMsg);
+
+  private static makeOptionGroups(msg: MsgFn) {
+    return {
+        organizer: { label: { _: msg("Organizer") }, collapsible: true, advanced: false },
+    };
+  }
+  static optionGroups = WebwriterAdvanceOrganizer.makeOptionGroups(sourceMsg);
+  readonly optionGroups = WebwriterAdvanceOrganizer.makeOptionGroups(sourceMsg);
+
   /** @internal */
   @provide({
     context: documentContext,
@@ -75,7 +99,7 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
    * links it to the page with that `node-id`, a `position` and `dimension` in canvas
    * coordinates, a `label` and a `style`.
    */
-  @property({ type: Array, reflect: true })
+  @property({ type: Array, attribute: false, state: true })
   accessor nodes: Node[] = [];
 
   /**
@@ -83,14 +107,14 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
    * node by `id`, anchored at a fixed side of the node (`sourcePosition`/`targetPosition`),
    * and can carry a `label` and a `style` including arrow heads at either end.
    */
-  @property({ type: Array, reflect: true })
+  @property({ type: Array, attribute: false, state: true })
   accessor edges: Edge[] = [];
 
   /**
    * The images placed on the canvas. Each image has a `position` and `dimension` in canvas
    * coordinates and a `src` stored as a data URL.
    */
-  @property({ type: Array, reflect: true })
+  @property({ type: Array, attribute: false, state: true })
   accessor images: Image[] = [];
 
   // Used to differentiate between own changes and changes from outside when properties change
@@ -112,10 +136,18 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
   @query("ao-canvas")
   private accessor canvas!: AoCanvas | null;
 
-  protected override localize = LOCALIZE;
+  protected override localize = createLocalizer(this, () => {
+      Object.assign(this.actions, WebwriterAdvanceOrganizer.makeActions(this.msg));
+      Object.assign(this.optionGroups, WebwriterAdvanceOrganizer.makeOptionGroups(this.msg));
+  });
+  readonly msg = this.localize.msg;
 
   constructor() {
     super();
+    const authoredData = readData<{ nodes: Node[]; edges: Edge[]; images: Image[] }>(this);
+    this.nodes = authoredData.nodes ?? [];
+    this.edges = authoredData.edges ?? [];
+    this.images = authoredData.images ?? [];
     new KeyboardController(this);
     this.doc.subscribe(() => {
       const snapshot = {
@@ -128,7 +160,18 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
       this.nodes = snapshot.nodes;
       this.edges = snapshot.edges;
       this.images = snapshot.images;
+      writeData(this, snapshot);
     });
+  }
+
+  dataChanged(text: string | null): void {
+    if (!text) return;
+    try {
+      const data = JSON.parse(text);
+      this.doc.load(data.nodes ?? [], data.edges ?? [], data.images ?? []);
+    } catch {
+      // Keep malformed authored data available for repair without replacing the live model.
+    }
   }
 
   /** @internal */
@@ -222,10 +265,14 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
     insertNode(this.canvas.insertPosition(), this.canvas);
   };
 
+  addNode(): void { this._insertNode(); }
+
   private _insertImage = (): void => {
     if (!this.canvas) return;
     void pickAndInsertImages(this.canvas.insertPosition(), this.canvas);
   };
+
+  addImage(): void { this._insertImage(); }
 
   protected override willUpdate(changedProperties: PropertyValues): void {
     super.willUpdate(changedProperties);

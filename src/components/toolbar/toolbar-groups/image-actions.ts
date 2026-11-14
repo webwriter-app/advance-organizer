@@ -1,3 +1,4 @@
+import { connectMessages } from "../../../../localization/localizer";
 import { consume } from "@lit/context";
 import { LitElementWw } from "@webwriter/lit";
 import { documentContext, selectionContext } from "../../../state/contexts";
@@ -10,7 +11,6 @@ import { Id, ImageStyle, StrokeStyle } from "../../../model/types";
 import { STROKE_STYLES, strokeStyleLabel } from "../../../model/labels";
 import { DEFAULT_BLACK } from "../../../model/colors";
 import { renderColorIcon, STROKE_STYLE_ICONS } from "./previews";
-import { localized, msg } from "@lit/localize";
 import { AoColorPicker } from "../../ui/color-picker";
 
 import SlButton from "@shoelace-style/shoelace/dist/components/button/button.component.js";
@@ -27,8 +27,8 @@ import SlTooltip from "@shoelace-style/shoelace/dist/components/tooltip/tooltip.
 import iconBorderStyle from "@tabler/icons/outline/border-style.svg";
 import iconStroke from "@tabler/icons/outline/border-style-2.svg";
 
-@localized()
 export class AoImageActionsGroup extends LitElementWw {
+  protected readonly msg = connectMessages(this);
   @consume({ context: documentContext })
   accessor doc!: DocumentController;
 
@@ -72,11 +72,11 @@ export class AoImageActionsGroup extends LitElementWw {
     const stroke = item.style?.stroke || DEFAULT_BLACK;
     const strokeWidth = item.style?.strokeWidth ?? 0;
 
-    return html`<sl-button-group label=${msg("Image edits")}>
+    return html`<sl-button-group label=${this.msg("Image edits")}>
       <sl-dropdown>
-        <sl-tooltip slot="trigger" tabindex="-1" content=${msg("Stroke color")}>
+        <sl-tooltip slot="trigger" tabindex="-1" content=${this.msg("Stroke color")}>
           <sl-button size="small" caret>
-            ${renderColorIcon(iconBorderStyle, stroke, msg("Stroke color"))}
+            ${renderColorIcon(iconBorderStyle, stroke, this.msg("Stroke color"))}
           </sl-button>
         </sl-tooltip>
         <sl-menu class="colors">
@@ -87,13 +87,13 @@ export class AoImageActionsGroup extends LitElementWw {
         </sl-menu>
       </sl-dropdown>
       <sl-dropdown>
-        <sl-tooltip slot="trigger" tabindex="-1" content=${msg("Stroke")}>
+        <sl-tooltip slot="trigger" tabindex="-1" content=${this.msg("Stroke")}>
           <sl-button size="small" caret>
-            <sl-icon label=${msg("Stroke")} .src=${iconStroke}></sl-icon>
+            <sl-icon label=${this.msg("Stroke")} .src=${iconStroke}></sl-icon>
           </sl-button>
         </sl-tooltip>
         <sl-menu @sl-select=${(e: CustomEvent) => this._onBorderStyleSelect(e)}>
-          <sl-menu-label>${msg("Stroke width")}</sl-menu-label>
+          <sl-menu-label>${this.msg("Stroke width")}</sl-menu-label>
           <sl-range
             .value=${strokeWidth}
             min="0"
@@ -104,7 +104,7 @@ export class AoImageActionsGroup extends LitElementWw {
               }
             }}></sl-range>
           <sl-divider></sl-divider>
-          <sl-menu-label>${msg("Stroke style")}</sl-menu-label>
+          <sl-menu-label>${this.msg("Stroke style")}</sl-menu-label>
           ${STROKE_STYLES.map(
             (strokeStyle) =>
               html`<sl-menu-item
@@ -115,7 +115,7 @@ export class AoImageActionsGroup extends LitElementWw {
                 <sl-icon
                   slot="prefix"
                   .src=${STROKE_STYLE_ICONS[strokeStyle]}></sl-icon>
-                ${strokeStyleLabel(strokeStyle)}
+                ${strokeStyleLabel(strokeStyle, this.msg)}
               </sl-menu-item>`,
           )}
         </sl-menu>

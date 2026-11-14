@@ -2,7 +2,7 @@
     // Do not modify this file by hand!
     // Re-generate this file by running lit-localize
 
-    
+
     import {str} from '@lit/localize';
 
     /* eslint-disable no-irregular-whitespace */
@@ -12,6 +12,7 @@
       's0520016b18aadf60': `Dvosmerno`,
 's0bc31719aa7a8f43': `Izreži`,
 's109991b0423f1512': `Vijolična`,
+'s163eda8ddbb113ba': `Organizator`,
 's1c8cc3603762c768': `Povečaj in pomanjšaj`,
 's236ae937cbcd6a39': `Povečaj`,
 's2470dafb1ae8a017': `Izraz`,
@@ -37,6 +38,7 @@
 's669b18c6d2d9c95b': `Nobena`,
 's6a7f201c8d3fdb35': `Pomoč pri dejanjih`,
 's6baf78886c99db89': `Rumena`,
+'s781e64ea47044bd9': `Dodaj sliko`,
 's7fd3469f78111589': `Odpri kontekstni meni`,
 's81a0bc84b9a58af8': `Tema D`,
 's81a0bd84b9a58cab': `Tema E`,
@@ -59,10 +61,7 @@
 's9ff1de19feac1b7c': `Rdeča`,
 'sa30f1981fd1cd441': `Velikost pisave`,
 'saa7d7cc808f0a35a': `Urejanje koncepta`,
-'saa987c09599e0f9a': str`Pusti 
-          slike 
-          ${0} tukaj
-        `,
+'saa987c09599e0f9a': str`Spustite slike sem (število: ${0})`,
 'sabe465e6eb12f208': `Barva obrobe`,
 'sabfeef1e4511a839': `Dejanja na strani`,
 'sad17444d283ef2db': `Povezana stran`,
@@ -95,4 +94,3 @@
 'sfac15b89e0668996': `Podvojiti`,
 'sfe31d1c784d29ef4': `Polna`,
     };
-  

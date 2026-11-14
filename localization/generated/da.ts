@@ -2,7 +2,7 @@
     // Do not modify this file by hand!
     // Re-generate this file by running lit-localize
 
-    
+
     import {str} from '@lit/localize';
 
     /* eslint-disable no-irregular-whitespace */
@@ -12,6 +12,7 @@
       's0520016b18aadf60': `Tovejs`,
 's0bc31719aa7a8f43': `Klip`,
 's109991b0423f1512': `Violet`,
+'s163eda8ddbb113ba': `Organisator`,
 's1c8cc3603762c768': `Zoom ind og ud`,
 's236ae937cbcd6a39': `Zoom ind`,
 's2470dafb1ae8a017': `Begreb`,
@@ -37,6 +38,7 @@
 's669b18c6d2d9c95b': `Ingen`,
 's6a7f201c8d3fdb35': `Hjælp til handlinger`,
 's6baf78886c99db89': `Gul`,
+'s781e64ea47044bd9': `Tilføj billede`,
 's7fd3469f78111589': `Åbn kontekstmenuen`,
 's81a0bc84b9a58af8': `Emne D`,
 's81a0bd84b9a58cab': `Emne E`,
@@ -59,9 +61,7 @@
 's9ff1de19feac1b7c': `Rød`,
 'sa30f1981fd1cd441': `Skriftstørrelse`,
 'saa7d7cc808f0a35a': `Redigering af begreber`,
-'saa987c09599e0f9a': str`Slip 
-          ${0} billeder her
-        `,
+'saa987c09599e0f9a': str`Slip ${0} billeder her`,
 'sabe465e6eb12f208': `Kantfarve`,
 'sabfeef1e4511a839': `Sidehandlinger`,
 'sad17444d283ef2db': `Tilknyttet side`,
@@ -94,4 +94,3 @@
 'sfac15b89e0668996': `Dupliker`,
 'sfe31d1c784d29ef4': `Fyld`,
     };
-  

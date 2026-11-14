@@ -1,8 +1,8 @@
+import { connectMessages } from "../../../localization/localizer";
 import { LitElementWw } from "@webwriter/lit";
 import { html, type TemplateResult } from "lit";
 import { property } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
-import { localized, msg } from "@lit/localize";
 import { colorPickerStyles } from "./color-picker.styles";
 import { DEFAULT_BLACK } from "../../model/colors";
 
@@ -11,37 +11,37 @@ export interface ColorOption {
   readonly color: string;
 }
 
-@localized()
 export class AoColorPicker extends LitElementWw {
+  protected readonly msg = connectMessages(this);
   // `--sl-color-*-600`, `gray-950` for black as fixed values
-  static get COLORS(): readonly ColorOption[] {
+  get COLORS(): readonly ColorOption[] {
     return [
-      { label: msg("Black"), color: DEFAULT_BLACK },
-      { label: msg("White"), color: "#ffffff" },
-      { label: msg("Red"), color: "#dc2626" },
-      { label: msg("Orange"), color: "#ea580c" },
-      { label: msg("Yellow"), color: "#ca8a04" },
-      { label: msg("Green"), color: "#16a34a" },
-      { label: msg("Cyan"), color: "#0891b2" },
-      { label: msg("Blue"), color: "#2563eb" },
-      { label: msg("Violet"), color: "#7c3aed" },
-      { label: msg("Pink"), color: "#db2777" },
+      { label: this.msg("Black"), color: DEFAULT_BLACK },
+      { label: this.msg("White"), color: "#ffffff" },
+      { label: this.msg("Red"), color: "#dc2626" },
+      { label: this.msg("Orange"), color: "#ea580c" },
+      { label: this.msg("Yellow"), color: "#ca8a04" },
+      { label: this.msg("Green"), color: "#16a34a" },
+      { label: this.msg("Cyan"), color: "#0891b2" },
+      { label: this.msg("Blue"), color: "#2563eb" },
+      { label: this.msg("Violet"), color: "#7c3aed" },
+      { label: this.msg("Pink"), color: "#db2777" },
     ];
   }
 
   // `--sl-color-*-100`, `gray-200` for neutral
-  static get TINTS(): readonly ColorOption[] {
+  get TINTS(): readonly ColorOption[] {
     return [
-      { label: msg("White"), color: "#ffffff" },
-      { label: msg("Gray"), color: "#e4e4e7" },
-      { label: msg("Red"), color: "#fee2e2" },
-      { label: msg("Orange"), color: "#ffedd5" },
-      { label: msg("Yellow"), color: "#fef9c3" },
-      { label: msg("Green"), color: "#dcfce7" },
-      { label: msg("Cyan"), color: "#cffafe" },
-      { label: msg("Blue"), color: "#dbeafe" },
-      { label: msg("Violet"), color: "#ede9fe" },
-      { label: msg("Pink"), color: "#fce7f3" },
+      { label: this.msg("White"), color: "#ffffff" },
+      { label: this.msg("Gray"), color: "#e4e4e7" },
+      { label: this.msg("Red"), color: "#fee2e2" },
+      { label: this.msg("Orange"), color: "#ffedd5" },
+      { label: this.msg("Yellow"), color: "#fef9c3" },
+      { label: this.msg("Green"), color: "#dcfce7" },
+      { label: this.msg("Cyan"), color: "#cffafe" },
+      { label: this.msg("Blue"), color: "#dbeafe" },
+      { label: this.msg("Violet"), color: "#ede9fe" },
+      { label: this.msg("Pink"), color: "#fce7f3" },
     ];
   }
 
@@ -63,7 +63,7 @@ export class AoColorPicker extends LitElementWw {
   }
 
   protected override render(): TemplateResult {
-    const colors = this.tinted ? AoColorPicker.TINTS : AoColorPicker.COLORS;
+    const colors = this.tinted ? this.TINTS : this.COLORS;
     const current = normalizeColor(this.value);
 
     return html`${colors.map(

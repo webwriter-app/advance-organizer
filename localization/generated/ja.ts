@@ -2,7 +2,7 @@
     // Do not modify this file by hand!
     // Re-generate this file by running lit-localize
 
-    
+
     import {str} from '@lit/localize';
 
     /* eslint-disable no-irregular-whitespace */
@@ -12,6 +12,7 @@
       's0520016b18aadf60': `双方向`,
 's0bc31719aa7a8f43': `カット`,
 's109991b0423f1512': `紫`,
+'s163eda8ddbb113ba': `概念整理`,
 's1c8cc3603762c768': `ズームイン・ズームアウト`,
 's236ae937cbcd6a39': `縮小`,
 's2470dafb1ae8a017': `用語`,
@@ -37,6 +38,7 @@
 's669b18c6d2d9c95b': `なし`,
 's6a7f201c8d3fdb35': `ヘルプ操作`,
 's6baf78886c99db89': `黄色`,
+'s781e64ea47044bd9': `画像を追加`,
 's7fd3469f78111589': `コンテキストメニューを開く`,
 's81a0bc84b9a58af8': `トピック D`,
 's81a0bd84b9a58cab': `トピックE`,
@@ -59,9 +61,7 @@
 's9ff1de19feac1b7c': `赤`,
 'sa30f1981fd1cd441': `フォントサイズ`,
 'saa7d7cc808f0a35a': `概念の編集`,
-'saa987c09599e0f9a': str`ここに
-          ${0} の画像をドラッグ＆ドロップ
-        `,
+'saa987c09599e0f9a': str`ここに画像を${0}枚ドロップ`,
 'sabe465e6eb12f208': `枠の色`,
 'sabfeef1e4511a839': `ページの操作`,
 'sad17444d283ef2db': `関連ページ`,
@@ -94,4 +94,3 @@
 'sfac15b89e0668996': `複製`,
 'sfe31d1c784d29ef4': `実線`,
     };
-  

@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+<file target-language="te" source-language="en" original="lit-localize-inputs" datatype="plaintext">
+<body>
+<trans-unit id="sb3a97475cf766cba">
+  <source>Add concepts via the toolbar above.</source>
+<target>పై టూల్‌బార్ ద్వారా భావనలను జోడించండి.</target></trans-unit>
+<trans-unit id="s637ca9e5a893dcf5">
+  <source>New concept</source>
+<target>కొత్త భావన</target></trans-unit>
+<trans-unit id="s4975775e0dfd4b75">
+  <source>Add elements</source>
+<target>అంశాలను జోడించండి</target></trans-unit>
+<trans-unit id="sda787d99adea97e0">
+  <source>Add concept</source>
+<target>భావనను జోడించండి</target></trans-unit>
+<trans-unit id="sbe113db3717be2d8">
+  <source>Add relation</source>
+<target>సంబంధాన్ని జోడించండి</target></trans-unit>
+<trans-unit id="s5fd300106abf0f0e">
+  <source>Add picture</source>
+<target>చిత్రాన్ని జోడించండి</target></trans-unit>
+<trans-unit id="sef601e085690ef34">
+  <source>Relation edits</source>
+<target>సంబంధాలను సవరించండి</target></trans-unit>
+<trans-unit id="s2afc172e45ceaabe">
+  <source>Stroke color</source>
+<target>రేఖ రంగు</target></trans-unit>
+<trans-unit id="s8e5cbbecf3c94675">
+  <source>Stroke</source>
+<target>రేఖ</target></trans-unit>
+<trans-unit id="se615f6ce0dd01061">
+  <source>Stroke width</source>
+<target>రేఖ వెడల్పు</target></trans-unit>
+<trans-unit id="s822bb535ea683190">
+  <source>Stroke style</source>
+<target>రేఖ శైలి</target></trans-unit>
+<trans-unit id="s821f2ff928cf5899">
+  <source>Arrowheads</source>
+<target>బాణపు చివరలు</target></trans-unit>
+<trans-unit id="s6a7f201c8d3fdb35">
+  <source>Help actions</source>
+<target>సహాయ చర్యలు</target></trans-unit>
+<trans-unit id="s352719d86112de9a">
+  <source>Help</source>
+<target>సహాయం</target></trans-unit>
+<trans-unit id="s6218b19e67f6d134">
+  <source>Select an element</source>
+<target>ఒక అంశాన్ని ఎంచుకోండి</target></trans-unit>
+<trans-unit id="se610cb50ceb6ad1d">
+  <source>Move the selection</source>
+<target>ఎంపికను తరలించండి</target></trans-unit>
+<trans-unit id="s7fd3469f78111589">
+  <source>Open context menu</source>
+<target>సందర్భ మెనూను తెరవండి</target></trans-unit>
+<trans-unit id="sb6f7c888c7d917a1">
+  <source>Pan the canvas</source>
+<target>కాన్వాస్‌ను జరపండి</target></trans-unit>
+<trans-unit id="s1c8cc3603762c768">
+  <source>Zoom in and out</source>
+<target>జూమ్ పెంచండి లేదా తగ్గించండి</target></trans-unit>
+<trans-unit id="sb9762427948cf2b3">
+  <source>Image edits</source>
+<target>చిత్రాలను సవరించండి</target></trans-unit>
+<trans-unit id="saa7d7cc808f0a35a">
+  <source>Concept edits</source>
+<target>భావనలను సవరించండి</target></trans-unit>
+<trans-unit id="se87e58cabf0417aa">
+  <source>Concept preset</source>
+<target>భావన ముందస్తు అమరిక</target></trans-unit>
+<trans-unit id="sf0cab2483f66aa2e">
+  <source>Custom</source>
+<target>అనుకూలం</target></trans-unit>
+<trans-unit id="s2de969afacdaa7a6">
+  <source>Shape</source>
+<target>ఆకారం</target></trans-unit>
+<trans-unit id="sd1f81984eeb7c0e8">
+  <source>Fill</source>
+<target>నింపు</target></trans-unit>
+<trans-unit id="s9370dc6afa716b57">
+  <source>Border</source>
+<target>అంచు</target></trans-unit>
+<trans-unit id="s53dcaa8587a3546f">
+  <source>Border width</source>
+<target>అంచు వెడల్పు</target></trans-unit>
+<trans-unit id="s39be3c731b2ea7dd">
+  <source>Border type</source>
+<target>అంచు రకం</target></trans-unit>
+<trans-unit id="sabe465e6eb12f208">
+  <source>Border color</source>
+<target>అంచు రంగు</target></trans-unit>
+<trans-unit id="sad17444d283ef2db">
+  <source>Connected page</source>
+<target>అనుసంధానించిన పేజీ</target></trans-unit>
+<trans-unit id="sabfeef1e4511a839">
+  <source>Page actions</source>
+<target>పేజీ చర్యలు</target></trans-unit>
+<trans-unit id="s9ee4c202515c84c5">
+  <source>Delete page</source>
+<target>పేజీని తొలగించండి</target></trans-unit>
+<trans-unit id="s952c758843b27536">
+  <source>Are you sure you want to delete this page?</source>
+<target>ఈ పేజీని తొలగించాలనుకుంటున్నారా?</target></trans-unit>
+<trans-unit id="s2ceb11be2290bb1b">
+  <source>Cancel</source>
+<target>రద్దు చేయి</target></trans-unit>
+<trans-unit id="sdc673e73b5c13aea">
+  <source>Delete</source>
+<target>తొలగించు</target></trans-unit>
+<trans-unit id="s575e795c45e2d97e">
+  <source>Go back</source>
+<target>వెనక్కి వెళ్లండి</target></trans-unit>
+<trans-unit id="sad62ff7ac099b1df">
+  <source>Text edits</source>
+<target>వచనాన్ని సవరించండి</target></trans-unit>
+<trans-unit id="sf7c0eba7c822e3d6">
+  <source>Bold</source>
+<target>బోల్డ్</target></trans-unit>
+<trans-unit id="s523eb9043213ff0d">
+  <source>Italic</source>
+<target>ఇటాలిక్</target></trans-unit>
+<trans-unit id="sb206d700d26b14ff">
+  <source>Underline</source>
+<target>అండర్‌లైన్</target></trans-unit>
+<trans-unit id="s8e43508f1392e94d">
+  <source>Text color</source>
+<target>వచన రంగు</target></trans-unit>
+<trans-unit id="sa30f1981fd1cd441">
+  <source>Font size</source>
+<target>ఫాంట్ పరిమాణం</target></trans-unit>
+<trans-unit id="s5e3cb80d43a34044">
+  <source>Black</source>
+<target>నలుపు</target></trans-unit>
+<trans-unit id="s8e985aeeca6a8166">
+  <source>White</source>
+<target>తెలుపు</target></trans-unit>
+<trans-unit id="s9ff1de19feac1b7c">
+  <source>Red</source>
+<target>ఎరుపు</target></trans-unit>
+<trans-unit id="s8f450dd0b7bdb8cb">
+  <source>Orange</source>
+<target>నారింజ</target></trans-unit>
+<trans-unit id="s6baf78886c99db89">
+  <source>Yellow</source>
+<target>పసుపు</target></trans-unit>
+<trans-unit id="scf00d78fd5953f1c">
+  <source>Green</source>
+<target>ఆకుపచ్చ</target></trans-unit>
+<trans-unit id="s9b3c2f9cc32d565a">
+  <source>Cyan</source>
+<target>సయాన్</target></trans-unit>
+<trans-unit id="secf3d3a7c1693e2d">
+  <source>Blue</source>
+<target>నీలం</target></trans-unit>
+<trans-unit id="s109991b0423f1512">
+  <source>Violet</source>
+<target>ఊదా</target></trans-unit>
+<trans-unit id="se9beed19c6a38fed">
+  <source>Pink</source>
+<target>గులాబీ</target></trans-unit>
+<trans-unit id="s25fcab7e4563067a">
+  <source>Gray</source>
+<target>బూడిద</target></trans-unit>
+<trans-unit id="s0bc31719aa7a8f43">
+  <source>Cut</source>
+<target>కత్తిరించండి</target></trans-unit>
+<trans-unit id="s3687049d1af562c4">
+  <source>Copy</source>
+<target>కాపీ చేయండి</target></trans-unit>
+<trans-unit id="sd374c80e17e18808">
+  <source>Paste</source>
+<target>అతికించండి</target></trans-unit>
+<trans-unit id="sfac15b89e0668996">
+  <source>Duplicate</source>
+<target>నకలు చేయండి</target></trans-unit>
+<trans-unit id="se0a34419921b022a">
+  <source>Del</source>
+<target>తొలగించండి</target></trans-unit>
+<trans-unit id="saa987c09599e0f9a">
+  <source>Drop <x id="0" equiv-text="${this.imageCount}"/> images here</source>
+<target><x id="0" equiv-text="${this.imageCount}"/> చిత్రాలను ఇక్కడ వదలండి</target></trans-unit>
+<trans-unit id="sd6f0f760e3bb3148">
+  <source>Drop 1 image here</source>
+<target>ఒక చిత్రాన్ని ఇక్కడ వదలండి</target></trans-unit>
+<trans-unit id="s3c604c5ce842d6f2">
+  <source>Fit to view</source>
+<target>వీక్షణకు సరిపోల్చండి</target></trans-unit>
+<trans-unit id="sc65ea2cf2f21a13a">
+  <source>Zoom out</source>
+<target>జూమ్ తగ్గించండి</target></trans-unit>
+<trans-unit id="s236ae937cbcd6a39">
+  <source>Zoom in</source>
+<target>జూమ్ పెంచండి</target></trans-unit>
+<trans-unit id="s5d0b63df0bad8c2e">
+  <source>Rectangle</source>
+<target>దీర్ఘచతురస్రం</target></trans-unit>
+<trans-unit id="sbadcfb6aa6ef38b1">
+  <source>Ellipse</source>
+<target>దీర్ఘవృత్తం</target></trans-unit>
+<trans-unit id="s469d5c53c3a49087">
+  <source>Diamond</source>
+<target>వజ్రం</target></trans-unit>
+<trans-unit id="sfe31d1c784d29ef4">
+  <source>Solid</source>
+<target>ఘనమైనది</target></trans-unit>
+<trans-unit id="sc74e6ebfbc1a0e5c">
+  <source>Dashed</source>
+<target>డాష్‌లతో</target></trans-unit>
+<trans-unit id="sd7e04a53d5f87b4d">
+  <source>Dotted</source>
+<target>చుక్కలతో</target></trans-unit>
+<trans-unit id="s669b18c6d2d9c95b">
+  <source>None</source>
+<target>ఏదీ లేదు</target></trans-unit>
+<trans-unit id="s9fc3568ec8629bda">
+  <source>Forward</source>
+<target>ముందుకు</target></trans-unit>
+<trans-unit id="s3ffcdc5db5e7d0c5">
+  <source>Reverse</source>
+<target>వెనుకకు</target></trans-unit>
+<trans-unit id="s0520016b18aadf60">
+  <source>Bidirectional</source>
+<target>రెండు దిశల్లో</target></trans-unit>
+<trans-unit id="sdca5284f30b50177">
+  <source>Main topic</source>
+<target>ప్రధాన అంశం</target></trans-unit>
+<trans-unit id="s86dda4d3d5269d34">
+  <source>Subtopic</source>
+<target>ఉప అంశం</target></trans-unit>
+<trans-unit id="s8daa1db5187d4ad4">
+  <source>Detail</source>
+<target>వివరం</target></trans-unit>
+<trans-unit id="s2470dafb1ae8a017">
+  <source>Term</source>
+<target>పదం</target></trans-unit>
+<trans-unit id="s81a0c184b9a59377">
+  <source>Topic A</source>
+<target>అంశం A</target></trans-unit>
+<trans-unit id="s81a0c284b9a5952a">
+  <source>Topic B</source>
+<target>అంశం B</target></trans-unit>
+<trans-unit id="s81a0c384b9a596dd">
+  <source>Topic C</source>
+<target>అంశం C</target></trans-unit>
+<trans-unit id="s81a0bc84b9a58af8">
+  <source>Topic D</source>
+<target>అంశం D</target></trans-unit>
+<trans-unit id="s81a0bd84b9a58cab">
+  <source>Topic E</source>
+<target>అంశం E</target></trans-unit>
+<trans-unit id="s781e64ea47044bd9">
+  <source>Add image</source>
+<target>చిత్రాన్ని జోడించండి</target></trans-unit>
+<trans-unit id="s163eda8ddbb113ba">
+  <source>Organizer</source>
+<target>ముందస్తు నిర్వాహకం</target></trans-unit>
+</body>
+</file>
+</xliff>

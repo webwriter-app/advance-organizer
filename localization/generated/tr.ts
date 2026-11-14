@@ -2,7 +2,7 @@
     // Do not modify this file by hand!
     // Re-generate this file by running lit-localize
 
-    
+
     import {str} from '@lit/localize';
 
     /* eslint-disable no-irregular-whitespace */
@@ -12,6 +12,7 @@
       's0520016b18aadf60': `Çift yönlü`,
 's0bc31719aa7a8f43': `Kes`,
 's109991b0423f1512': `Menekşe`,
+'s163eda8ddbb113ba': `Düzenleyici`,
 's1c8cc3603762c768': `Yakınlaştır ve uzaklaştır`,
 's236ae937cbcd6a39': `Yakınlaştır`,
 's2470dafb1ae8a017': `Terim`,
@@ -37,6 +38,7 @@
 's669b18c6d2d9c95b': `Yok`,
 's6a7f201c8d3fdb35': `Yardım eylemleri`,
 's6baf78886c99db89': `Sarı`,
+'s781e64ea47044bd9': `Resim ekle`,
 's7fd3469f78111589': `Bağlam menüsünü aç`,
 's81a0bc84b9a58af8': `Konu D`,
 's81a0bd84b9a58cab': `Konu E`,
@@ -59,9 +61,7 @@
 's9ff1de19feac1b7c': `Kırmızı`,
 'sa30f1981fd1cd441': `Yazı tipi boyutu`,
 'saa7d7cc808f0a35a': `Kavram düzenlemeleri`,
-'saa987c09599e0f9a': str`Buraya 
-          ${0} resimlerini bırakın
-        `,
+'saa987c09599e0f9a': str`${0} resmi buraya bırakın`,
 'sabe465e6eb12f208': `Kenarlık rengi`,
 'sabfeef1e4511a839': `Sayfa işlemleri`,
 'sad17444d283ef2db': `Bağlantılı sayfa`,
@@ -94,4 +94,3 @@
 'sfac15b89e0668996': `Çoğalt`,
 'sfe31d1c784d29ef4': `Düz`,
     };
-  

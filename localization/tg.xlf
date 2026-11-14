@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+<file target-language="tg" source-language="en" original="lit-localize-inputs" datatype="plaintext">
+<body>
+<trans-unit id="sb3a97475cf766cba">
+  <source>Add concepts via the toolbar above.</source>
+<target>Бо ёрии панели абзорҳои боло мафҳумҳо илова кунед.</target></trans-unit>
+<trans-unit id="s637ca9e5a893dcf5">
+  <source>New concept</source>
+<target>Мафҳуми нав</target></trans-unit>
+<trans-unit id="s4975775e0dfd4b75">
+  <source>Add elements</source>
+<target>Илова кардани унсурҳо</target></trans-unit>
+<trans-unit id="sda787d99adea97e0">
+  <source>Add concept</source>
+<target>Илова кардани мафҳум</target></trans-unit>
+<trans-unit id="sbe113db3717be2d8">
+  <source>Add relation</source>
+<target>Илова кардани робита</target></trans-unit>
+<trans-unit id="s5fd300106abf0f0e">
+  <source>Add picture</source>
+<target>Илова кардани тасвир</target></trans-unit>
+<trans-unit id="sef601e085690ef34">
+  <source>Relation edits</source>
+<target>Таҳрири робитаҳо</target></trans-unit>
+<trans-unit id="s2afc172e45ceaabe">
+  <source>Stroke color</source>
+<target>Ранги хат</target></trans-unit>
+<trans-unit id="s8e5cbbecf3c94675">
+  <source>Stroke</source>
+<target>Хат</target></trans-unit>
+<trans-unit id="se615f6ce0dd01061">
+  <source>Stroke width</source>
+<target>Паҳнои хат</target></trans-unit>
+<trans-unit id="s822bb535ea683190">
+  <source>Stroke style</source>
+<target>Услуби хат</target></trans-unit>
+<trans-unit id="s821f2ff928cf5899">
+  <source>Arrowheads</source>
+<target>Сари тирҳо</target></trans-unit>
+<trans-unit id="s6a7f201c8d3fdb35">
+  <source>Help actions</source>
+<target>Амалиёти ёрирасон</target></trans-unit>
+<trans-unit id="s352719d86112de9a">
+  <source>Help</source>
+<target>Кӯмак</target></trans-unit>
+<trans-unit id="s6218b19e67f6d134">
+  <source>Select an element</source>
+<target>Интихоби унсур</target></trans-unit>
+<trans-unit id="se610cb50ceb6ad1d">
+  <source>Move the selection</source>
+<target>Ҷойивазкунии интихоб</target></trans-unit>
+<trans-unit id="s7fd3469f78111589">
+  <source>Open context menu</source>
+<target>Кушодани менюи контекстӣ</target></trans-unit>
+<trans-unit id="sb6f7c888c7d917a1">
+  <source>Pan the canvas</source>
+<target>Ҷойивазкунии канвас</target></trans-unit>
+<trans-unit id="s1c8cc3603762c768">
+  <source>Zoom in and out</source>
+<target>Калон ва хурд кардан</target></trans-unit>
+<trans-unit id="sb9762427948cf2b3">
+  <source>Image edits</source>
+<target>Таҳрири тасвирҳо</target></trans-unit>
+<trans-unit id="saa7d7cc808f0a35a">
+  <source>Concept edits</source>
+<target>Таҳрири мафҳумҳо</target></trans-unit>
+<trans-unit id="se87e58cabf0417aa">
+  <source>Concept preset</source>
+<target>Шаблони мафҳум</target></trans-unit>
+<trans-unit id="sf0cab2483f66aa2e">
+  <source>Custom</source>
+<target>Фармоишӣ</target></trans-unit>
+<trans-unit id="s2de969afacdaa7a6">
+  <source>Shape</source>
+<target>Шакл</target></trans-unit>
+<trans-unit id="sd1f81984eeb7c0e8">
+  <source>Fill</source>
+<target>Пуркунӣ</target></trans-unit>
+<trans-unit id="s9370dc6afa716b57">
+  <source>Border</source>
+<target>Ҳошия</target></trans-unit>
+<trans-unit id="s53dcaa8587a3546f">
+  <source>Border width</source>
+<target>Паҳнои ҳошия</target></trans-unit>
+<trans-unit id="s39be3c731b2ea7dd">
+  <source>Border type</source>
+<target>Навъи ҳошия</target></trans-unit>
+<trans-unit id="sabe465e6eb12f208">
+  <source>Border color</source>
+<target>Ранги ҳошия</target></trans-unit>
+<trans-unit id="sad17444d283ef2db">
+  <source>Connected page</source>
+<target>Саҳифаи пайвастшуда</target></trans-unit>
+<trans-unit id="sabfeef1e4511a839">
+  <source>Page actions</source>
+<target>Амалиёти саҳифа</target></trans-unit>
+<trans-unit id="s9ee4c202515c84c5">
+  <source>Delete page</source>
+<target>Нест кардани саҳифа</target></trans-unit>
+<trans-unit id="s952c758843b27536">
+  <source>Are you sure you want to delete this page?</source>
+<target>Оё мутмаин ҳастед, ки ин саҳифаро нест кардан мехоҳед?</target></trans-unit>
+<trans-unit id="s2ceb11be2290bb1b">
+  <source>Cancel</source>
+<target>Бекор кардан</target></trans-unit>
+<trans-unit id="sdc673e73b5c13aea">
+  <source>Delete</source>
+<target>Нест кардан</target></trans-unit>
+<trans-unit id="s575e795c45e2d97e">
+  <source>Go back</source>
+<target>Бозгашт</target></trans-unit>
+<trans-unit id="sad62ff7ac099b1df">
+  <source>Text edits</source>
+<target>Таҳрири матн</target></trans-unit>
+<trans-unit id="sf7c0eba7c822e3d6">
+  <source>Bold</source>
+<target>Ғафс</target></trans-unit>
+<trans-unit id="s523eb9043213ff0d">
+  <source>Italic</source>
+<target>Хамшуда</target></trans-unit>
+<trans-unit id="sb206d700d26b14ff">
+  <source>Underline</source>
+<target>Зерхатдор</target></trans-unit>
+<trans-unit id="s8e43508f1392e94d">
+  <source>Text color</source>
+<target>Ранги матн</target></trans-unit>
+<trans-unit id="sa30f1981fd1cd441">
+  <source>Font size</source>
+<target>Андозаи ҳарф</target></trans-unit>
+<trans-unit id="s5e3cb80d43a34044">
+  <source>Black</source>
+<target>Сиёҳ</target></trans-unit>
+<trans-unit id="s8e985aeeca6a8166">
+  <source>White</source>
+<target>Сафед</target></trans-unit>
+<trans-unit id="s9ff1de19feac1b7c">
+  <source>Red</source>
+<target>Сурх</target></trans-unit>
+<trans-unit id="s8f450dd0b7bdb8cb">
+  <source>Orange</source>
+<target>Норанҷӣ</target></trans-unit>
+<trans-unit id="s6baf78886c99db89">
+  <source>Yellow</source>
+<target>Зард</target></trans-unit>
+<trans-unit id="scf00d78fd5953f1c">
+  <source>Green</source>
+<target>Сабз</target></trans-unit>
+<trans-unit id="s9b3c2f9cc32d565a">
+  <source>Cyan</source>
+<target>Кабуди сабзтоб</target></trans-unit>
+<trans-unit id="secf3d3a7c1693e2d">
+  <source>Blue</source>
+<target>Кабуд</target></trans-unit>
+<trans-unit id="s109991b0423f1512">
+  <source>Violet</source>
+<target>Бунафш</target></trans-unit>
+<trans-unit id="se9beed19c6a38fed">
+  <source>Pink</source>
+<target>Гулобӣ</target></trans-unit>
+<trans-unit id="s25fcab7e4563067a">
+  <source>Gray</source>
+<target>Хокистарӣ</target></trans-unit>
+<trans-unit id="s0bc31719aa7a8f43">
+  <source>Cut</source>
+<target>Буридан</target></trans-unit>
+<trans-unit id="s3687049d1af562c4">
+  <source>Copy</source>
+<target>Нусхабардорӣ</target></trans-unit>
+<trans-unit id="sd374c80e17e18808">
+  <source>Paste</source>
+<target>Гузоштан</target></trans-unit>
+<trans-unit id="sfac15b89e0668996">
+  <source>Duplicate</source>
+<target>Нусха бардоштан</target></trans-unit>
+<trans-unit id="se0a34419921b022a">
+  <source>Del</source>
+<target>Нест кардан</target></trans-unit>
+<trans-unit id="saa987c09599e0f9a">
+  <source>Drop <x id="0" equiv-text="${this.imageCount}"/> images here</source>
+<target><x id="0" equiv-text="${this.imageCount}"/> тасвирро дар ин ҷо гузоред</target></trans-unit>
+<trans-unit id="sd6f0f760e3bb3148">
+  <source>Drop 1 image here</source>
+<target>Як тасвирро дар ин ҷо гузоред</target></trans-unit>
+<trans-unit id="s3c604c5ce842d6f2">
+  <source>Fit to view</source>
+<target>Мутобиқ ба намоиш</target></trans-unit>
+<trans-unit id="sc65ea2cf2f21a13a">
+  <source>Zoom out</source>
+<target>Хурд кардан</target></trans-unit>
+<trans-unit id="s236ae937cbcd6a39">
+  <source>Zoom in</source>
+<target>Калон кардан</target></trans-unit>
+<trans-unit id="s5d0b63df0bad8c2e">
+  <source>Rectangle</source>
+<target>Росткунҷа</target></trans-unit>
+<trans-unit id="sbadcfb6aa6ef38b1">
+  <source>Ellipse</source>
+<target>Эллипс</target></trans-unit>
+<trans-unit id="s469d5c53c3a49087">
+  <source>Diamond</source>
+<target>Ромб</target></trans-unit>
+<trans-unit id="sfe31d1c784d29ef4">
+  <source>Solid</source>
+<target>Яклухт</target></trans-unit>
+<trans-unit id="sc74e6ebfbc1a0e5c">
+  <source>Dashed</source>
+<target>Хат-хат</target></trans-unit>
+<trans-unit id="sd7e04a53d5f87b4d">
+  <source>Dotted</source>
+<target>Нуқтадор</target></trans-unit>
+<trans-unit id="s669b18c6d2d9c95b">
+  <source>None</source>
+<target>Ҳеҷ</target></trans-unit>
+<trans-unit id="s9fc3568ec8629bda">
+  <source>Forward</source>
+<target>Ба пеш</target></trans-unit>
+<trans-unit id="s3ffcdc5db5e7d0c5">
+  <source>Reverse</source>
+<target>Баръакс</target></trans-unit>
+<trans-unit id="s0520016b18aadf60">
+  <source>Bidirectional</source>
+<target>Дуҷониба</target></trans-unit>
+<trans-unit id="sdca5284f30b50177">
+  <source>Main topic</source>
+<target>Мавзӯи асосӣ</target></trans-unit>
+<trans-unit id="s86dda4d3d5269d34">
+  <source>Subtopic</source>
+<target>Зермавзӯъ</target></trans-unit>
+<trans-unit id="s8daa1db5187d4ad4">
+  <source>Detail</source>
+<target>Тафсилот</target></trans-unit>
+<trans-unit id="s2470dafb1ae8a017">
+  <source>Term</source>
+<target>Истилоҳ</target></trans-unit>
+<trans-unit id="s81a0c184b9a59377">
+  <source>Topic A</source>
+<target>Мавзӯи A</target></trans-unit>
+<trans-unit id="s81a0c284b9a5952a">
+  <source>Topic B</source>
+<target>Мавзӯи B</target></trans-unit>
+<trans-unit id="s81a0c384b9a596dd">
+  <source>Topic C</source>
+<target>Мавзӯи C</target></trans-unit>
+<trans-unit id="s81a0bc84b9a58af8">
+  <source>Topic D</source>
+<target>Мавзӯи D</target></trans-unit>
+<trans-unit id="s81a0bd84b9a58cab">
+  <source>Topic E</source>
+<target>Мавзӯи E</target></trans-unit>
+<trans-unit id="s781e64ea47044bd9">
+  <source>Add image</source>
+<target>Илова кардани тасвир</target></trans-unit>
+<trans-unit id="s163eda8ddbb113ba">
+  <source>Organizer</source>
+<target>Ташкилгари пешакӣ</target></trans-unit>
+</body>
+</file>
+</xliff>

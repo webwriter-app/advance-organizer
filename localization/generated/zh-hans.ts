@@ -2,7 +2,7 @@
     // Do not modify this file by hand!
     // Re-generate this file by running lit-localize
 
-    
+
     import {str} from '@lit/localize';
 
     /* eslint-disable no-irregular-whitespace */
@@ -12,6 +12,7 @@
       's0520016b18aadf60': `双向`,
 's0bc31719aa7a8f43': `剪切`,
 's109991b0423f1512': `紫色`,
+'s163eda8ddbb113ba': `概念组织图`,
 's1c8cc3603762c768': `放大/缩小`,
 's236ae937cbcd6a39': `缩小`,
 's2470dafb1ae8a017': `术语`,
@@ -37,6 +38,7 @@
 's669b18c6d2d9c95b': `无`,
 's6a7f201c8d3fdb35': `帮助操作`,
 's6baf78886c99db89': `黄色`,
+'s781e64ea47044bd9': `添加图片`,
 's7fd3469f78111589': `打开上下文菜单`,
 's81a0bc84b9a58af8': `主题 D`,
 's81a0bd84b9a58cab': `主题E`,
@@ -59,9 +61,7 @@
 's9ff1de19feac1b7c': `红色`,
 'sa30f1981fd1cd441': `字体大小`,
 'saa7d7cc808f0a35a': `概念编辑`,
-'saa987c09599e0f9a': str`将
-          ${0} 图片拖放到此处
-        `,
+'saa987c09599e0f9a': str`将 ${0} 张图片拖到此处`,
 'sabe465e6eb12f208': `边框颜色`,
 'sabfeef1e4511a839': `页面操作`,
 'sad17444d283ef2db': `关联页面`,
@@ -94,4 +94,3 @@
 'sfac15b89e0668996': `复制`,
 'sfe31d1c784d29ef4': `实线`,
     };
-  
