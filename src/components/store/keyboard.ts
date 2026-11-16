@@ -1,11 +1,12 @@
+import type { MsgFn } from "@lit/localize";
 import { ReactiveController, ReactiveControllerHost } from "lit";
-import { Id, Label, Point } from "../model/types";
+import { Id, Label, Point } from "../../model/types";
 import {
   CanvasStores,
   duplicateSelection,
   insertNode,
   pickAndInsertImages,
-} from "../components/canvas/insert";
+} from "../canvas/insert";
 
 const MOVE_STEP = 1;
 const MOVE_STEP_COARSE = 10;
@@ -22,6 +23,7 @@ export const MOD_LABEL = /mac|iphone|ipad/i.test(navigator.userAgent)
   : "Ctrl";
 
 export interface KeyboardCanvas extends CanvasStores {
+  readonly msg: MsgFn;
   readonly editable: boolean;
   readonly editingId: Id | null;
 

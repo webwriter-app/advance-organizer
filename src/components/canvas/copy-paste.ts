@@ -8,8 +8,8 @@ import {
   readPayload,
   writePayload,
   writePayloadToClipboard,
-} from "../../utils/clipboard";
-import { filterImageFiles } from "../../utils/image-import";
+} from "../io/clipboard";
+import { filterImageFiles } from "../io/image-import";
 import { CanvasStores, insertImages, insertPayload } from "./insert";
 
 export interface ClipboardHost extends CanvasStores {

@@ -1,4 +1,4 @@
-import { connectMessages } from "../../../localization/localizer";
+import { widgetMsg } from "@webwriter/lit/localize";
 import { LitElementWw } from "@webwriter/lit";
 import { contextMenuStyles } from "./context-menu.styles";
 import { html, PropertyValues, type TemplateResult } from "lit";
@@ -15,13 +15,13 @@ import {
   documentContext,
   pageContext,
   selectionContext,
-} from "../../state/contexts";
-import { DocumentController } from "../../state/document";
-import { SelectionController } from "../../state/selection";
-import { PageController } from "../../state/page";
-import { SubscribeController } from "../../state/subscribe";
-import { ClipboardAction } from "../../utils/clipboard";
-import { MOD_LABEL } from "../../state/keyboard";
+} from "../store/contexts";
+import { DocumentController } from "../store/document";
+import { SelectionController } from "../store/selection";
+import { PageController } from "../store/page";
+import { SubscribeController } from "../store/subscribe";
+import { ClipboardAction } from "../io/clipboard";
+import { MOD_LABEL } from "../store/keyboard";
 import { duplicateSelection } from "../canvas/insert";
 
 import iconCut from "@tabler/icons/outline/cut.svg";
@@ -31,7 +31,7 @@ import iconDuplicate from "@tabler/icons/outline/copy-plus.svg";
 import iconDelete from "@tabler/icons/outline/trash.svg";
 
 export class AoContextMenu extends LitElementWw {
-  protected readonly msg = connectMessages(this);
+  protected readonly msg = widgetMsg(this);
   @consume({ context: documentContext })
   accessor doc!: DocumentController;
 

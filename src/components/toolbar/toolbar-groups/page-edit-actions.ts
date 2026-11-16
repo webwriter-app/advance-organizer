@@ -1,4 +1,4 @@
-import { connectMessages } from "../../../../localization/localizer";
+import { widgetMsg } from "@webwriter/lit/localize";
 import { LitElementWw } from "@webwriter/lit";
 import { css, html, type TemplateResult } from "lit";
 import { state } from "lit/decorators.js";
@@ -13,7 +13,7 @@ import SlTooltip from "@shoelace-style/shoelace/dist/components/tooltip/tooltip.
 import iconDelete from "@tabler/icons/outline/trash.svg";
 
 export class AoPageEditActionsGroup extends LitElementWw {
-  protected readonly msg = connectMessages(this);
+  protected readonly msg = widgetMsg(this);
   static override scopedElements = {
     "sl-button": SlButton,
     "sl-button-group": SlButtonGroup,

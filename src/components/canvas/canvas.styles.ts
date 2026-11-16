@@ -65,6 +65,13 @@ export const canvasStyles = css`
     cursor: pointer;
   }
 
+  /* Readers cannot use these, so a drag that starts on them pans the view. */
+  :host(:not([editable])) .node:not(.has-page),
+  :host(:not([editable])) .edges,
+  :host(:not([editable])) .images {
+    pointer-events: none;
+  }
+
   .resize-handle-target {
     pointer-events: none;
   }

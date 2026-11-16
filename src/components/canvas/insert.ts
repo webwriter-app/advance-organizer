@@ -7,16 +7,16 @@ import {
   NodeStyle,
   Point,
 } from "../../model/types";
-import { DEFAULT_PRESET, presetStyle } from "../../model/presets";
-import type { DocumentController } from "../../state/document";
-import type { PageController } from "../../state/page";
-import type { SelectionController } from "../../state/selection";
-import { ClipboardPayload } from "../../utils/clipboard";
+import { DEFAULT_PRESET, presetStyle } from "../options/presets";
+import type { DocumentController } from "../store/document";
+import type { PageController } from "../store/page";
+import type { SelectionController } from "../store/selection";
+import { ClipboardPayload } from "../io/clipboard";
 import {
   displayDimension,
   importImage,
   pickImageFiles,
-} from "../../utils/image-import";
+} from "../io/image-import";
 import { INSERT_GAP } from "./helper";
 
 export interface CanvasStores {

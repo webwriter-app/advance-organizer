@@ -8,7 +8,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A page of a `<webwriter-advance-organizer>`: the content shown when a learner clicks on\r\nthe node it belongs to. Pages are children of the advance organizer and are linked to a\r\nnode by their `node-id`.\r\n\r\nA page holds arbitrary content – text, images, other widgets – and stays hidden until\r\nits node is opened. Pages are managed by the advance organizer, adding a page to a node\r\nin the toolbar creates one, and removing the node removes its page again.",
+          "description": "A page of a `<webwriter-advance-organizer>`: the content shown when a learner clicks on\nthe node it belongs to. Pages are children of the advance organizer and are linked to a\nnode by their `node-id`.\n\nA page holds arbitrary content – text, images, other widgets – and stays hidden until\nits node is opened. Pages are managed by the advance organizer, adding a page to a node\nin the toolbar creates one, and removing the node removes its page again.",
           "name": "WebwriterAdvanceOrganizerPage",
           "slots": [
             {
@@ -73,7 +73,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A visual advance organizer: a canvas of labeled boxes, connecting arrows and images\r\nthat gives learners an overview of a topic before they study it in detail.",
+          "description": "A visual advance organizer: a canvas of labeled boxes, connecting arrows and images\nthat gives learners an overview of a topic before they study it in detail.",
           "name": "WebwriterAdvanceOrganizer",
           "slots": [
             {
@@ -84,14 +84,60 @@
           "members": [
             {
               "kind": "field",
+              "name": "dataType",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "\"application/json\""
+            },
+            {
+              "kind": "field",
+              "name": "actions",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ addNode: { label: (widget: { msg: MsgFn }) => widget.msg(\"Add concept\"), group: \"organizer\", icon: \"Add\", intent: \"default\" as const, }, addImage: { label: (widget: { msg: MsgFn }) => widget.msg(\"Add image\"), group: \"organizer\", icon: \"Image\", intent: \"default\" as const, }, }"
+            },
+            {
+              "kind": "field",
+              "name": "optionGroups",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ organizer: { label: (widget: { msg: MsgFn }) => widget.msg(\"Organizer\"), collapsible: true, advanced: false, }, }"
+            },
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "protected"
+            },
+            {
+              "kind": "field",
+              "name": "msg",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#permissions",
+              "privacy": "private",
+              "default": "new Permissions(this)"
+            },
+            {
+              "kind": "field",
+              "name": "#data",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
               "name": "nodes",
               "type": {
                 "text": "Node[]"
               },
               "default": "[]",
-              "description": "The nodes of the advance organizer. Each node has an `id` that edges refer to and that\r\nlinks it to the page with that `node-id`, a `position` and `dimension` in canvas\r\ncoordinates, a `label` and a `style`.",
-              "attribute": "nodes",
-              "reflects": true
+              "description": "The nodes of the advance organizer. Each node has an `id` that edges refer to and that\nlinks it to the page with that `node-id`, a `position` and `dimension` in canvas\ncoordinates, a `label` and a `style`."
             },
             {
               "kind": "field",
@@ -100,9 +146,7 @@
                 "text": "Edge[]"
               },
               "default": "[]",
-              "description": "The edges of the advance organizer. Each edge refers to its `source` and `target`\r\nnode by `id`, anchored at a fixed side of the node (`sourcePosition`/`targetPosition`),\r\nand can carry a `label` and a `style` including arrow heads at either end.",
-              "attribute": "edges",
-              "reflects": true
+              "description": "The edges of the advance organizer. Each edge refers to its `source` and `target`\nnode by `id`, anchored at a fixed side of the node (`sourcePosition`/`targetPosition`),\nand can carry a `label` and a `style` including arrow heads at either end."
             },
             {
               "kind": "field",
@@ -111,17 +155,7 @@
                 "text": "Image[]"
               },
               "default": "[]",
-              "description": "The images placed on the canvas. Each image has a `position` and `dimension` in canvas\r\ncoordinates and a `src` stored as a data URL.",
-              "attribute": "images",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "_publishedDocument",
-              "type": {
-                "text": "{\r\n    nodes: Node[];\r\n    edges: Edge[];\r\n    images: Image[];\r\n  } | undefined"
-              },
-              "privacy": "private"
+              "description": "The images placed on the canvas. Each image has a `position` and `dimension` in canvas\ncoordinates and a `src` stored as a data URL."
             },
             {
               "kind": "field",
@@ -160,9 +194,11 @@
             },
             {
               "kind": "field",
-              "name": "localize",
-              "privacy": "protected",
-              "default": "LOCALIZE"
+              "name": "_publishedDocument",
+              "type": {
+                "text": "{\n    nodes: Node[];\n    edges: Edge[];\n    images: Image[];\n  } | undefined"
+              },
+              "privacy": "private"
             },
             {
               "kind": "field",
@@ -208,9 +244,27 @@
               "privacy": "private"
             },
             {
+              "kind": "method",
+              "name": "addNode",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
               "kind": "field",
               "name": "_insertImage",
               "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "addImage",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
             },
             {
               "kind": "method",
@@ -259,35 +313,6 @@
                   "text": "TemplateResult | typeof nothing"
                 }
               }
-            }
-          ],
-          "attributes": [
-            {
-              "name": "nodes",
-              "type": {
-                "text": "Node[]"
-              },
-              "default": "[]",
-              "description": "The nodes of the advance organizer. Each node has an `id` that edges refer to and that\r\nlinks it to the page with that `node-id`, a `position` and `dimension` in canvas\r\ncoordinates, a `label` and a `style`.",
-              "fieldName": "nodes"
-            },
-            {
-              "name": "edges",
-              "type": {
-                "text": "Edge[]"
-              },
-              "default": "[]",
-              "description": "The edges of the advance organizer. Each edge refers to its `source` and `target`\r\nnode by `id`, anchored at a fixed side of the node (`sourcePosition`/`targetPosition`),\r\nand can carry a `label` and a `style` including arrow heads at either end.",
-              "fieldName": "edges"
-            },
-            {
-              "name": "images",
-              "type": {
-                "text": "Image[]"
-              },
-              "default": "[]",
-              "description": "The images placed on the canvas. Each image has a `position` and `dimension` in canvas\r\ncoordinates and a `src` stored as a data URL.",
-              "fieldName": "images"
             }
           ],
           "superclass": {

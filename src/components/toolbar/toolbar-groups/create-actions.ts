@@ -1,13 +1,13 @@
-import { connectMessages } from "../../../../localization/localizer";
+import { widgetMsg } from "@webwriter/lit/localize";
 import { consume } from "@lit/context";
 import { LitElementWw } from "@webwriter/lit";
-import { documentContext, selectionContext } from "../../../state/contexts";
-import { DocumentController } from "../../../state/document";
+import { documentContext, selectionContext } from "../../store/contexts";
+import { DocumentController } from "../../store/document";
 import { html, PropertyValues, type TemplateResult } from "lit";
 import { property } from "lit/decorators.js";
-import { SubscribeController } from "../../../state/subscribe";
+import { SubscribeController } from "../../store/subscribe";
 import { actionsStyles } from "./toolbar-actions.styles";
-import { SelectionController } from "../../../state/selection";
+import { SelectionController } from "../../store/selection";
 
 import SlButton from "@shoelace-style/shoelace/dist/components/button/button.component.js";
 import SlButtonGroup from "@shoelace-style/shoelace/dist/components/button-group/button-group.component.js";
@@ -19,7 +19,7 @@ import iconAddEdge from "@tabler/icons/outline/link-plus.svg";
 import iconAddImage from "@tabler/icons/outline/photo-plus.svg";
 
 export class AoCreateActionsGroup extends LitElementWw {
-  protected readonly msg = connectMessages(this);
+  protected readonly msg = widgetMsg(this);
   @consume({ context: documentContext })
   accessor doc!: DocumentController;
 

@@ -12,14 +12,14 @@ import {
   Label,
   Node,
   NodeStyle,
-} from "../model/types";
-import { Point } from "../model/types";
+} from "../../model/types";
+import { Point } from "../../model/types";
 import { Observable } from "./observable";
 import {
   boundsWithin,
   computeBounds,
   INSERT_GAP,
-} from "../components/canvas/helper";
+} from "../canvas/helper";
 
 export class DocumentController extends Observable {
   private _nodes: Map<Id, Node> = new Map();

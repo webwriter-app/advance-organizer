@@ -1,8 +1,8 @@
 import { html, nothing, type TemplateResult } from "lit";
 import { styleMap } from "lit/directives/style-map.js";
 import { Id, Node } from "../../model/types";
-import { DocumentController } from "../../state/document";
-import { PageController } from "../../state/page";
+import { DocumentController } from "../store/document";
+import { PageController } from "../store/page";
 import { renderEdge } from "../canvas/edge";
 import { computeBounds } from "../canvas/helper";
 import { renderImage } from "../canvas/image";

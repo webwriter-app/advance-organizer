@@ -1,11 +1,11 @@
-import { connectMessages } from "../../../../localization/localizer";
+import { widgetMsg } from "@webwriter/lit/localize";
 import { consume } from "@lit/context";
 import { LitElementWw } from "@webwriter/lit";
-import { documentContext, selectionContext } from "../../../state/contexts";
-import { DocumentController } from "../../../state/document";
-import { SelectionController } from "../../../state/selection";
+import { documentContext, selectionContext } from "../../store/contexts";
+import { DocumentController } from "../../store/document";
+import { SelectionController } from "../../store/selection";
 import { html, nothing, PropertyValues, type TemplateResult } from "lit";
-import { SubscribeController } from "../../../state/subscribe";
+import { SubscribeController } from "../../store/subscribe";
 import { actionsStyles } from "./toolbar-actions.styles";
 import {
   ArrowheadOption,
@@ -19,7 +19,7 @@ import {
   arrowheadLabel,
   STROKE_STYLES,
   strokeStyleLabel,
-} from "../../../model/labels";
+} from "../../options/labels";
 import { renderColorIcon, STROKE_STYLE_ICONS } from "./previews";
 import { AoColorPicker } from "../../ui/color-picker";
 
@@ -68,7 +68,7 @@ function getArrowheadOption(style: EdgeStyle): ArrowheadOption {
 }
 
 export class AoEdgeActionsGroup extends LitElementWw {
-  protected readonly msg = connectMessages(this);
+  protected readonly msg = widgetMsg(this);
   @consume({ context: documentContext })
   accessor doc!: DocumentController;
 

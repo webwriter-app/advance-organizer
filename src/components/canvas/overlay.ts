@@ -1,7 +1,7 @@
 import { svg, nothing, type TemplateResult } from "lit";
-import { SelectionController } from "../../state/selection";
+import { SelectionController } from "../store/selection";
 import { AnchorRendering, Id, Point, ResizeHandle } from "../../model/types";
-import { DocumentController } from "../../state/document";
+import { DocumentController } from "../store/document";
 import {
   computeEdgePoints,
   getAnchorPoints,

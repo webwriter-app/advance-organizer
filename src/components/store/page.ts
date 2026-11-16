@@ -3,7 +3,7 @@ import { Observable } from "./observable";
 import { DocumentController } from "./document";
 import { LitElementWw } from "@webwriter/lit";
 import DOMPurify from "dompurify";
-import { Id } from "../model/types";
+import { Id } from "../../model/types";
 
 const PAGE_TAG = "webwriter-advance-organizer-page";
 const NODE_ID_ATTR = "node-id";

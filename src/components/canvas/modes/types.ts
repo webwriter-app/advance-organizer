@@ -5,8 +5,8 @@ import type {
   Point,
   ResizeHandle,
 } from "../../../model/types";
-import type { DocumentController } from "../../../state/document";
-import type { SelectionController } from "../../../state/selection";
+import type { DocumentController } from "../../store/document";
+import type { SelectionController } from "../../store/selection";
 import { ZoomController } from "../zoom";
 import { SnapHighlighter } from "../snap";
 

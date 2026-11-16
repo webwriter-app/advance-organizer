@@ -1,6 +1,6 @@
 import { nothing, type TemplateResult } from "lit";
 import { EdgePosition, Id, Point } from "../../../model/types";
-import type { DocumentController } from "../../../state/document";
+import type { DocumentController } from "../../store/document";
 import { applyDrawEdgePreviewDom } from "../dom-sync";
 import { renderEdgePreview } from "../edge";
 import { getAnchorPoints } from "../helper";

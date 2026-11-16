@@ -1,4 +1,4 @@
-import { connectMessages } from "../../../localization/localizer";
+import { widgetMsg } from "@webwriter/lit/localize";
 import { LitElementWw } from "@webwriter/lit";
 import { zoomControlsStyles } from "./zoom-controls.styles";
 import { html, type TemplateResult } from "lit";
@@ -13,7 +13,7 @@ import iconZoomIn from "@tabler/icons/outline/zoom-in.svg";
 import iconZoomOut from "@tabler/icons/outline/zoom-out.svg";
 
 export class AoZoomControls extends LitElementWw {
-  protected readonly msg = connectMessages(this);
+  protected readonly msg = widgetMsg(this);
   static override scopedElements = {
     "sl-icon-button": SlIconButton,
     "sl-divider": SlDivider,

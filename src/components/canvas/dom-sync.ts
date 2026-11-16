@@ -6,7 +6,7 @@ import {
   Node,
   Point,
 } from "../../model/types";
-import { DocumentController } from "../../state/document";
+import { DocumentController } from "../store/document";
 import {
   applyResize,
   computeEdgeLabelLayout,

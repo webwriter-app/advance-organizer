@@ -1,11 +1,11 @@
-import { connectMessages } from "../../../../localization/localizer";
+import { widgetMsg } from "@webwriter/lit/localize";
 import { consume } from "@lit/context";
 import { LitElementWw } from "@webwriter/lit";
-import { documentContext, selectionContext } from "../../../state/contexts";
-import { DocumentController } from "../../../state/document";
-import { SelectionController } from "../../../state/selection";
+import { documentContext, selectionContext } from "../../store/contexts";
+import { DocumentController } from "../../store/document";
+import { SelectionController } from "../../store/selection";
 import { css, html, nothing, PropertyValues, type TemplateResult } from "lit";
-import { SubscribeController } from "../../../state/subscribe";
+import { SubscribeController } from "../../store/subscribe";
 import { actionsStyles } from "./toolbar-actions.styles";
 import {
   Node,
@@ -14,14 +14,14 @@ import {
   NodeShape,
   StrokeStyle,
 } from "../../../model/types";
-import { NODE_PRESETS, presetLabel, presetStyle } from "../../../model/presets";
+import { NODE_PRESETS, presetLabel, presetStyle } from "../../options/presets";
 import { DEFAULT_BLACK } from "../../../model/colors";
 import {
   SHAPES,
   shapeLabel,
   STROKE_STYLES,
   strokeStyleLabel,
-} from "../../../model/labels";
+} from "../../options/labels";
 import { renderShapePreview } from "../../canvas/node";
 import {
   renderColorIcon,
@@ -48,7 +48,7 @@ import iconCustom from "@tabler/icons/outline/adjustments.svg";
 const CUSTOM = "custom";
 
 export class AoNodeActionsGroup extends LitElementWw {
-  protected readonly msg = connectMessages(this);
+  protected readonly msg = widgetMsg(this);
   @consume({ context: documentContext })
   accessor doc!: DocumentController;
 

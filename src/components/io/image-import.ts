@@ -1,4 +1,4 @@
-import { type Dimension } from "../model/types";
+import { type Dimension } from "../../model/types";
 
 export const MIN_IMAGE_SIDE = 200;
 const MAX_ENCODED_SIDE = 1024;

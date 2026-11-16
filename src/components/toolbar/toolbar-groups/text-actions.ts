@@ -1,16 +1,16 @@
-import { connectMessages } from "../../../../localization/localizer";
+import { widgetMsg } from "@webwriter/lit/localize";
 import { consume } from "@lit/context";
 import { LitElementWw } from "@webwriter/lit";
-import { documentContext, selectionContext } from "../../../state/contexts";
-import { DocumentController } from "../../../state/document";
-import { SelectionController } from "../../../state/selection";
+import { documentContext, selectionContext } from "../../store/contexts";
+import { DocumentController } from "../../store/document";
+import { SelectionController } from "../../store/selection";
 import { html, nothing, PropertyValues, type TemplateResult } from "lit";
-import { SubscribeController } from "../../../state/subscribe";
+import { SubscribeController } from "../../store/subscribe";
 import { actionsStyles } from "./toolbar-actions.styles";
 import { Label } from "../../../model/types";
 import { DEFAULT_BLACK } from "../../../model/colors";
 import { renderColorIcon } from "./previews";
-import { MOD_LABEL } from "../../../state/keyboard";
+import { MOD_LABEL } from "../../store/keyboard";
 import { AoColorPicker } from "../../ui/color-picker";
 
 import SlButton from "@shoelace-style/shoelace/dist/components/button/button.component.js";
@@ -31,7 +31,7 @@ const FONT_SIZES: readonly number[] = [10, 12, 14, 16, 18, 24, 32, 48];
 const DEFAULT_FONT_SIZE = 18;
 
 export class AoTextActionsGroup extends LitElementWw {
-  protected readonly msg = connectMessages(this);
+  protected readonly msg = widgetMsg(this);
   @consume({ context: documentContext })
   accessor doc!: DocumentController;
 

@@ -1,5 +1,5 @@
-# Advance Organizer (`@webwriter/advance-organizer@1.0.0`)
-[License: MIT](LICENSE) | Version: 1.0.0
+# Advance Organizer (`@webwriter/advance-organizer@2.0.0`)
+[License: MIT](LICENSE) | Version: 2.0.0
 
 Create visual advance organizers to introduce new topics. Link concepts to further content that learners can open with a click.
 
@@ -35,11 +35,23 @@ npm install @webwriter/advance-organizer
 ## Fields
 | Name (Attribute Name) | Type | Description | Default | Reflects |
 | :-------------------: | :--: | :---------: | :-----: | :------: |
-| `nodes` (`nodes`) | `Node[]` | The nodes of the advance organizer. Each node has an `id` that edges refer to and that<br>links it to the page with that `node-id`, a `position` and `dimension` in canvas<br>coordinates, a `label` and a `style`. | `[]` | ✓ |
-| `edges` (`edges`) | `Edge[]` | The edges of the advance organizer. Each edge refers to its `source` and `target`<br>node by `id`, anchored at a fixed side of the node (`sourcePosition`/`targetPosition`),<br>and can carry a `label` and a `style` including arrow heads at either end. | `[]` | ✓ |
-| `images` (`images`) | `Image[]` | The images placed on the canvas. Each image has a `position` and `dimension` in canvas<br>coordinates and a `src` stored as a data URL. | `[]` | ✓ |
+| `WebwriterAdvanceOrganizer.dataType` | `string` | - | `"application/json"` | ✗ |
+| `WebwriterAdvanceOrganizer.actions` | `object` | - | `{ addNode: { label: (widget: { msg: MsgFn }) => widget.msg("Add concept"), group: "organizer", icon: "Add", intent: "default" as const, }, addImage: { label: (widget: { msg: MsgFn }) => widget.msg("Add image"), group: "organizer", icon: "Image", intent: "default" as const, }, }` | ✗ |
+| `WebwriterAdvanceOrganizer.optionGroups` | `object` | - | `{ organizer: { label: (widget: { msg: MsgFn }) => widget.msg("Organizer"), collapsible: true, advanced: false, }, }` | ✗ |
+| `msg` | - | - | - | ✗ |
+| `nodes` | `Node[]` | The nodes of the advance organizer. Each node has an `id` that edges refer to and that<br>links it to the page with that `node-id`, a `position` and `dimension` in canvas<br>coordinates, a `label` and a `style`. | `[]` | ✗ |
+| `edges` | `Edge[]` | The edges of the advance organizer. Each edge refers to its `source` and `target`<br>node by `id`, anchored at a fixed side of the node (`sourcePosition`/`targetPosition`),<br>and can carry a `label` and a `style` including arrow heads at either end. | `[]` | ✗ |
+| `images` | `Image[]` | The images placed on the canvas. Each image has a `position` and `dimension` in canvas<br>coordinates and a `src` stored as a data URL. | `[]` | ✗ |
 
 *Fields including [properties](https://developer.mozilla.org/en-US/docs/Glossary/Property/JavaScript) and [attributes](https://developer.mozilla.org/en-US/docs/Glossary/Attribute) define the current state of the widget and offer customization options.*
+
+## Methods
+| Name | Description | Parameters |
+| :--: | :---------: | :-------: |
+| `addNode` | - | -
+| `addImage` | - | -
+
+*[Methods](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Method_definitions) allow programmatic access to the widget.*
 
 ## Slots
 | Name | Description | Content Type |
@@ -56,7 +68,7 @@ npm install @webwriter/advance-organizer
 
 *The [editing config](https://webwriter.app/docs/packages/configuring/#editingconfig) defines how explorable authoring tools such as [WebWriter](https://webwriter.app) treat the widget.*
 
-*No public methods, events, custom CSS properties, or CSS parts.*
+*No public events, custom CSS properties, or CSS parts.*
 
 
 ## `WebwriterAdvanceOrganizerPage` (`<webwriter-advance-organizer-page>`)

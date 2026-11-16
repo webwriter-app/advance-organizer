@@ -1,4 +1,4 @@
-import { connectMessages } from "../../../localization/localizer";
+import { widgetMsg } from "@webwriter/lit/localize";
 import { LitElementWw } from "@webwriter/lit";
 import { dragOverlayStyles } from "./drag-overlay.styles";
 import { html, type TemplateResult } from "lit";
@@ -10,7 +10,7 @@ import SlIcon from "@shoelace-style/shoelace/dist/components/icon/icon.component
 import photoPlus from "@tabler/icons/outline/photo-plus.svg";
 
 export class AoDragOverlay extends LitElementWw {
-  protected readonly msg = connectMessages(this);
+  protected readonly msg = widgetMsg(this);
   static override scopedElements = {
     "sl-icon": SlIcon,
   };

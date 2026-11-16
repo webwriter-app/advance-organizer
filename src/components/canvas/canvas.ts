@@ -1,5 +1,6 @@
-import { connectMessages } from "../../../localization/localizer";
+import { widgetMsg } from "@webwriter/lit/localize";
 import { LitElementWw } from "@webwriter/lit";
+import { Viewport } from "@webwriter/lit/viewport";
 import { html, nothing, PropertyValues, type TemplateResult } from "lit";
 import { labelStyles, canvasStyles } from "./canvas.styles";
 import { renderNode } from "./node";
@@ -9,12 +10,12 @@ import {
   documentContext,
   pageContext,
   selectionContext,
-} from "../../state/contexts";
-import { SelectionController } from "../../state/selection";
-import { PageController } from "../../state/page";
+} from "../store/contexts";
+import { SelectionController } from "../store/selection";
+import { PageController } from "../store/page";
 import { renderOverlay } from "./overlay";
-import { DocumentController } from "../../state/document";
-import { SubscribeController } from "../../state/subscribe";
+import { DocumentController } from "../store/document";
+import { SubscribeController } from "../store/subscribe";
 import { repeat } from "lit/directives/repeat.js";
 import {
   AnchorRendering,
@@ -25,7 +26,7 @@ import {
 } from "../../model/types";
 import { property, state } from "lit/decorators.js";
 import { ANCHOR_HOVER_RADIUS, INTERACTIVE_SELECTOR } from "./helper";
-import { ClipboardAction } from "../../utils/clipboard";
+import { ClipboardAction } from "../io/clipboard";
 import { AoZoomControls } from "../ui/zoom-controls";
 import { ZoomController } from "./zoom";
 import { renderImage } from "./image";
@@ -55,7 +56,7 @@ import { LabelEditController, EDITOR_CLASS } from "./label-edit";
 import { LongPressController } from "./long-press";
 
 export class AoCanvas extends LitElementWw {
-  readonly msg = connectMessages(this);
+  readonly msg = widgetMsg(this);
   static override scopedElements = {
     "ao-zoom-controls": AoZoomControls,
     "ao-drag-overlay": AoDragOverlay,
@@ -71,7 +72,7 @@ export class AoCanvas extends LitElementWw {
   accessor pages!: PageController;
 
   @property({ type: Boolean, reflect: true })
-  accessor editable = true;
+  override accessor editable = true;
 
   @state()
   private accessor _mode: InteractionMode = { kind: "idle" };
@@ -97,9 +98,15 @@ export class AoCanvas extends LitElementWw {
   private static readonly MIN_ZOOM = 0.25;
   private static readonly MAX_ZOOM = 4;
 
+  private readonly _viewport = new Viewport(this, {
+    bounds: () => this._zoomController.panLimit(),
+    margin: ZoomController.PAN_MARGIN,
+    can: () => this._zoomController.panningEnabled(),
+  });
+
   private readonly _zoomController = new ZoomController(
     this,
-    AoCanvas.MIN_ZOOM,
+    this._viewport,
     AoCanvas.MAX_ZOOM,
     () => this.editable,
     () => [...this.doc.nodes, ...this.doc.images],
@@ -153,8 +160,6 @@ export class AoCanvas extends LitElementWw {
   }
 
   protected override updated(changedProperties: PropertyValues): void {
-    this._zoomController.clampPan();
-
     if (!changedProperties.has("_mode")) return;
     const previous = changedProperties.get("_mode") as
       | InteractionMode
@@ -179,25 +184,26 @@ export class AoCanvas extends LitElementWw {
 
   override connectedCallback(): void {
     super.connectedCallback();
-    if (this.hasUpdated) this._attach();
+    if (this.hasUpdated) {
+      this._attach();
+      // The module reads the template after a render.
+      this.requestUpdate();
+    }
   }
 
   override disconnectedCallback(): void {
+    this._zoomController.remember();
     super.disconnectedCallback();
     this._labelEdit.commit();
     this._resetMode();
     this._detachSvgListeners();
   }
 
-  destroy(): void {
-    this._zoomController.destroy();
-  }
-
   private _attach(): void {
-    const viewport = this.renderRoot.querySelector<SVGGElement>("g.viewport");
-    if (!viewport) return;
+    const svg = this.renderRoot.querySelector<SVGSVGElement>("svg");
+    if (!svg) return;
 
-    this._zoomController.init(viewport);
+    this._zoomController.init(svg);
     this._attachSvgListeners();
   }
 
@@ -226,6 +232,9 @@ export class AoCanvas extends LitElementWw {
 
   protected override render(): TemplateResult {
     return html`<svg
+        data-ww-viewport="canvas"
+        data-ww-viewport-zoom="${AoCanvas.MIN_ZOOM} ${AoCanvas.MAX_ZOOM}"
+        data-ww-viewport-fit="none"
         style="touch-action: none"
         width="100%"
         height="100%"
@@ -241,7 +250,9 @@ export class AoCanvas extends LitElementWw {
         @dragover=${this._dropController.onDragOver}
         @dragleave=${this._dropController.onDragLeave}
         @drop=${this._dropController.onDrop}>
-        <g class="viewport">
+        <g
+          class="viewport"
+          transform="translate(${this._viewport.x} ${this._viewport.y}) scale(${this._viewport.scale})">
           <g class="background"></g>
           <g class="images">
             ${repeat(this.doc.images, (img) => img.id, renderImage)}
@@ -384,6 +395,8 @@ export class AoCanvas extends LitElementWw {
     }
 
     if (this._mode.kind === "draw-edge") {
+      // The press belongs to the edge, not to the viewport's drag to pan.
+      e.preventDefault();
       handleDrawEdgeClick(e, this._mode, this._modeContext);
       return;
     }
@@ -470,6 +483,8 @@ export class AoCanvas extends LitElementWw {
       if (e.pointerType === "touch") {
         this._longPress.start(e);
       } else if (!e.shiftKey) {
+        // A drag on the background selects; Shift+drag is left to the viewport to pan.
+        e.preventDefault();
         beginRectangleSelect({ x: e.clientX, y: e.clientY }, this._modeContext);
       }
     }

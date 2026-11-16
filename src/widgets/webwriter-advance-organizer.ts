@@ -17,18 +17,18 @@ import {
   documentContext,
   pageContext,
   selectionContext,
-} from "../state/contexts";
-import { DocumentController } from "../state/document";
-import { SelectionController } from "../state/selection";
+} from "../components/store/contexts";
+import { DocumentController } from "../components/store/document";
+import { SelectionController } from "../components/store/selection";
 import { Edge, Id, Image, Node } from "../model/types";
 import { AoPageEditActionsGroup } from "../components/toolbar/toolbar-groups/page-edit-actions";
 import { AoPageInfoActionsGroup } from "../components/toolbar/toolbar-groups/page-info-actions";
-import { PageController } from "../state/page";
-import { KeyboardController } from "../state/keyboard";
+import { PageController } from "../components/store/page";
+import { KeyboardController } from "../components/store/keyboard";
 import { insertNode, pickAndInsertImages } from "../components/canvas/insert";
 import { AoCreateActionsGroup } from "../components/toolbar/toolbar-groups/create-actions";
 import { AoEdgeActionsGroup } from "../components/toolbar/toolbar-groups/edge-actions";
-import { ClipboardAction } from "../utils/clipboard";
+import { ClipboardAction } from "../components/io/clipboard";
 import { AoImageActionsGroup } from "../components/toolbar/toolbar-groups/image-actions";
 import {
   getPrintEntries,
@@ -38,11 +38,12 @@ import {
 import { AoTextActionsGroup } from "../components/toolbar/toolbar-groups/text-actions";
 import { AoHelpActionsGroup } from "../components/toolbar/toolbar-groups/help-actions";
 
-// @ts-ignore
 import type { MsgFn } from "@lit/localize";
-import { createLocalizer, effectiveLanguage, sourceMsg } from "../../localization/localizer";
+import { localizer } from "@webwriter/lit/localize";
+import { jsonData } from "@webwriter/lit/data";
+import { Permissions } from "@webwriter/lit/permissions";
+import { sourceLocale, targetLocales } from "../../localization/generated/locale-codes.js";
 import { cache } from "lit/directives/cache.js";
-import { readData, writeData } from "../utils/data";
 
 /**
  * A visual advance organizer: a canvas of labeled boxes, connecting arrows and images
@@ -53,28 +54,70 @@ import { readData, writeData } from "../utils/data";
 
 @customElement("webwriter-advance-organizer")
 export class WebwriterAdvanceOrganizer extends LitElementWw {
-  // Inherited language must not be reflected as an authored attribute.
-  static override properties = { lang: { attribute: false, noAccessor: true } };
-  override get lang(): string { return effectiveLanguage(this); }
-  override set lang(value: string) { this.setAttribute("lang", value); }
+  static override dataType = "application/json";
 
-  static dataType = "application/json";
-  readonly actions = WebwriterAdvanceOrganizer.makeActions(sourceMsg);
-  private static makeActions(msg: MsgFn) {
-    return {
-        addNode: { label: { _: msg("Add concept") }, group: "organizer", icon: "Add", intent: "default" },
-        addImage: { label: { _: msg("Add image") }, group: "organizer", icon: "Image", intent: "default" },
-    };
-  }
-  static override actions = WebwriterAdvanceOrganizer.makeActions(sourceMsg);
+  static override styles = [styles, labelStyles, shoelaceTheme];
 
-  private static makeOptionGroups(msg: MsgFn) {
-    return {
-        organizer: { label: { _: msg("Organizer") }, collapsible: true, advanced: false },
-    };
-  }
-  static optionGroups = WebwriterAdvanceOrganizer.makeOptionGroups(sourceMsg);
-  readonly optionGroups = WebwriterAdvanceOrganizer.makeOptionGroups(sourceMsg);
+  /** @internal */
+  static override shadowRootOptions: ShadowRootInit = {
+    ...super.shadowRootOptions,
+    slotAssignment: "manual" as const,
+  };
+
+  /** @internal */
+  static override scopedElements = {
+    "ao-toolbar": AoToolbar,
+    "ao-context-menu": AoContextMenu,
+    "ao-canvas": AoCanvas,
+
+    "ao-create-actions": AoCreateActionsGroup,
+    "ao-node-actions": AoNodeActionsGroup,
+    "ao-edge-actions": AoEdgeActionsGroup,
+    "ao-image-actions": AoImageActionsGroup,
+    "ao-text-actions": AoTextActionsGroup,
+    "ao-page-actions": AoPageActionsGroup,
+    "ao-page-info-actions": AoPageInfoActionsGroup,
+    "ao-page-edit-actions": AoPageEditActionsGroup,
+    "ao-help-actions": AoHelpActionsGroup,
+  };
+
+  static override actions = {
+    addNode: {
+      label: (widget: { msg: MsgFn }) => widget.msg("Add concept"),
+      group: "organizer",
+      icon: "Add",
+      intent: "default" as const,
+    },
+    addImage: {
+      label: (widget: { msg: MsgFn }) => widget.msg("Add image"),
+      group: "organizer",
+      icon: "Image",
+      intent: "default" as const,
+    },
+  };
+
+  static override optionGroups = {
+    organizer: {
+      label: (widget: { msg: MsgFn }) => widget.msg("Organizer"),
+      collapsible: true,
+      advanced: false,
+    },
+  };
+
+  protected override localize = localizer(this, {
+    sourceLocale,
+    targetLocales,
+    load: (locale) => import(`../../localization/generated/${locale}.ts`),
+    drawer: true,
+  });
+  readonly msg = this.localize.msg;
+
+  #permissions = new Permissions(this);
+
+  #data = jsonData(this, {
+    defaults: { nodes: [] as readonly Node[], edges: [] as readonly Edge[], images: [] as readonly Image[] },
+    changed: (value) => this.doc.load([...value.nodes], [...value.edges], [...value.images]),
+  });
 
   /** @internal */
   @provide({
@@ -117,13 +160,6 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
   @property({ type: Array, attribute: false, state: true })
   accessor images: Image[] = [];
 
-  // Used to differentiate between own changes and changes from outside when properties change
-  private _publishedDocument?: {
-    nodes: Node[];
-    edges: Edge[];
-    images: Image[];
-  };
-
   @state()
   private accessor _openPage: Id | null = null;
 
@@ -136,18 +172,15 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
   @query("ao-canvas")
   private accessor canvas!: AoCanvas | null;
 
-  protected override localize = createLocalizer(this, () => {
-      Object.assign(this.actions, WebwriterAdvanceOrganizer.makeActions(this.msg));
-      Object.assign(this.optionGroups, WebwriterAdvanceOrganizer.makeOptionGroups(this.msg));
-  });
-  readonly msg = this.localize.msg;
+  // Used to differentiate between own changes and changes from outside when properties change
+  private _publishedDocument?: {
+    nodes: Node[];
+    edges: Edge[];
+    images: Image[];
+  };
 
   constructor() {
     super();
-    const authoredData = readData<{ nodes: Node[]; edges: Edge[]; images: Image[] }>(this);
-    this.nodes = authoredData.nodes ?? [];
-    this.edges = authoredData.edges ?? [];
-    this.images = authoredData.images ?? [];
     new KeyboardController(this);
     this.doc.subscribe(() => {
       const snapshot = {
@@ -160,47 +193,11 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
       this.nodes = snapshot.nodes;
       this.edges = snapshot.edges;
       this.images = snapshot.images;
-      writeData(this, snapshot);
+      this.#data.set(snapshot);
+      // Written in this task, together with the pages that the change removed.
+      this.#data.flush();
     });
   }
-
-  dataChanged(text: string | null): void {
-    if (!text) return;
-    try {
-      const data = JSON.parse(text);
-      this.doc.load(data.nodes ?? [], data.edges ?? [], data.images ?? []);
-    } catch {
-      // Keep malformed authored data available for repair without replacing the live model.
-    }
-  }
-
-  /** @internal */
-  static override shadowRootOptions: ShadowRootInit = {
-    ...super.shadowRootOptions,
-    slotAssignment: "manual" as const,
-  };
-
-  /**
-   * Register the classes of custom elements to use in the Shadow DOM here.
-   * @internal
-   */
-  static override scopedElements = {
-    "ao-toolbar": AoToolbar,
-    "ao-context-menu": AoContextMenu,
-    "ao-canvas": AoCanvas,
-
-    "ao-create-actions": AoCreateActionsGroup,
-    "ao-node-actions": AoNodeActionsGroup,
-    "ao-edge-actions": AoEdgeActionsGroup,
-    "ao-image-actions": AoImageActionsGroup,
-    "ao-text-actions": AoTextActionsGroup,
-    "ao-page-actions": AoPageActionsGroup,
-    "ao-page-info-actions": AoPageInfoActionsGroup,
-    "ao-page-edit-actions": AoPageEditActionsGroup,
-    "ao-help-actions": AoHelpActionsGroup,
-  };
-
-  static override styles = [styles, labelStyles, shoelaceTheme];
 
   override connectedCallback(): void {
     super.connectedCallback();
@@ -217,7 +214,6 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
     this.removeEventListener("copy", this._onCopy);
     this.removeEventListener("cut", this._onCut);
     this.removeEventListener("paste", this._onPaste);
-    this.canvas?.destroy();
   }
 
   private _onFocusOut = (): void => {
@@ -333,7 +329,7 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
       return;
     }
     if (!this.pages.hasPage(pageId)) {
-      if (!this.isContentEditable) {
+      if (!this.#permissions.editing) {
         return;
       }
       this.pages.addPage(pageId);
@@ -342,7 +338,7 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
   }
 
   private _renderToolbar(): TemplateResult | typeof nothing {
-    if (this._openPage === null && !this.isContentEditable) {
+    if (this._openPage === null && !this.#permissions.editing) {
       return nothing;
     }
 
@@ -381,26 +377,25 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
                 this._openPage = null;
               }}></ao-page-info-actions>
             <div class="spacer"></div>
-            ${this.isContentEditable
-              ? html`<ao-page-edit-actions
-                  @delete-page=${() => {
-                    if (this._openPage !== null) {
-                      this.pages.removePage(this._openPage);
-                      this._openPage = null;
-                    }
-                  }}></ao-page-edit-actions>`
-              : nothing}`}
+            <ao-page-edit-actions
+              data-ww-can="edit"
+              @delete-page=${() => {
+                if (this._openPage !== null) {
+                  this.pages.removePage(this._openPage);
+                  this._openPage = null;
+                }
+              }}></ao-page-edit-actions>`}
     </ao-toolbar>`;
   }
 
   protected override render(): TemplateResult {
     const printEntries = getPrintEntries(this.doc, this.pages);
-    return html`<div class="root${this.isContentEditable ? "" : " reading"}">
+    return html`<div class="root${this.#permissions.editing ? "" : " reading"}">
       ${this._renderToolbar()}
       ${cache(
         this._openPage === null
           ? html`<ao-canvas
-                .editable=${this.isContentEditable}
+                .editable=${this.#permissions.editing}
                 @draw-edge-change=${(e: CustomEvent<{ active: boolean }>) => {
                   this._drawingEdge = e.detail.active;
                 }}

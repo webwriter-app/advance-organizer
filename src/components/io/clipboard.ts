@@ -1,4 +1,4 @@
-import { Edge, Id, Image, Node } from "../model/types";
+import { Edge, Id, Image, Node } from "../../model/types";
 
 const CLIPBOARD_MIME = "application/vnd.webwriter.advance-organizer+json";
 const CLIPBOARD_WEB_MIME = `web ${CLIPBOARD_MIME}`;

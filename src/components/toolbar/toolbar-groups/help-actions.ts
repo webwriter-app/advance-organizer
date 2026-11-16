@@ -1,9 +1,9 @@
-import { connectMessages } from "../../../../localization/localizer";
+import { widgetMsg } from "@webwriter/lit/localize";
 import { LitElementWw } from "@webwriter/lit";
-import { SelectionController } from "../../../state/selection";
+import { SelectionController } from "../../store/selection";
 import { css, html, type TemplateResult } from "lit";
 import { actionsStyles } from "./toolbar-actions.styles";
-import { MOD_LABEL } from "../../../state/keyboard";
+import { MOD_LABEL } from "../../store/keyboard";
 
 import SlButton from "@shoelace-style/shoelace/dist/components/button/button.component.js";
 import SlButtonGroup from "@shoelace-style/shoelace/dist/components/button-group/button-group.component.js";
@@ -27,7 +27,7 @@ const WHEEL_HIGHLIGHT =
   "M12 4a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1 -3 0v-3a1.5 1.5 0 0 1 1.5 -1.5z";
 
 export class AoHelpActionsGroup extends LitElementWw {
-  protected readonly msg = connectMessages(this);
+  protected readonly msg = widgetMsg(this);
   static override scopedElements = {
     "sl-button": SlButton,
     "sl-button-group": SlButtonGroup,
@@ -96,7 +96,7 @@ export class AoHelpActionsGroup extends LitElementWw {
   ];
 
   static isApplicable(
-    _: any,
+    _: unknown,
     selection: SelectionController | undefined,
   ): boolean {
     return !selection || selection.size === 0;

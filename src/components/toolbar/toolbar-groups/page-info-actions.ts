@@ -1,10 +1,10 @@
-import { connectMessages } from "../../../../localization/localizer";
+import { widgetMsg } from "@webwriter/lit/localize";
 import { consume } from "@lit/context";
 import { LitElementWw } from "@webwriter/lit";
-import { documentContext } from "../../../state/contexts";
-import { DocumentController } from "../../../state/document";
+import { documentContext } from "../../store/contexts";
+import { DocumentController } from "../../store/document";
 import { css, html, nothing, PropertyValues, type TemplateResult } from "lit";
-import { SubscribeController } from "../../../state/subscribe";
+import { SubscribeController } from "../../store/subscribe";
 import { actionsStyles } from "./toolbar-actions.styles";
 import { property } from "lit/decorators.js";
 import { Id } from "../../../model/types";
@@ -17,7 +17,7 @@ import SlTooltip from "@shoelace-style/shoelace/dist/components/tooltip/tooltip.
 import iconArrowLeft from "@tabler/icons/outline/arrow-left.svg";
 
 export class AoPageInfoActionsGroup extends LitElementWw {
-  protected readonly msg = connectMessages(this);
+  protected readonly msg = widgetMsg(this);
   @consume({ context: documentContext })
   accessor doc!: DocumentController;
 

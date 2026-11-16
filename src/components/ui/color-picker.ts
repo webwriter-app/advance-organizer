@@ -1,4 +1,4 @@
-import { connectMessages } from "../../../localization/localizer";
+import { widgetMsg } from "@webwriter/lit/localize";
 import { LitElementWw } from "@webwriter/lit";
 import { html, type TemplateResult } from "lit";
 import { property } from "lit/decorators.js";
@@ -12,7 +12,7 @@ export interface ColorOption {
 }
 
 export class AoColorPicker extends LitElementWw {
-  protected readonly msg = connectMessages(this);
+  protected readonly msg = widgetMsg(this);
   // `--sl-color-*-600`, `gray-950` for black as fixed values
   get COLORS(): readonly ColorOption[] {
     return [

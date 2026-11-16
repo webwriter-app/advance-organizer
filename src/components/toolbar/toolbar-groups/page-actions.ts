@@ -1,11 +1,11 @@
-import { connectMessages } from "../../../../localization/localizer";
+import { widgetMsg } from "@webwriter/lit/localize";
 import { consume } from "@lit/context";
 import { LitElementWw } from "@webwriter/lit";
-import { documentContext, selectionContext } from "../../../state/contexts";
-import { DocumentController } from "../../../state/document";
-import { SelectionController } from "../../../state/selection";
+import { documentContext, selectionContext } from "../../store/contexts";
+import { DocumentController } from "../../store/document";
+import { SelectionController } from "../../store/selection";
 import { html, nothing, PropertyValues, type TemplateResult } from "lit";
-import { SubscribeController } from "../../../state/subscribe";
+import { SubscribeController } from "../../store/subscribe";
 import { actionsStyles } from "./toolbar-actions.styles";
 
 import SlButton from "@shoelace-style/shoelace/dist/components/button/button.component.js";
@@ -16,7 +16,7 @@ import SlTooltip from "@shoelace-style/shoelace/dist/components/tooltip/tooltip.
 import iconEditFile from "@tabler/icons/outline/file-pencil.svg";
 
 export class AoPageActionsGroup extends LitElementWw {
-  protected readonly msg = connectMessages(this);
+  protected readonly msg = widgetMsg(this);
   @consume({ context: documentContext })
   accessor doc!: DocumentController;
 
