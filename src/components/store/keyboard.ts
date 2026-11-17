@@ -22,7 +22,7 @@ export const MOD_LABEL = /mac|iphone|ipad/i.test(navigator.userAgent)
   ? "⌘"
   : "Ctrl";
 
-export interface KeyboardCanvas extends CanvasStores {
+interface KeyboardCanvas extends CanvasStores {
   readonly msg: MsgFn;
   readonly editable: boolean;
   readonly editingId: Id | null;
@@ -34,7 +34,7 @@ export interface KeyboardCanvas extends CanvasStores {
   cancelInteraction(): boolean;
 }
 
-export interface KeyboardHost extends ReactiveControllerHost, EventTarget {
+interface KeyboardHost extends ReactiveControllerHost, EventTarget {
   keyboardTarget(e: KeyboardEvent): KeyboardCanvas | null;
 }
 

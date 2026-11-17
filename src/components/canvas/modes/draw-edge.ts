@@ -47,7 +47,7 @@ export function handleDrawEdgeClick(
   ctx.resetMode();
 }
 
-export interface AnchorTarget {
+interface AnchorTarget {
   el: SVGElement;
   nodeId: Id;
   anchor: EdgePosition;

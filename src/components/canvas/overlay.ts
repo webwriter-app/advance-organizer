@@ -11,7 +11,7 @@ import {
   TOUCH_INDICATOR_RADIUS,
 } from "./helper";
 
-export interface RectangleSelection {
+interface RectangleSelection {
   start: Point;
   touch: boolean;
 }

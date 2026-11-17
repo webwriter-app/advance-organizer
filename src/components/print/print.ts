@@ -10,7 +10,7 @@ import { getBadgeColors, renderNode } from "../canvas/node";
 
 const PRINT_PADDING = 32;
 
-export interface PrintEntry {
+interface PrintEntry {
   readonly node: Node;
   readonly number: number;
 }

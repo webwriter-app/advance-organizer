@@ -44,6 +44,7 @@ import { jsonData } from "@webwriter/lit/data";
 import { Permissions } from "@webwriter/lit/permissions";
 import { sourceLocale, targetLocales } from "../../localization/generated/locale-codes.js";
 import { cache } from "lit/directives/cache.js";
+import { guard } from "lit/directives/guard.js";
 
 /**
  * A visual advance organizer: a canvas of labeled boxes, connecting arrows and images
@@ -424,7 +425,10 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
                 : nothing}`
           : nothing,
       )}
-      ${renderPrintOrganizer(this.doc, printEntries)}
+      ${guard(
+        [this.nodes, this.edges, this.images, printEntries.map((e) => e.node.id).join()],
+        () => renderPrintOrganizer(this.doc, printEntries),
+      )}
       ${renderPages(printEntries, this._openPage)}
     </div>`;
   }

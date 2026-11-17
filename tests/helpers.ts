@@ -36,7 +36,7 @@ export const until = async <T>(fn: () => T | Promise<T>, message = "condition no
 };
 export const settle = async (n = 3) => { for (let i = 0; i < n; i++) await frame(); };
 
-export const DATA = {
+const DATA = {
   nodes: [
     { id: "n1", kind: "node", position: { x: 0, y: 0 }, dimension: { width: 160, height: 60 }, style: { preset: "main-topic" }, label: { text: "A" } },
     { id: "n2", kind: "node", position: { x: 300, y: -80 }, dimension: { width: 140, height: 60 }, style: { shape: "ellipse" }, label: { text: "B" } },

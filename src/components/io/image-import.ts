@@ -1,11 +1,11 @@
 import { type Dimension } from "../../model/types";
 
-export const MIN_IMAGE_SIDE = 200;
+const MIN_IMAGE_SIDE = 200;
 const MAX_ENCODED_SIDE = 1024;
 const ENCODED_TYPE = "image/webp";
 const ENCODED_QUALITY = 0.8;
 
-export interface ImportedImage {
+interface ImportedImage {
   src: string;
   width: number;
   height: number;

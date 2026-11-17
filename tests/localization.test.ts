@@ -1,7 +1,7 @@
 /// <reference types="mocha" />
 import "mocha/mocha.js";
 import { getMochaConfig } from "@webwriter/build/test";
-import { warnings, mount, reset, mountPoint, canvasOf, must, zoomButton, zoomButtons, until } from "./helpers";
+import { warnings, mount, reset, mountPoint, must, zoomButton, zoomButtons, until } from "./helpers";
 
 mocha.setup(getMochaConfig());
 

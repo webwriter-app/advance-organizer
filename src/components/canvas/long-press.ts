@@ -1,6 +1,6 @@
 import { Point } from "../../model/types";
 
-export interface HeldPress {
+interface HeldPress {
   origin: Point;
   target: Element | null;
 }

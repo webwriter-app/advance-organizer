@@ -25,7 +25,7 @@ export interface CanvasStores {
   pages: PageController;
 }
 
-export type ItemStores = Pick<CanvasStores, "doc" | "selection">;
+type ItemStores = Pick<CanvasStores, "doc" | "selection">;
 
 const NEW_NODE_DIMENSION: Dimension = { width: 160, height: 80 };
 const NEW_NODE_STYLE: NodeStyle = presetStyle(DEFAULT_PRESET);

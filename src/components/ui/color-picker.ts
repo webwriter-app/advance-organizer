@@ -6,7 +6,7 @@ import { classMap } from "lit/directives/class-map.js";
 import { colorPickerStyles } from "./color-picker.styles";
 import { DEFAULT_BLACK } from "../../model/colors";
 
-export interface ColorOption {
+interface ColorOption {
   readonly label: string;
   readonly color: string;
 }

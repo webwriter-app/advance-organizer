@@ -1,9 +1,9 @@
 import type { MsgFn } from "@lit/localize";
 import { NodePresetId, NodeStyle } from "../../model/types";
 
-export type PresetStyle = Required<Omit<NodeStyle, "preset">>;
+type PresetStyle = Required<Omit<NodeStyle, "preset">>;
 
-export interface NodePreset {
+interface NodePreset {
   readonly id: NodePresetId;
   readonly style: PresetStyle;
 }
