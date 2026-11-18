@@ -27,6 +27,18 @@ export const zoomControlsStyles = css`
     color: var(--sl-color-neutral-600);
   }
 
+  @container (max-width: 480px) {
+    :host {
+      top: var(--sl-spacing-x-small);
+      right: var(--sl-spacing-x-small);
+    }
+
+    .zoom-level,
+    sl-divider {
+      display: none;
+    }
+  }
+
   sl-divider {
     height: 1.25rem;
     --spacing: var(--sl-spacing-2x-small);

@@ -50,9 +50,9 @@ function renderRectangleSelection(point: Point): TemplateResult {
         y=${0}
         width=${0}
         height=${0}
-        fill="var(--ao-selection-color, #3b82f6)"
+        fill="var(--ao-selection-color, var(--ww-theme-accent-1, #3b82f6))"
         fill-opacity="0.2"
-        stroke="var(--ao-selection-color, #3b82f6)"
+        stroke="var(--ao-selection-color, var(--ww-theme-accent-1, #3b82f6))"
         stroke-width="1"
         vector-effect="non-scaling-stroke"
       />
@@ -118,7 +118,7 @@ function renderSelectionIndicator(
           width=${item.dimension.width}
           height=${item.dimension.height}
           fill="none"
-          stroke="var(--ao-selection-color, #3b82f6)"
+          stroke="var(--ao-selection-color, var(--ww-theme-accent-1, #3b82f6))"
           stroke-width="2"
           vector-effect="non-scaling-stroke"
         />
@@ -147,7 +147,7 @@ function renderSelectionIndicator(
         y1="${start.y}"
         x2="${end.x}"
         y2="${end.y}"
-        stroke="var(--ao-selection-color, #3b82f6)"
+        stroke="var(--ao-selection-color, var(--ww-theme-accent-1, #3b82f6))"
         stroke-width="2"
         stroke-dasharray="4 2"
         vector-effect="non-scaling-stroke"
@@ -180,7 +180,7 @@ function renderResizeHandles(
         transform="translate(${x}, ${y})"
         pointer-events="all"
         fill="white"
-        stroke="var(--ao-selection-color, #3b82f6)"
+        stroke="var(--ao-selection-color, var(--ww-theme-accent-1, #3b82f6))"
         stroke-width="1.5"
         vector-effect="non-scaling-stroke"
       >
@@ -207,7 +207,7 @@ function renderResizeHandles(
         data-resize-id=${entryId}
         pointer-events="all"
         fill="white"
-        stroke="var(--ao-selection-color, #3b82f6)"
+        stroke="var(--ao-selection-color, var(--ww-theme-accent-1, #3b82f6))"
         stroke-width="1.5"
         vector-effect="non-scaling-stroke"
       >

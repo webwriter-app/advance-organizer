@@ -69,7 +69,7 @@ export function renderPages(
   return html`<div class="page-container${openPageId === null ? "" : " open"}">
     ${entries.map(({ node, number }) => {
       const { badge, icon } = getBadgeColors(node.style);
-      return html`<section class="page${node.id === openPageId ? " open" : ""}">
+      return html`<section part="page" class="page${node.id === openPageId ? " open" : ""}">
         <header class="page-header">
           <span
             class="page-number"

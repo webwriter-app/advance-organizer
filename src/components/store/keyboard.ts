@@ -94,6 +94,10 @@ export class KeyboardController implements ReactiveController {
       }
     }
 
+    if (e.key === "Tab" && !e.ctrlKey && !e.metaKey) {
+      return this._stepSelection(canvas, e.shiftKey ? -1 : 1);
+    }
+
     switch (e.key) {
       case "Delete":
       case "Backspace":
@@ -110,7 +114,8 @@ export class KeyboardController implements ReactiveController {
         if (!e.repeat) insertNode(canvas.insertPosition(), canvas);
         return true;
       case "r":
-        if (!e.repeat) canvas.toggleDrawEdge();
+        if (e.repeat) return true;
+        if (!(e.shiftKey && this._connectSelected(canvas))) canvas.toggleDrawEdge();
         return true;
       case "i":
         if (!e.repeat) {
@@ -189,12 +194,60 @@ export class KeyboardController implements ReactiveController {
   }
 
   private _startLabelEdit(canvas: KeyboardCanvas): boolean {
+    if (canvas.selection.isEmpty()) {
+      const first = this._itemIds(canvas)[0];
+      if (first === undefined) return false;
+      canvas.selection.select(new Set([first]));
+      return true;
+    }
     if (canvas.selection.size !== 1) return false;
     const id = canvas.selection.entries.values().next().value;
     if (id === undefined) return false;
     const item = canvas.doc.get(id);
     if (item?.kind !== "node" && item?.kind !== "edge") return false;
     canvas.startLabelEdit(id);
+    return true;
+  }
+
+  private _itemIds(canvas: KeyboardCanvas): Id[] {
+    return [
+      ...canvas.doc.nodes.map((node) => node.id),
+      ...canvas.doc.edges.map((edge) => edge.id),
+      ...canvas.doc.images.map((image) => image.id),
+    ];
+  }
+
+  /** Tab moves a single selection through the items; at either end it leaves the canvas. */
+  private _stepSelection(canvas: KeyboardCanvas, step: 1 | -1): boolean {
+    if (canvas.selection.size !== 1) return false;
+    const ids = this._itemIds(canvas);
+    const current = ids.indexOf(canvas.selection.entries.values().next().value!);
+    const next = ids[current + step];
+    if (current < 0 || next === undefined) return false;
+    canvas.selection.select(new Set([next]));
+    return true;
+  }
+
+  /** With two concepts selected, Shift+R connects them, the keyboard way of drawing a relation. */
+  private _connectSelected(canvas: KeyboardCanvas): boolean {
+    if (canvas.selection.size !== 2) return false;
+    const [source, target] = [...canvas.selection.entries].map((id) =>
+      canvas.doc.get(id),
+    );
+    if (source?.kind !== "node" || target?.kind !== "node") return false;
+    const dx = target.position.x - source.position.x;
+    const dy = target.position.y - source.position.y;
+    const horizontal = Math.abs(dx) >= Math.abs(dy);
+    const sourcePosition = horizontal ? (dx >= 0 ? "right" : "left") : dy >= 0 ? "bottom" : "top";
+    const targetPosition = horizontal ? (dx >= 0 ? "left" : "right") : dy >= 0 ? "top" : "bottom";
+    const edge = canvas.doc.addEdge({
+      source: source.id,
+      sourcePosition,
+      target: target.id,
+      targetPosition,
+      style: { markerEnd: "arrow" },
+    });
+    if (edge) canvas.selection.select(new Set([edge.id]));
     return true;
   }
 }

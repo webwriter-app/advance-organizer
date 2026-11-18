@@ -4,14 +4,16 @@
   "description": "Create visual advance organizers to introduce new topics. Link concepts to further content that learners can open with a click.",
   "keywords": [
     "webwriter-widget",
-    "advance-organizer",
-    "concept-map",
-    "mind-map",
-    "canvas",
     "widget-presentational",
     "widget-conceptual",
+    "isced2011-1",
     "isced2011-2",
     "isced2011-3",
+    "isced2011-4",
+    "isced2011-5",
+    "isced2011-6",
+    "isced2011-7",
+    "iscedf2013-00",
     "iscedf2013-01",
     "iscedf2013-02",
     "iscedf2013-03",
@@ -22,6 +24,27 @@
     "iscedf2013-08",
     "iscedf2013-09",
     "iscedf2013-10",
+    "widget-editable",
+    "widget-has-content",
+    "widget-allows-pointer-input",
+    "widget-allows-keyboard-input",
+    "widget-allows-touch-input",
+    "widget-convertible-from-ul",
+    "widget-convertible-from-ol",
+    "widget-convertible-to-ul",
+    "widget-convertible-to-image/svg+xml",
+    "widget-convertible-to-application/json",
+    "widget-convertible-from-application/json",
+    "widget-responsive",
+    "widget-themeable",
+    "widget-printable",
+    "widget-stateful",
+    "widget-reactive",
+    "widget-testable",
+    "widget-supports-shared-dependencies",
+    "advance-organizer",
+    "concept-map",
+    "mind-map",
     "widget-lang-en",
     "widget-lang-de",
     "widget-lang-ar",
@@ -180,6 +203,10 @@
       "source": "./tests/editing.test.ts",
       "default": "./dist/tests/editing.*"
     },
+    "./tests/conversion.*": {
+      "source": "./tests/conversion.test.ts",
+      "default": "./dist/tests/conversion.*"
+    },
     "./icon": "./icon.svg",
     "./editing-config.json": "./editing-config.json",
     "./custom-elements.json": "./custom-elements.json"
@@ -187,7 +214,14 @@
   "editingConfig": {
     "./widgets/webwriter-advance-organizer": {
       "definingAsContext": true,
-      "content": "(webwriter-advance-organizer-page)*"
+      "content": "(webwriter-advance-organizer-page)*",
+      "importFormats": [
+        ".json"
+      ],
+      "exportFormats": [
+        ".json",
+        "image/svg+xml"
+      ]
     },
     "./widgets/webwriter-advance-organizer-page": {
       "definingForContent": true,

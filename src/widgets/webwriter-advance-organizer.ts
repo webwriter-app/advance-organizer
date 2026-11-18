@@ -1,5 +1,5 @@
 import { html, nothing, PropertyValues, TemplateResult } from "lit";
-import { LitElementWw } from "@webwriter/lit";
+import { LitElementWw, computed, signal } from "@webwriter/lit";
 import { customElement, property, query, state } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
 import { styles } from "./webwriter-advance-organizer.styles";
@@ -43,6 +43,11 @@ import { localizer } from "@webwriter/lit/localize";
 import { jsonData } from "@webwriter/lit/data";
 import { Permissions } from "@webwriter/lit/permissions";
 import { sourceLocale, targetLocales } from "../../localization/generated/locale-codes.js";
+import { organizerFromOutline, outlineFromOrganizer } from "../model/outline";
+import { parseOrganizerJson } from "../model/organizer-json";
+import { listFromOutline, outlineFromList } from "../components/io/outline-dom";
+import { organizerToSvg } from "../components/io/svg-export";
+import { presetStyle } from "../components/options/presets";
 import { cache } from "lit/directives/cache.js";
 import { guard } from "lit/directives/guard.js";
 
@@ -51,6 +56,26 @@ import { guard } from "lit/directives/guard.js";
  * that gives learners an overview of a topic before they study it in detail.
  *
  * @slot - The pages of the advance organizer, as `<webwriter-advance-organizer-page>` elements.
+ *
+ * @part canvas - The canvas with the nodes, edges and images.
+ * @part page - A page of the advance organizer: the section that holds the page content (printed and shown when opened).
+ *
+ * Keyboard: with the canvas focused in edit mode, Enter selects the first item (and then edits the
+ * label of the selected node or edge), Tab and Shift+Tab step through the items, arrow keys move the
+ * selection, C adds a concept, R connects two selected concepts (or starts drawing a relation),
+ * I adds an image. Readers reach every node that has a page with Tab and open it with Enter or Space.
+ *
+ * Conversions: a nested `ul` or `ol` becomes a tree of concepts with arrows from each item to its
+ * sub-items (the item text only; lists in an item are its sub-items). The concepts become a nested
+ * `ul` again: roots are the concepts without an incoming arrow and sub-items follow the arrows from
+ * top to bottom. Edge labels, styles, images and linked pages are not part of the list. Files:
+ * `.json` imports and exports the organizer data (nodes, edges, images; linked pages are not
+ * included), `image/svg+xml` exports a picture of the canvas (labels as plain text).
+ *
+ * Signal `openConcept` (string): the label of the concept whose page is open, empty when none is.
+ *
+ * Theme: text uses `--ww-text-color` and `--ww-font-family`; selection and focus use `--ww-theme-accent-1`
+ * (or `--ao-selection-color`). Node and edge colors are authored data and do not follow the theme.
  */
 
 @customElement("webwriter-advance-organizer")
@@ -80,6 +105,18 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
     "ao-page-info-actions": AoPageInfoActionsGroup,
     "ao-page-edit-actions": AoPageEditActionsGroup,
     "ao-help-actions": AoHelpActionsGroup,
+  };
+
+  static convertFrom = {
+    ul: "loadList",
+    ol: "loadList",
+    ".json": "importJson",
+  };
+
+  static convertTo = {
+    ul: "toList",
+    ".json": "exportJson",
+    "image/svg+xml": "exportSvg",
   };
 
   static override actions = {
@@ -114,6 +151,11 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
   readonly msg = this.localize.msg;
 
   #permissions = new Permissions(this);
+
+  #openConcept = signal("");
+
+  /** @internal */
+  readonly signals = { openConcept: computed(() => this.#openConcept.get()) };
 
   #data = jsonData(this, {
     defaults: { nodes: [] as readonly Node[], edges: [] as readonly Edge[], images: [] as readonly Image[] },
@@ -271,6 +313,42 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
 
   addImage(): void { this._insertImage(); }
 
+  /** @internal */
+  loadList(fragment: DocumentFragment): boolean {
+    const list = fragment.querySelector("ul, ol");
+    const outline = list ? outlineFromList(list) : [];
+    if (!outline.length) return false;
+    const preset = (depth: number) =>
+      presetStyle(depth === 0 ? "main-topic" : depth === 1 ? "subtopic" : "detail");
+    const { nodes, edges } = organizerFromOutline(outline, preset);
+    this.doc.load(nodes, edges, []);
+    return true;
+  }
+
+  /** @internal */
+  toList(): HTMLUListElement | null {
+    const outline = outlineFromOrganizer(this.doc.nodes, this.doc.edges);
+    return outline.length ? listFromOutline(outline) : null;
+  }
+
+  /** @internal */
+  async importJson(file: File): Promise<() => void> {
+    const { nodes, edges, images } = parseOrganizerJson(await file.text(), this.msg);
+    return () => this.doc.load(nodes, edges, images);
+  }
+
+  /** @internal */
+  exportJson(): File {
+    const data = { nodes: this.doc.nodes, edges: this.doc.edges, images: this.doc.images };
+    return new File([JSON.stringify(data, null, 2)], "advance-organizer.json", { type: "application/json" });
+  }
+
+  /** @internal */
+  exportSvg(): File | null {
+    const svg = organizerToSvg(this.doc.nodes, this.doc.edges, this.doc.images);
+    return svg ? new File([svg], "advance-organizer.svg", { type: "image/svg+xml" }) : null;
+  }
+
   protected override willUpdate(changedProperties: PropertyValues): void {
     super.willUpdate(changedProperties);
     if (this._openPage !== null && !this.pages.hasPage(this._openPage)) {
@@ -307,6 +385,9 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
       }
     }
     this._assignPages();
+    this.#openConcept.set(
+      this._openPage === null ? "" : (this.doc.get(this._openPage) as Node | undefined)?.label.text ?? "",
+    );
   }
 
   private _assignPages(): void {
@@ -396,6 +477,7 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
       ${cache(
         this._openPage === null
           ? html`<ao-canvas
+                part="canvas"
                 .editable=${this.#permissions.editing}
                 @draw-edge-change=${(e: CustomEvent<{ active: boolean }>) => {
                   this._drawingEdge = e.detail.active;

@@ -36,6 +36,8 @@ npm install @webwriter/advance-organizer
 | Name (Attribute Name) | Type | Description | Default | Reflects |
 | :-------------------: | :--: | :---------: | :-----: | :------: |
 | `WebwriterAdvanceOrganizer.dataType` | `string` | - | `"application/json"` | ✗ |
+| `WebwriterAdvanceOrganizer.convertFrom` | `object` | - | `{ ul: "loadList", ol: "loadList", ".json": "importJson", }` | ✗ |
+| `WebwriterAdvanceOrganizer.convertTo` | `object` | - | `{ ul: "toList", ".json": "exportJson", "image/svg+xml": "exportSvg", }` | ✗ |
 | `WebwriterAdvanceOrganizer.actions` | `object` | - | `{ addNode: { label: (widget: { msg: MsgFn }) => widget.msg("Add concept"), group: "organizer", icon: "Add", intent: "default" as const, }, addImage: { label: (widget: { msg: MsgFn }) => widget.msg("Add image"), group: "organizer", icon: "Image", intent: "default" as const, }, }` | ✗ |
 | `WebwriterAdvanceOrganizer.optionGroups` | `object` | - | `{ organizer: { label: (widget: { msg: MsgFn }) => widget.msg("Organizer"), collapsible: true, advanced: false, }, }` | ✗ |
 | `msg` | - | - | - | ✗ |
@@ -60,15 +62,25 @@ npm install @webwriter/advance-organizer
 
 *[Slots](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_templates_and_slots) define how the content of the widget is rendered.*
 
+## CSS parts
+| Name | Description |
+| :--: | :---------: |
+| canvas | The canvas with the nodes, edges and images. |
+| page | A page of the advance organizer: the section that holds the page content (printed and shown when opened). Keyboard: with the canvas focused in edit mode, Enter selects the first item (and then edits the label of the selected node or edge), Tab and Shift+Tab step through the items, arrow keys move the selection, C adds a concept, R connects two selected concepts (or starts drawing a relation), I adds an image. Readers reach every node that has a page with Tab and open it with Enter or Space. Conversions: a nested `ul` or `ol` becomes a tree of concepts with arrows from each item to its sub-items (the item text only; lists in an item are its sub-items). The concepts become a nested `ul` again: roots are the concepts without an incoming arrow and sub-items follow the arrows from top to bottom. Edge labels, styles, images and linked pages are not part of the list. Files: `.json` imports and exports the organizer data (nodes, edges, images; linked pages are not included), `image/svg+xml` exports a picture of the canvas (labels as plain text). Signal `openConcept` (string): the label of the concept whose page is open, empty when none is. Theme: text uses `--ww-text-color` and `--ww-font-family`; selection and focus use `--ww-theme-accent-1` (or `--ao-selection-color`). Node and edge colors are authored data and do not follow the theme. |
+
+*[CSS parts](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_shadow_parts) allow freely styling internals of the widget with CSS.*
+
 ## Editing config
 | Name | Value |
 | :--: | :---------: |
 | `definingAsContext` | `true` |
 | `content` | `(webwriter-advance-organizer-page)*` |
+| `importFormats` | `.json` |
+| `exportFormats` | `.json,image/svg+xml` |
 
 *The [editing config](https://webwriter.app/docs/packages/configuring/#editingconfig) defines how explorable authoring tools such as [WebWriter](https://webwriter.app) treat the widget.*
 
-*No public events, custom CSS properties, or CSS parts.*
+*No public events, or custom CSS properties.*
 
 
 ## `WebwriterAdvanceOrganizerPage` (`<webwriter-advance-organizer-page>`)
@@ -128,4 +140,4 @@ npm install @webwriter/advance-organizer
 
 
 ---
-*Generated with @webwriter/build@1.9.1*
+*Generated with @webwriter/build@1.14.0*

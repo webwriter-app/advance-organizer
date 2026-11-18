@@ -5,7 +5,8 @@ export const canvasStyles = css`
     display: block;
     position: relative;
     width: 100%;
-    height: 600px;
+    height: var(--ao-height, 600px);
+    min-height: 240px;
   }
 
   :host(.resizing),
@@ -21,6 +22,20 @@ export const canvasStyles = css`
 
   svg:focus {
     outline: none;
+  }
+
+  svg:focus-visible {
+    outline: 2px solid var(--ao-selection-color, var(--ww-theme-accent-1, #3b82f6));
+    outline-offset: -2px;
+  }
+
+  .node:focus {
+    outline: none;
+  }
+
+  .node:focus-visible .shape {
+    outline: 3px solid var(--ao-selection-color, var(--ww-theme-accent-1, #3b82f6));
+    outline-offset: 3px;
   }
 
   ao-zoom-controls {

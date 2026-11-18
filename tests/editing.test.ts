@@ -186,6 +186,66 @@ describe("<webwriter-advance-organizer> in edit mode", function () {
     });
   });
 
+  describe("keyboard and touch authoring", function () {
+    before(async function () {
+      w = await mount({ edit: "fake" });
+    });
+    const ids = () => [...w.selection.entries];
+    const pos = (id: string) => dataOf(w).nodes.find((n: any) => n.id === id)?.position;
+
+    it("selects the first item on Enter, steps on Tab and leaves at the end", async function () {
+      w.selection.clear(); await settle(2);
+      key(svgOf(w), "Enter"); await settle(2);
+      must(ids().join() === "n1", () => `Enter selected ${ids()}`);
+      key(svgOf(w), "Tab"); await settle(2);
+      must(ids().join() === "n2", () => `Tab selected ${ids()}`);
+      key(svgOf(w), "Tab", { shiftKey: true }); await settle(2);
+      must(ids().join() === "n1", () => `Shift+Tab selected ${ids()}`);
+      for (let i = 0; i < 6; i++) key(svgOf(w), "Tab");
+      await settle(2);
+      must(ids().join() === "e1", () => `last item ${ids()}`);
+      const notHandled = svgOf(w).dispatchEvent(new KeyboardEvent("keydown", { key: "Tab", bubbles: true, composed: true, cancelable: true }));
+      must(notHandled, "Tab at the end was swallowed");
+    });
+    it("connects two selected concepts on Shift+R and keeps R as draw mode", async function () {
+      w.selection.select(new Set(["n2", "n3"])); await settle(2);
+      const before = dataOf(w).edges.length;
+      key(svgOf(w), "r"); await settle(3);
+      must(dataOf(w).edges.length === before && canvasOf(w).drawingEdge === true, "R must only start draw mode");
+      key(svgOf(w), "Escape"); await settle(2);
+      w.selection.select(new Set(["n2", "n3"])); await settle(2);
+      key(svgOf(w), "R", { shiftKey: true }); await settle(3);
+      const d = dataOf(w);
+      const edge = d.edges.find((e: any) => e.source === "n2" && e.target === "n3");
+      must(d.edges.length === before + 1 && edge?.sourcePosition === "bottom" && edge?.targetPosition === "top", () => JSON.stringify(d.edges));
+      must(canvasOf(w).drawingEdge === false && ids().join() === edge.id, "mode or selection");
+    });
+    it("moves a node on a touch drag", async function () {
+      const p = pos("n3"); const s = view(w).scale; const el = nodeEl(w, "n3"); const from = center(el);
+      await new Promise((r) => setTimeout(r, 450));
+      const t = (x: number, y: number, type: string) => fire(el, type, { clientX: x, clientY: y }, { pointerId: 63, pointerType: "touch", buttons: type === "pointerup" ? 0 : 1 });
+      t(from.clientX, from.clientY, "pointerdown"); await frame();
+      for (let i = 1; i <= 4; i++) { t(from.clientX + i * 10, from.clientY + i * 5, "pointermove"); await frame(); await frame(); }
+      t(from.clientX + 40, from.clientY + 20, "pointerup"); await settle(3);
+      const q = pos("n3"); must(near(q.x - p.x, 40 / s, 2) && near(q.y - p.y, 20 / s, 2), () => JSON.stringify({ p, q }));
+    });
+    it("selects a node on a touch tap", async function () {
+      w.selection.clear(); await settle(2);
+      const at = center(nodeEl(w, "n3"));
+      const t = (type: string) => fire(nodeEl(w, "n3"), type, at, { pointerId: 62, pointerType: "touch", buttons: type === "pointerup" ? 0 : 1 });
+      t("pointerdown"); await frame(); t("pointerup"); await settle(3);
+      must(ids().join() === "n3", () => `selected ${ids()}`);
+    });
+    it("draws the selection in the accent color of the page", async function () {
+      mountPoint.style.cssText = "--ww-theme-accent-1: rgb(9, 8, 7)";
+      await settle(2);
+      const el = canvasOf(w).shadowRoot.querySelector('.overlays [stroke*="ao-selection-color"]');
+      const stroke = el ? getComputedStyle(el).stroke : "";
+      mountPoint.style.cssText = "";
+      must(stroke === "rgb(9, 8, 7)", () => `stroke ${stroke}`);
+    });
+  });
+
   it("reports no warnings", function () {
     must(warnings.length === 0, () => warnings.join(" | "));
   });

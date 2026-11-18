@@ -239,12 +239,16 @@ export class AoCanvas extends LitElementWw {
         width="100%"
         height="100%"
         tabindex="0"
+        aria-label=${this.msg("Advance organizer")}
         @pointerdown=${this._onPointerDown}
         @pointermove=${this._onPointerMove}
         @pointerup=${this._onPointerUp}
         @pointercancel=${this._onPointerCancel}
         @pointerleave=${() => (this._hoveredAnchor = null)}
-        @keydown=${(e: KeyboardEvent) => this._labelEdit.onKeydown(e)}
+        @keydown=${(e: KeyboardEvent) => {
+          this._onNodeKeydown(e);
+          this._labelEdit.onKeydown(e);
+        }}
         @focusout=${(e: FocusEvent) => this._labelEdit.onFocusOut(e)}
         @contextmenu=${this._onContextMenu}
         @dragover=${this._dropController.onDragOver}
@@ -274,6 +278,8 @@ export class AoCanvas extends LitElementWw {
                   n,
                   this.pages.hasPage(n.id),
                   this._labelEdit.isEditing(n.id),
+                  undefined,
+                  !this.editable && this.pages.hasPage(n.id),
                 ),
             )}
           </g>
@@ -492,6 +498,16 @@ export class AoCanvas extends LitElementWw {
     const svg = e.currentTarget as SVGSVGElement;
     svg.focus({ preventScroll: true });
     svg.setPointerCapture(e.pointerId);
+  }
+
+  /** Readers open the page of a focused node with Enter or Space. */
+  private _onNodeKeydown(e: KeyboardEvent): void {
+    if (this.editable || (e.key !== "Enter" && e.key !== " ")) return;
+    const id = (e.target as Element).closest<SVGElement>("[data-item-id]")
+      ?.dataset["itemId"];
+    if (!id || !this.pages.hasPage(id)) return;
+    e.preventDefault();
+    this._openPage(id);
   }
 
   private _onLongPress(origin: Point): void {

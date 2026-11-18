@@ -1,7 +1,7 @@
 /// <reference types="mocha" />
 import "mocha/mocha.js";
 import { getMochaConfig } from "@webwriter/build/test";
-import { warnings, mount, reset, canvasOf, svgOf, view, dataOf, nodeEl, center, fire, dragOn, wheel, key, must, near, zoomLabel, zoomButton, click, closePage, openPage, settle, frame, until } from "./helpers";
+import { warnings, mount, reset, mountPoint, zoomButtons, canvasOf, svgOf, view, dataOf, nodeEl, center, fire, dragOn, wheel, key, must, near, zoomLabel, zoomButton, click, closePage, openPage, settle, frame, until } from "./helpers";
 
 mocha.setup(getMochaConfig());
 
@@ -143,6 +143,44 @@ describe("<webwriter-advance-organizer> in read mode", function () {
       openPage(w); await until(() => !canvasOf(w), "page open"); await settle(3);
       const actions = w.shadowRoot.querySelector("ao-page-edit-actions"); const hidden = !actions || getComputedStyle(actions).display === "none";
       closePage(w); await until(() => canvasOf(w), "back"); must(hidden, "visible to a reader");
+    });
+  });
+
+  describe("keyboard, touch and theme", function () {
+    const touch = (el: Element, type: string, pos: object) => fire(el, type, pos, { pointerId: 61, pointerType: "touch", buttons: type === "pointerup" ? 0 : 1 });
+
+    it("makes a node with a page a labelled tab stop and no other node", function () {
+      const n2 = nodeEl(w, "n2"), n3 = nodeEl(w, "n3");
+      must(n2.getAttribute("tabindex") === "0" && n2.getAttribute("role") === "button" && n2.getAttribute("aria-label") === "B", "n2 attributes");
+      must(!n3.hasAttribute("tabindex") && !n3.hasAttribute("role"), "n3 attributes");
+    });
+    it("opens the page of a focused node on Enter and on Space", async function () {
+      key(nodeEl(w, "n2"), "Enter"); await until(() => !canvasOf(w), "page open on Enter");
+      closePage(w); await until(() => canvasOf(w) && svgOf(w), "canvas back"); await settle(4);
+      key(nodeEl(w, "n2"), " "); await until(() => !canvasOf(w), "page open on Space");
+      closePage(w); await until(() => canvasOf(w) && svgOf(w), "canvas back"); await settle(4);
+    });
+    it("opens the page on a touch tap", async function () {
+      const at = center(nodeEl(w, "n2"));
+      touch(nodeEl(w, "n2"), "pointerdown", at); touch(nodeEl(w, "n2"), "pointerup", at);
+      await until(() => !canvasOf(w), "page open on tap");
+      closePage(w); await until(() => canvasOf(w) && svgOf(w), "canvas back"); await settle(4);
+    });
+    it("makes the zoom buttons at least 24 by 24 pixels", function () {
+      for (const b of zoomButtons(w)) { const r = b.getBoundingClientRect(); must(r.width >= 24 && r.height >= 24, () => `${b.getAttribute("label")} ${r.width}x${r.height}`); }
+    });
+    it("follows the text color, font and accent of the page", async function () {
+      mountPoint.style.cssText = "--ww-text-color: rgb(1, 2, 3); --ww-font-family: Georgia, serif; --ww-theme-accent-1: rgb(9, 8, 7)";
+      await settle(2);
+      const { color, fontFamily } = getComputedStyle(w);
+      const focusRule = [...canvasOf(w).shadowRoot.adoptedStyleSheets].flatMap((sheet: CSSStyleSheet) => [...sheet.cssRules]).map((r: CSSRule) => r.cssText).join("\n");
+      mountPoint.style.cssText = "";
+      must(color === "rgb(1, 2, 3)" && fontFamily.includes("Georgia"), () => `${color} ${fontFamily}`);
+      must(focusRule.includes("--ww-theme-accent-1"), "accent not used for focus");
+    });
+    it("limits its width to 2100 pixels and keeps 300 pixels as the minimum", function () {
+      const cs = getComputedStyle(w);
+      must(cs.maxWidth === "2100px" && cs.minWidth === "300px", () => `${cs.minWidth} ${cs.maxWidth}`);
     });
   });
 
