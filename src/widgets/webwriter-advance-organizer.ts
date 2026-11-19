@@ -272,8 +272,10 @@ export class WebwriterAdvanceOrganizer extends LitElementWw {
   private _canvasTarget(e: Event): AoCanvas | null {
     if (this._openPage !== null) return null;
     const path = e.composedPath();
-    const hostIndex = path.indexOf(this);
-    const inner = hostIndex === -1 ? path : path.slice(0, hostIndex);
+    // The canvas inherits contenteditable from the host, but is not a text editor.
+    const boundary = this.canvas && path.includes(this.canvas) ? this.canvas : this;
+    const boundaryIndex = path.indexOf(boundary);
+    const inner = boundaryIndex === -1 ? path : path.slice(0, boundaryIndex);
     if (inner.some(isEditableTarget)) return null;
     return this.canvas;
   }

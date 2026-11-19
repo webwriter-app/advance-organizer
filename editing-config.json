@@ -1,4 +1,11 @@
 {
+  "./snippets/concepts-of-webwriter": {
+    "label": {
+      "_": "Concepts of WebWriter",
+      "en": "Concepts of WebWriter",
+      "de": "Konzepte von WebWriter"
+    }
+  },
   ".": {
     "description": {
       "bg": "Създайте визуални предварителни организиращи материали за въвеждане на нови теми. Свържете възлите с допълнително съдържание, което учащите могат да отворят с едно кликване.",

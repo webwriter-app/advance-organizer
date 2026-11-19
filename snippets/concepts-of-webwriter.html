@@ -1,0 +1,118 @@
+<webwriter-advance-organizer lang="en">
+  <script type="application/json" slot="data">
+    {
+      "nodes": [
+        {
+          "id": "webwriter",
+          "kind": "node",
+          "position": { "x": 0, "y": -180 },
+          "dimension": { "width": 210, "height": 80 },
+          "style": { "preset": "main-topic", "shape": "rectangle", "fill": "#e4e4e7", "stroke": "#131316", "strokeWidth": 3 },
+          "label": { "text": "WebWriter", "bold": true, "fontSize": 20 }
+        },
+        {
+          "id": "documents",
+          "kind": "node",
+          "position": { "x": -250, "y": 0 },
+          "dimension": { "width": 180, "height": 76 },
+          "style": { "preset": "topic-a", "shape": "rectangle", "fill": "#dbeafe", "stroke": "#2563eb", "strokeWidth": 2 },
+          "label": { "text": "Documents", "bold": true, "fontSize": 16 }
+        },
+        {
+          "id": "widgets",
+          "kind": "node",
+          "position": { "x": 0, "y": 0 },
+          "dimension": { "width": 180, "height": 76 },
+          "style": { "preset": "topic-b", "shape": "rectangle", "fill": "#dcfce7", "stroke": "#16a34a", "strokeWidth": 2 },
+          "label": { "text": "Widgets", "bold": true, "fontSize": 16 }
+        },
+        {
+          "id": "live-sessions",
+          "kind": "node",
+          "position": { "x": 250, "y": 0 },
+          "dimension": { "width": 180, "height": 76 },
+          "style": { "preset": "topic-d", "shape": "rectangle", "fill": "#ede9fe", "stroke": "#7c3aed", "strokeWidth": 2 },
+          "label": { "text": "Live sessions", "bold": true, "fontSize": 16 }
+        },
+        {
+          "id": "themes",
+          "kind": "node",
+          "position": { "x": -250, "y": 180 },
+          "dimension": { "width": 180, "height": 76 },
+          "style": { "preset": "topic-a", "shape": "rectangle", "fill": "#dbeafe", "stroke": "#2563eb", "strokeWidth": 2 },
+          "label": { "text": "Themes", "fontSize": 16 }
+        },
+        {
+          "id": "snippets",
+          "kind": "node",
+          "position": { "x": 0, "y": 180 },
+          "dimension": { "width": 180, "height": 76 },
+          "style": { "preset": "topic-b", "shape": "rectangle", "fill": "#dcfce7", "stroke": "#16a34a", "strokeWidth": 2 },
+          "label": { "text": "Snippets", "fontSize": 16 }
+        },
+        {
+          "id": "shared-data",
+          "kind": "node",
+          "position": { "x": 250, "y": 180 },
+          "dimension": { "width": 180, "height": 76 },
+          "style": { "preset": "topic-d", "shape": "rectangle", "fill": "#ede9fe", "stroke": "#7c3aed", "strokeWidth": 2 },
+          "label": { "text": "Shared data", "fontSize": 16 }
+        }
+      ],
+      "edges": [
+        { "id": "authors-documents", "kind": "edge", "source": "webwriter", "sourcePosition": "left", "target": "documents", "targetPosition": "top", "style": { "markerEnd": "arrow", "stroke": "#2563eb", "strokeWidth": 2 }, "label": { "text": "authors", "fontSize": 13 } },
+        { "id": "offers-widgets", "kind": "edge", "source": "webwriter", "sourcePosition": "bottom", "target": "widgets", "targetPosition": "top", "style": { "markerEnd": "arrow", "stroke": "#16a34a", "strokeWidth": 2 }, "label": { "text": "offers", "fontSize": 13 } },
+        { "id": "hosts-sessions", "kind": "edge", "source": "webwriter", "sourcePosition": "right", "target": "live-sessions", "targetPosition": "top", "style": { "markerEnd": "arrow", "stroke": "#7c3aed", "strokeWidth": 2 }, "label": { "text": "hosts", "fontSize": 13 } },
+        { "id": "styled-by-themes", "kind": "edge", "source": "documents", "sourcePosition": "bottom", "target": "themes", "targetPosition": "top", "style": { "markerEnd": "arrow", "stroke": "#2563eb", "strokeWidth": 2 }, "label": { "text": "styled by", "fontSize": 13 } },
+        { "id": "reused-in-snippets", "kind": "edge", "source": "widgets", "sourcePosition": "bottom", "target": "snippets", "targetPosition": "top", "style": { "markerEnd": "arrow", "stroke": "#16a34a", "strokeWidth": 2 }, "label": { "text": "reused in", "fontSize": 13 } },
+        { "id": "collect-shared-data", "kind": "edge", "source": "live-sessions", "sourcePosition": "bottom", "target": "shared-data", "targetPosition": "top", "style": { "markerEnd": "arrow", "stroke": "#7c3aed", "strokeWidth": 2 }, "label": { "text": "collect", "fontSize": 13 } }
+      ],
+      "images": []
+    }
+  </script>
+  <webwriter-advance-organizer-page node-id="webwriter">
+    <h2>Concepts of WebWriter</h2>
+    <p>WebWriter brings text, media, and interactive widgets together in HTML documents. This map introduces the ideas behind authoring and using those documents.</p>
+    <p>Return to the map and open a concept to explore it. Follow the arrows to see how the concepts relate.</p>
+    <ul>
+      <li>Documents hold the learning content, and themes give it a consistent appearance.</li>
+      <li>Widgets add interaction, and snippets provide ready-made examples.</li>
+      <li>Live sessions let participants use the content together, with shared data where a widget supports it.</li>
+    </ul>
+  </webwriter-advance-organizer-page>
+  <webwriter-advance-organizer-page node-id="documents">
+    <h2>Documents</h2>
+    <p>A WebWriter document combines ordinary HTML content, such as headings, paragraphs, lists, and images, with interactive widgets.</p>
+    <p>Authors arrange and edit the content. Readers explore the resulting material and use the interactions that its widgets provide.</p>
+  </webwriter-advance-organizer-page>
+  <webwriter-advance-organizer-page node-id="widgets">
+    <h2>Widgets</h2>
+    <p>Widgets add activities and visualizations to a document. Examples include quizzes, simulations, diagrams, and this advance organizer.</p>
+    <p>Each widget supplies its own controls. Authors configure it in edit mode; readers use the interactions offered in reading mode.</p>
+  </webwriter-advance-organizer-page>
+  <webwriter-advance-organizer-page node-id="live-sessions">
+    <h2>Live sessions</h2>
+    <p>A live session connects a host with participants who use a document. Widgets that support sessions can collect responses and let the host review them.</p>
+    <p>The available participant actions depend on the widget and the permissions chosen by the author or host.</p>
+  </webwriter-advance-organizer-page>
+  <webwriter-advance-organizer-page node-id="themes">
+    <h2>Themes</h2>
+    <p>A theme gives a document a consistent visual style through choices such as fonts and colors. Widgets that support theming can follow those choices too.</p>
+    <p>The content stays the same when its presentation changes.</p>
+  </webwriter-advance-organizer-page>
+  <webwriter-advance-organizer-page node-id="snippets">
+    <h2>Snippets</h2>
+    <p>A snippet is a prepared piece of content that an author can insert into a document. It can contain a configured widget, example data, and supporting text.</p>
+    <p>This concept map is a snippet. After inserting it, an author can rename concepts, move them, change relations, and edit these explanations.</p>
+  </webwriter-advance-organizer-page>
+  <webwriter-advance-organizer-page node-id="shared-data">
+    <h2>Shared data</h2>
+    <p>Widgets that support sharing can keep data for one participant, for a group, or for everyone in a session.</p>
+    <ul>
+      <li>Individual data lets participants work on their own responses.</li>
+      <li>Group data supports a shared activity within a group.</li>
+      <li>Data shared with everyone supports a common result.</li>
+    </ul>
+    <p>The available sharing choices depend on the widget.</p>
+  </webwriter-advance-organizer-page>
+</webwriter-advance-organizer>
