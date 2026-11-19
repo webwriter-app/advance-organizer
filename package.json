@@ -183,7 +183,6 @@
     "typescript": "^7.0.2"
   },
   "exports": {
-    "./snippets/concepts-of-webwriter.html": "./snippets/concepts-of-webwriter.html",
     "./widgets/webwriter-advance-organizer.*": {
       "source": "./src/widgets/webwriter-advance-organizer.ts",
       "default": "./dist/widgets/webwriter-advance-organizer.*"
@@ -192,6 +191,7 @@
       "source": "./src/widgets/webwriter-advance-organizer-page.ts",
       "default": "./dist/widgets/webwriter-advance-organizer-page.*"
     },
+    "./snippets/concepts-of-webwriter.html": "./snippets/concepts-of-webwriter.html",
     "./tests/reading.*": {
       "source": "./tests/reading.test.ts",
       "default": "./dist/tests/reading.*"
