@@ -54,6 +54,7 @@ import {
 import { findNearestAnchor, SnapHighlighter } from "./snap";
 import { LabelEditController, EDITOR_CLASS } from "./label-edit";
 import { LongPressController } from "./long-press";
+import { insertNode } from "./insert";
 
 export class AoCanvas extends LitElementWw {
   readonly msg = widgetMsg(this);
@@ -244,6 +245,7 @@ export class AoCanvas extends LitElementWw {
         @pointermove=${this._onPointerMove}
         @pointerup=${this._onPointerUp}
         @pointercancel=${this._onPointerCancel}
+        @dblclick=${this._onDoubleClick}
         @pointerleave=${() => (this._hoveredAnchor = null)}
         @keydown=${(e: KeyboardEvent) => {
           this._onNodeKeydown(e);
@@ -306,7 +308,7 @@ export class AoCanvas extends LitElementWw {
       </ao-zoom-controls>
       ${this.editable && this.doc.isEmpty()
         ? html`<div class="empty-hint">
-            ${this.msg("Add concepts via the toolbar above.")}
+            ${this.msg("Double click / long tap to add a concept")}
           </div>`
         : nothing}
       ${this._dropController.imageCount === null
@@ -408,7 +410,10 @@ export class AoCanvas extends LitElementWw {
     }
 
     // A second finger during a gesture is meant for panning or pinch zooming.
-    if (e.pointerType === "touch" && this._mode.kind !== "idle") return;
+    if (e.pointerType === "touch" && this._mode.kind !== "idle") {
+      this._longPress.cancel();
+      return;
+    }
 
     this._shiftKey = e.shiftKey;
 
@@ -510,10 +515,22 @@ export class AoCanvas extends LitElementWw {
     this._openPage(id);
   }
 
+  private _onDoubleClick(e: MouseEvent): void {
+    if (!this.editable || this._mode.kind !== "idle") return;
+    if (this._isInteractiveTarget(e.target)) return;
+    e.preventDefault();
+    this._insertConcept({ x: e.clientX, y: e.clientY });
+  }
+
+  private _insertConcept(origin: Point): void {
+    insertNode(this._zoomController.clientToScene(origin.x, origin.y), this);
+  }
+
   private _onLongPress(origin: Point): void {
+    if (!this.editable || !this.isConnected) return;
     navigator.vibrate?.(20);
     if (this._mode.kind === "idle") {
-      beginRectangleSelect(origin, this._modeContext, true);
+      this._insertConcept(origin);
     }
   }
 
@@ -594,7 +611,9 @@ export class AoCanvas extends LitElementWw {
     const held = e ? this._longPress.heldPress(e.pointerId) : null;
     if (held) {
       this._resetMode();
-      this._openContextMenuAt(held.origin, held.target);
+      if (held.target?.closest("[data-item-id]")) {
+        this._openContextMenuAt(held.origin, held.target);
+      }
       return;
     }
 
