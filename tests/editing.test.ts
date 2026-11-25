@@ -1,7 +1,7 @@
 /// <reference types="mocha" />
 import "mocha/mocha.js";
 import { getMochaConfig } from "@webwriter/build/test";
-import { warnings, mount, reset, mountPoint, canvasOf, svgOf, view, dataOf, nodeEl, center, fire, dragOn, wheel, key, must, near, zoomButton, click, closePage, openPage, settle, frame, until } from "./helpers";
+import { warnings, mount, reset, mountPoint, canvasOf, svgOf, view, dataOf, nodeEl, center, fire, mouse, dragOn, wheel, key, must, near, zoomButton, click, closePage, openPage, settle, frame, until } from "./helpers";
 
 mocha.setup(getMochaConfig());
 
@@ -135,18 +135,16 @@ describe("<webwriter-advance-organizer> in edit mode", function () {
       const a = view(w); canvasOf(w).cancelInteraction(); await settle(2);
       must(near(a.x, b.x, 0.5) && near(a.y, b.y, 0.5), () => JSON.stringify({ a, b }));
     });
-    it("selects with a rectangle and does not pan on a touch long press on the background", async function () {
+    it("adds one concept without panning or opening a menu on a touch long press on the background", async function () {
       const rect = svgOf(w).getBoundingClientRect(); const from = { clientX: rect.left + 5, clientY: rect.top + 5 };
       const t = (x: number, y: number, type: string) => fire(svgOf(w), type, { clientX: x, clientY: y }, { pointerId: 41, pointerType: "touch", buttons: type === "pointerup" ? 0 : 1 });
-      const b = view(w);
+      const b = view(w); const count = dataOf(w).nodes.length;
       t(from.clientX, from.clientY, "pointerdown");
-      await until(() => canvasOf(w)._mode.kind === "rectangle-select", "long press", 3000);
-      must(canvasOf(w).hasAttribute("data-pan-paused"), "panning not paused");
-      const end = { x: rect.right - 5, y: rect.bottom - 5 };
-      for (let i = 1; i <= 6; i++) { t(from.clientX + (end.x - from.clientX) * i / 6, from.clientY + (end.y - from.clientY) * i / 6, "pointermove"); await frame(); await frame(); }
-      const a = view(w);
-      t(end.x, end.y, "pointerup"); await settle(3);
-      must(near(a.x, b.x, 0.5) && near(a.y, b.y, 0.5) && w.selection.size > 0 && !canvasOf(w).hasAttribute("data-pan-paused"), () => JSON.stringify({ a, b, sel: w.selection.size, paused: canvasOf(w).hasAttribute("data-pan-paused") }));
+      await until(() => dataOf(w).nodes.length === count + 1, "long press", 3000);
+      t(from.clientX, from.clientY, "pointerup"); await settle(3);
+      const a = view(w); const node = dataOf(w).nodes.at(-1);
+      must(near(node.position.x, (5 - b.x) / b.scale, 1) && near(node.position.y, (5 - b.y) / b.scale, 1), "insertion position");
+      must(near(a.x, b.x, 0.5) && near(a.y, b.y, 0.5) && w.selection.has(node.id) && !w.shadowRoot.querySelector("ao-context-menu") && dataOf(w).nodes.length === count + 1, "long press result");
     });
     it("pans on a touch drag on the background", async function () {
       w.selection.clear(); await settle(2);
@@ -169,9 +167,7 @@ describe("<webwriter-advance-organizer> in edit mode", function () {
       const script = w.querySelector(":scope > script");
       must([...page.attributes].map((a: Attr) => a.name).join() === "node-id" && [...script.attributes].map((a: Attr) => a.name).sort().join() === "slot,type", () => [...page.attributes].map((a: Attr) => a.name).join() + " | " + [...script.attributes].map((a: Attr) => a.name).join());
     });
-    // Known defect, same before the conversion: keydown never reaches the handlers while the host is
-    // really contenteditable, because the key handler treats ao-canvas (editable through its host) as a text target.
-    it.skip("moves the selected node on ArrowRight with real contenteditable and designMode", async function () {
+    it("moves the selected node on ArrowRight with real contenteditable and designMode", async function () {
       const x = await mount({ edit: true });
       const el = nodeEl(x, "n3"); const at = center(el);
       fire(el, "pointerdown", at); await frame(); fire(el, "pointerup", at); await settle(3);
@@ -183,6 +179,94 @@ describe("<webwriter-advance-organizer> in edit mode", function () {
       const widget = mountPoint.querySelector("webwriter-advance-organizer")!; widget.remove(); await settle(3);
       mountPoint.append(widget); await settle(5);
       must(!!canvasOf(widget), "no canvas");
+    });
+  });
+
+  describe("concept creation and deletion with real contenteditable", function () {
+    beforeEach(async function () {
+      w = await mount({ edit: true });
+    });
+    const background = () => {
+      const rect = svgOf(w).getBoundingClientRect();
+      return { clientX: rect.left + 20, clientY: rect.top + 20 };
+    };
+
+    it("shows the automaton-style hint only on an empty editable canvas", async function () {
+      w.doc.removeItems(new Set([...w.doc.nodes, ...w.doc.edges].map((item: any) => item.id))); await settle(3);
+      const hint = canvasOf(w).shadowRoot.querySelector(".empty-hint");
+      must(hint?.textContent.trim() === "Double click / long tap to add a concept", "hint");
+      must(getComputedStyle(hint).display === "grid" && getComputedStyle(hint).pointerEvents === "none", "hint style");
+      mouse(svgOf(w), "dblclick", background()); await settle(3);
+      must(!canvasOf(w).shadowRoot.querySelector(".empty-hint"), "hint remains after creation");
+      w.removeAttribute("contenteditable"); document.designMode = "off"; await settle(3);
+      w.doc.removeItems(new Set(w.doc.nodes.map((item: any) => item.id))); await settle(3);
+      must(!canvasOf(w).shadowRoot.querySelector(".empty-hint"), "reader hint");
+    });
+    it("adds and selects a concept at the double-click position after zooming and panning", async function () {
+      const at = background();
+      wheel(svgOf(w), { ...at, deltaY: -100, ctrlKey: true }); await settle(3);
+      wheel(svgOf(w), { ...at, deltaX: 60, deltaY: 30 }); await settle(3);
+      const v = view(w); const count = dataOf(w).nodes.length;
+      mouse(svgOf(w), "dblclick", at); await settle(3);
+      const node = dataOf(w).nodes.at(-1);
+      must(dataOf(w).nodes.length === count + 1 && w.selection.has(node.id), "creation or selection");
+      must(near(node.position.x, (20 - v.x) / v.scale, 1) && near(node.position.y, (20 - v.y) / v.scale, 1), "zoomed position");
+      must(dataOf(w).keep === "me", "unknown data lost");
+    });
+    it("does not add concepts on items, in relation mode, or in reading mode", async function () {
+      const count = dataOf(w).nodes.length;
+      mouse(nodeEl(w, "n3"), "dblclick", center(nodeEl(w, "n3")));
+      canvasOf(w).toggleDrawEdge(); await settle(2);
+      mouse(svgOf(w), "dblclick", background());
+      canvasOf(w).cancelInteraction();
+      w.removeAttribute("contenteditable"); document.designMode = "off"; await settle(3);
+      mouse(svgOf(w), "dblclick", background()); await settle(3);
+      must(dataOf(w).nodes.length === count, "unexpected creation");
+    });
+    it("deletes a selected concept, its relations and its page with Backspace", async function () {
+      const el = nodeEl(w, "n2"); const at = center(el);
+      fire(el, "pointerdown", at); fire(el, "pointerup", at); await settle(3);
+      must(key(svgOf(w), "Backspace") === false, "Backspace not consumed"); await settle(3);
+      must(!dataOf(w).nodes.some((n: any) => n.id === "n2") && dataOf(w).edges.length === 0, "concept or relation remains");
+      must(!w.querySelector('[node-id="n2"]') && dataOf(w).keep === "me", "page or data");
+    });
+    it("deletes a selected image with Backspace", async function () {
+      const image = w.doc.addImage({ position: { x: 0, y: 180 }, dimension: { width: 80, height: 60 }, src: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'/>" }); await settle(3);
+      const el = canvasOf(w).shadowRoot.querySelector(`[data-item-id="${image.id}"]`); const at = center(el);
+      fire(el, "pointerdown", at); fire(el, "pointerup", at); await settle(3);
+      key(svgOf(w), "Backspace"); await settle(3);
+      must(dataOf(w).images.length === 0 && dataOf(w).nodes.length === 3, "image deletion");
+    });
+    it("keeps Backspace inside a label editor", async function () {
+      w.selection.select(new Set(["n3"])); key(svgOf(w), "Enter"); await settle(3);
+      const editor = canvasOf(w).shadowRoot.querySelector(".label-editor"); must(editor, "editor missing");
+      must(key(editor, "Backspace"), "text Backspace prevented"); await settle(3);
+      must(dataOf(w).nodes.length === 3, "concept deleted while editing");
+    });
+    it("cancels pending long taps on pointercancel, a second finger, mode changes and removal", async function () {
+      const count = dataOf(w).nodes.length; const at = background();
+      const touch = (type: string, pointerId = 81) => fire(svgOf(w), type, at, { pointerType: "touch", pointerId });
+      touch("pointerdown"); touch("pointercancel");
+      await new Promise((r) => setTimeout(r, 550));
+      touch("pointerdown"); touch("pointerdown", 82); touch("pointerup", 82); touch("pointerup");
+      await new Promise((r) => setTimeout(r, 550));
+      touch("pointerdown"); w.removeAttribute("contenteditable"); document.designMode = "off";
+      await new Promise((r) => setTimeout(r, 550));
+      must(dataOf(w).nodes.length === count, "canceled or read-only long tap created a concept");
+      w.setAttribute("contenteditable", ""); document.designMode = "on"; await settle(3);
+      touch("pointerdown"); w.remove();
+      await new Promise((r) => setTimeout(r, 550));
+      must(dataOf(w).nodes.length === count, "detached long tap created a concept");
+    });
+    it("keeps the context menu on a long tap on an existing concept", async function () {
+      const el = nodeEl(w, "n3"); const at = center(el); const count = dataOf(w).nodes.length;
+      fire(el, "pointerdown", at, { pointerType: "touch" });
+      await new Promise((r) => setTimeout(r, 550));
+      fire(el, "pointerup", at, { pointerType: "touch" }); await settle(3);
+      must(!!w.shadowRoot.querySelector("ao-context-menu") && dataOf(w).nodes.length === count, "item long tap");
+    });
+    it("does not outline the focused canvas", function () {
+      svgOf(w).focus(); must(getComputedStyle(svgOf(w)).outlineStyle === "none", "canvas outline");
     });
   });
 

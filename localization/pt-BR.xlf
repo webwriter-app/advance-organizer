@@ -213,10 +213,6 @@
         <source>Zoom in and out</source>
         <target>Aumentar e diminuir o zoom</target>
       </trans-unit>
-      <trans-unit id="sb3a97475cf766cba">
-        <source>Add concepts via the toolbar above.</source>
-        <target>Adicione conceitos pela barra de ferramentas acima.</target>
-      </trans-unit>
       <trans-unit id="s637ca9e5a893dcf5">
         <source>New concept</source>
         <target>Novo conceito</target>
@@ -335,6 +331,22 @@
 <trans-unit id="s163eda8ddbb113ba">
   <source>Organizer</source>
 <target>Organizador</target></trans-unit>
+<trans-unit id="s2ec69d892689b2a0">
+  <source>Advance organizer</source>
+        <target>Organizador prévio</target>
+</trans-unit>
+<trans-unit id="sa88475f0cc54f4c1">
+  <source>Double click / long tap to add a concept</source>
+        <target>Dê um duplo clique ou pressione e segure para adicionar um conceito</target>
+</trans-unit>
+<trans-unit id="se182079c831c456d">
+  <source>The file is not a valid advance organizer.</source>
+        <target>O arquivo não é um organizador prévio válido.</target>
+</trans-unit>
+<trans-unit id="sb3a97475cf766cba">
+        <source>Add concepts via the toolbar above.</source>
+        <target>Adicione conceitos pela barra de ferramentas acima.</target>
+      </trans-unit>
 </body>
   </file>
 </xliff>

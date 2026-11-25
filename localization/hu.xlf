@@ -213,10 +213,6 @@
         <source>Zoom in and out</source>
         <target>Nagyítás és kicsinyítés</target>
       </trans-unit>
-      <trans-unit id="sb3a97475cf766cba">
-        <source>Add concepts via the toolbar above.</source>
-        <target>A fenti eszköztár segítségével adhat hozzá fogalmakat.</target>
-      </trans-unit>
       <trans-unit id="s637ca9e5a893dcf5">
         <source>New concept</source>
         <target>Új fogalom</target>
@@ -335,6 +331,22 @@
 <trans-unit id="s163eda8ddbb113ba">
   <source>Organizer</source>
 <target>Rendszerező</target></trans-unit>
+<trans-unit id="s2ec69d892689b2a0">
+  <source>Advance organizer</source>
+        <target>Előzetes szervező</target>
+</trans-unit>
+<trans-unit id="sa88475f0cc54f4c1">
+  <source>Double click / long tap to add a concept</source>
+        <target>Kattintson duplán vagy tartsa lenyomva a fogalom hozzáadásához</target>
+</trans-unit>
+<trans-unit id="se182079c831c456d">
+  <source>The file is not a valid advance organizer.</source>
+        <target>A fájl nem érvényes előzetes szervező.</target>
+</trans-unit>
+<trans-unit id="sb3a97475cf766cba">
+        <source>Add concepts via the toolbar above.</source>
+        <target>A fenti eszköztár segítségével adhat hozzá fogalmakat.</target>
+      </trans-unit>
 </body>
   </file>
 </xliff>

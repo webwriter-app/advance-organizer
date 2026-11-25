@@ -213,10 +213,6 @@
         <source>Zoom in and out</source>
         <target>확대 및 축소</target>
       </trans-unit>
-      <trans-unit id="sb3a97475cf766cba">
-        <source>Add concepts via the toolbar above.</source>
-        <target>상단의 도구 모음을 통해 개념을 추가하세요.</target>
-      </trans-unit>
       <trans-unit id="s637ca9e5a893dcf5">
         <source>New concept</source>
         <target>새 개념</target>
@@ -335,6 +331,22 @@
 <trans-unit id="s163eda8ddbb113ba">
   <source>Organizer</source>
 <target>개념 정리</target></trans-unit>
+<trans-unit id="s2ec69d892689b2a0">
+  <source>Advance organizer</source>
+        <target>선행 조직자</target>
+</trans-unit>
+<trans-unit id="sa88475f0cc54f4c1">
+  <source>Double click / long tap to add a concept</source>
+        <target>개념을 추가하려면 두 번 클릭하거나 길게 누르세요</target>
+</trans-unit>
+<trans-unit id="se182079c831c456d">
+  <source>The file is not a valid advance organizer.</source>
+        <target>파일이 유효한 선행 조직자가 아닙니다.</target>
+</trans-unit>
+<trans-unit id="sb3a97475cf766cba">
+        <source>Add concepts via the toolbar above.</source>
+        <target>상단의 도구 모음을 통해 개념을 추가하세요.</target>
+      </trans-unit>
 </body>
   </file>
 </xliff>

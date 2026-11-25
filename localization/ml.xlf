@@ -2,9 +2,6 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
 <file target-language="ml" source-language="en" original="lit-localize-inputs" datatype="plaintext">
 <body>
-<trans-unit id="sb3a97475cf766cba">
-  <source>Add concepts via the toolbar above.</source>
-<target>മുകളിലെ ടൂൾബാർ ഉപയോഗിച്ച് ആശയങ്ങൾ ചേർക്കുക.</target></trans-unit>
 <trans-unit id="s637ca9e5a893dcf5">
   <source>New concept</source>
 <target>പുതിയ ആശയം</target></trans-unit>
@@ -254,6 +251,21 @@
 <trans-unit id="s163eda8ddbb113ba">
   <source>Organizer</source>
 <target>മുൻകൂർ സംഘാടകൻ</target></trans-unit>
+<trans-unit id="s2ec69d892689b2a0">
+  <source>Advance organizer</source>
+        <target>പൂർവ സംഘാടകൻ</target>
+</trans-unit>
+<trans-unit id="sa88475f0cc54f4c1">
+  <source>Double click / long tap to add a concept</source>
+        <target>ഒരു ആശയം ചേർക്കാൻ ഇരട്ട ക്ലിക്ക് ചെയ്യുക അല്ലെങ്കിൽ ദീർഘനേരം അമർത്തുക</target>
+</trans-unit>
+<trans-unit id="se182079c831c456d">
+  <source>The file is not a valid advance organizer.</source>
+        <target>ഫയൽ സാധുവായ പൂർവ സംഘാടകനല്ല.</target>
+</trans-unit>
+<trans-unit id="sb3a97475cf766cba">
+  <source>Add concepts via the toolbar above.</source>
+<target>മുകളിലെ ടൂൾബാർ ഉപയോഗിച്ച് ആശയങ്ങൾ ചേർക്കുക.</target></trans-unit>
 </body>
 </file>
 </xliff>

@@ -1,9 +1,14 @@
 # Advance Organizer (`@webwriter/advance-organizer@2.0.0`)
 [License: MIT](LICENSE) | Version: 2.0.0
 
-Create visual advance organizers to introduce new topics. Link concepts to further content that learners can open with a click.
+Create concept maps and mind maps that introduce topics and link concepts to learning content.
 
+## Snippets
+[Snippets](https://webwriter.app/docs/snippets/snippets/) are examples and templates using the package's widgets.
 
+| Name | Import Path |
+| :--: | :---------: |
+| Concepts Of Webwriter | `@webwriter/advance-organizer/snippets/concepts-of-webwriter.html` |
 
 
 
@@ -140,4 +145,4 @@ npm install @webwriter/advance-organizer
 
 
 ---
-*Generated with @webwriter/build@1.14.0*
+*Generated with @webwriter/build@1.15.0*
