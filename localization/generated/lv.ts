@@ -2,7 +2,7 @@
     // Do not modify this file by hand!
     // Re-generate this file by running lit-localize
 
-    
+
     import {str} from '@lit/localize';
 
     /* eslint-disable no-irregular-whitespace */
@@ -12,6 +12,7 @@
       's0520016b18aadf60': `Divvirzienu`,
 's0bc31719aa7a8f43': `Izgriezt`,
 's109991b0423f1512': `Violets`,
+'s163eda8ddbb113ba': `Organizators`,
 's1c8cc3603762c768': `Palielināt un samazināt`,
 's236ae937cbcd6a39': `Palielināt`,
 's2470dafb1ae8a017': `Termins`,
@@ -19,6 +20,7 @@
 's2afc172e45ceaabe': `Līnijas krāsa`,
 's2ceb11be2290bb1b': `Atcelt`,
 's2de969afacdaa7a6': `Figūra`,
+'s2ec69d892689b2a0': `Ievadorganizators`,
 's352719d86112de9a': `Palīdzība`,
 's3687049d1af562c4': `Kopēt`,
 's39be3c731b2ea7dd': `Malas tips`,
@@ -37,6 +39,7 @@
 's669b18c6d2d9c95b': `Nav`,
 's6a7f201c8d3fdb35': `Palīdzības darbības`,
 's6baf78886c99db89': `Dzeltena`,
+'s781e64ea47044bd9': `Pievienot attēlu`,
 's7fd3469f78111589': `Atvērt konteksta izvēlni`,
 's81a0bc84b9a58af8': `Tēma D`,
 's81a0bd84b9a58cab': `Tēma E`,
@@ -58,16 +61,14 @@
 's9fc3568ec8629bda': `Uz priekšu`,
 's9ff1de19feac1b7c': `Sarkans`,
 'sa30f1981fd1cd441': `Fontu izmērs`,
+'sa88475f0cc54f4c1': `Veiciet dubultklikšķi vai turiet nospiestu, lai pievienotu jēdzienu`,
 'saa7d7cc808f0a35a': `Jēdziena rediģēšana`,
-'saa987c09599e0f9a': str`Nometiet 
-          ${0} attēlus šeit
-        `,
+'saa987c09599e0f9a': str`Nometiet šeit attēlus (skaits: ${0})`,
 'sabe465e6eb12f208': `Malas krāsa`,
 'sabfeef1e4511a839': `Lapas darbības`,
 'sad17444d283ef2db': `Saistītā lapa`,
 'sad62ff7ac099b1df': `Teksta rediģēšana`,
 'sb206d700d26b14ff': `Pārvilkums`,
-'sb3a97475cf766cba': `Pievienojiet jēdzienus, izmantojot rīkjoslu augšā.`,
 'sb6f7c888c7d917a1': `Pārvietot darba laukumu`,
 'sb9762427948cf2b3': `Attēla rediģēšana`,
 'sbadcfb6aa6ef38b1': `Elipse`,
@@ -83,6 +84,7 @@
 'sdc673e73b5c13aea': `Dzēst`,
 'sdca5284f30b50177': `Galvenā tēma`,
 'se0a34419921b022a': `Del`,
+'se182079c831c456d': `Fails nav derīgs ievadorganizators.`,
 'se610cb50ceb6ad1d': `Pārvietot atlasi`,
 'se615f6ce0dd01061': `Līnijas platums`,
 'se87e58cabf0417aa': `Jēdziena iestatījums`,
@@ -94,4 +96,3 @@
 'sfac15b89e0668996': `Dublikāts`,
 'sfe31d1c784d29ef4': `Vienkrāsaina`,
     };
-  

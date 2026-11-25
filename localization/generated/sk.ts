@@ -2,7 +2,7 @@
     // Do not modify this file by hand!
     // Re-generate this file by running lit-localize
 
-    
+
     import {str} from '@lit/localize';
 
     /* eslint-disable no-irregular-whitespace */
@@ -12,6 +12,7 @@
       's0520016b18aadf60': `Obousmerné`,
 's0bc31719aa7a8f43': `Vystrihnúť`,
 's109991b0423f1512': `Fialová`,
+'s163eda8ddbb113ba': `Organizér`,
 's1c8cc3603762c768': `Zväčšiť a zmenšiť`,
 's236ae937cbcd6a39': `Zväčšiť`,
 's2470dafb1ae8a017': `Termín`,
@@ -19,6 +20,7 @@
 's2afc172e45ceaabe': `Farba obrysu`,
 's2ceb11be2290bb1b': `Zrušiť`,
 's2de969afacdaa7a6': `Tvar`,
+'s2ec69d892689b2a0': `Predbežný organizátor`,
 's352719d86112de9a': `Pomoc`,
 's3687049d1af562c4': `Kopírovať`,
 's39be3c731b2ea7dd': `Typ ohraničenia`,
@@ -37,6 +39,7 @@
 's669b18c6d2d9c95b': `Žiadne`,
 's6a7f201c8d3fdb35': `Pomocné akcie`,
 's6baf78886c99db89': `Žltá`,
+'s781e64ea47044bd9': `Pridať obrázok`,
 's7fd3469f78111589': `Otvoriť kontextové menu`,
 's81a0bc84b9a58af8': `Téma D`,
 's81a0bd84b9a58cab': `Téma E`,
@@ -58,17 +61,14 @@
 's9fc3568ec8629bda': `Dopredu`,
 's9ff1de19feac1b7c': `Červená`,
 'sa30f1981fd1cd441': `Veľkosť písma`,
+'sa88475f0cc54f4c1': `Dvojitým kliknutím alebo dlhým stlačením pridáte pojem`,
 'saa7d7cc808f0a35a': `Úpravy pojmu`,
-'saa987c09599e0f9a': str`Pretiahnite 
-          obrázky z 
-          ${0} sem
-        `,
+'saa987c09599e0f9a': str`Presuňte sem obrázky (počet: ${0})`,
 'sabe465e6eb12f208': `Farba ohraničenia`,
 'sabfeef1e4511a839': `Akcie na stránke`,
 'sad17444d283ef2db': `Prepojená stránka`,
 'sad62ff7ac099b1df': `Úpravy textu`,
 'sb206d700d26b14ff': `Podčiarknutie`,
-'sb3a97475cf766cba': `Pridajte pojmy pomocou panela nástrojov hore.`,
 'sb6f7c888c7d917a1': `Posúvať plátno`,
 'sb9762427948cf2b3': `Úpravy obrázkov`,
 'sbadcfb6aa6ef38b1': `Elipsa`,
@@ -84,6 +84,7 @@
 'sdc673e73b5c13aea': `Odstrániť`,
 'sdca5284f30b50177': `Hlavná téma`,
 'se0a34419921b022a': `Odstrániť`,
+'se182079c831c456d': `Súbor nie je platný predbežný organizátor.`,
 'se610cb50ceb6ad1d': `Presunúť výber`,
 'se615f6ce0dd01061': `Šírka obrysu`,
 'se87e58cabf0417aa': `Prednastavenie pojmu`,
@@ -95,4 +96,3 @@
 'sfac15b89e0668996': `Duplikovať`,
 'sfe31d1c784d29ef4': `Plná`,
     };
-  

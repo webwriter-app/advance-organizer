@@ -2,7 +2,7 @@
     // Do not modify this file by hand!
     // Re-generate this file by running lit-localize
 
-    
+
     import {str} from '@lit/localize';
 
     /* eslint-disable no-irregular-whitespace */
@@ -12,6 +12,7 @@
       's0520016b18aadf60': `Dvosmerno`,
 's0bc31719aa7a8f43': `Izreži`,
 's109991b0423f1512': `Vijolična`,
+'s163eda8ddbb113ba': `Organizator`,
 's1c8cc3603762c768': `Povečaj in pomanjšaj`,
 's236ae937cbcd6a39': `Povečaj`,
 's2470dafb1ae8a017': `Izraz`,
@@ -19,6 +20,7 @@
 's2afc172e45ceaabe': `Barva črte`,
 's2ceb11be2290bb1b': `Prekliči`,
 's2de969afacdaa7a6': `Oblika`,
+'s2ec69d892689b2a0': `Uvodni organizator`,
 's352719d86112de9a': `Pomoč`,
 's3687049d1af562c4': `Kopiraj`,
 's39be3c731b2ea7dd': `Vrsta obrobe`,
@@ -37,6 +39,7 @@
 's669b18c6d2d9c95b': `Nobena`,
 's6a7f201c8d3fdb35': `Pomoč pri dejanjih`,
 's6baf78886c99db89': `Rumena`,
+'s781e64ea47044bd9': `Dodaj sliko`,
 's7fd3469f78111589': `Odpri kontekstni meni`,
 's81a0bc84b9a58af8': `Tema D`,
 's81a0bd84b9a58cab': `Tema E`,
@@ -58,17 +61,14 @@
 's9fc3568ec8629bda': `Naprej`,
 's9ff1de19feac1b7c': `Rdeča`,
 'sa30f1981fd1cd441': `Velikost pisave`,
+'sa88475f0cc54f4c1': `Dvokliknite ali dolgo pritisnite, da dodate pojem`,
 'saa7d7cc808f0a35a': `Urejanje koncepta`,
-'saa987c09599e0f9a': str`Pusti 
-          slike 
-          ${0} tukaj
-        `,
+'saa987c09599e0f9a': str`Spustite slike sem (število: ${0})`,
 'sabe465e6eb12f208': `Barva obrobe`,
 'sabfeef1e4511a839': `Dejanja na strani`,
 'sad17444d283ef2db': `Povezana stran`,
 'sad62ff7ac099b1df': `Urejanje besedila`,
 'sb206d700d26b14ff': `Podčrtano`,
-'sb3a97475cf766cba': `Koncepte dodajte prek orodne vrstice zgoraj.`,
 'sb6f7c888c7d917a1': `Premikaj platno`,
 'sb9762427948cf2b3': `Urejanje slike`,
 'sbadcfb6aa6ef38b1': `Elipsa`,
@@ -84,6 +84,7 @@
 'sdc673e73b5c13aea': `Izbriši`,
 'sdca5284f30b50177': `Glavna tema`,
 'se0a34419921b022a': `Del`,
+'se182079c831c456d': `Datoteka ni veljaven uvodni organizator.`,
 'se610cb50ceb6ad1d': `Premakni izbor`,
 'se615f6ce0dd01061': `Širina črte`,
 'se87e58cabf0417aa': `Prednastavitev koncepta`,
@@ -95,4 +96,3 @@
 'sfac15b89e0668996': `Podvojiti`,
 'sfe31d1c784d29ef4': `Polna`,
     };
-  

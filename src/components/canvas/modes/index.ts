@@ -5,7 +5,7 @@ import { rectangleSelectHandlers } from "./rectangle-select";
 import { resizeHandlers } from "./resize";
 import { InteractionMode, ModeHandlerMap, ModeHandlers } from "./types";
 
-export const modeHandlers: ModeHandlerMap = {
+const modeHandlers: ModeHandlerMap = {
   drag: dragHandlers,
   resize: resizeHandlers,
   "rectangle-select": rectangleSelectHandlers,

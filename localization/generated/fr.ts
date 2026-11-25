@@ -2,7 +2,7 @@
     // Do not modify this file by hand!
     // Re-generate this file by running lit-localize
 
-    
+
     import {str} from '@lit/localize';
 
     /* eslint-disable no-irregular-whitespace */
@@ -12,6 +12,7 @@
       's0520016b18aadf60': `Bidirectionnel`,
 's0bc31719aa7a8f43': `Couper`,
 's109991b0423f1512': `Violet`,
+'s163eda8ddbb113ba': `Organisateur`,
 's1c8cc3603762c768': `Zoomer et dézoomer`,
 's236ae937cbcd6a39': `Zoom avant`,
 's2470dafb1ae8a017': `Terme`,
@@ -19,6 +20,7 @@
 's2afc172e45ceaabe': `Couleur du trait`,
 's2ceb11be2290bb1b': `Annuler`,
 's2de969afacdaa7a6': `Forme`,
+'s2ec69d892689b2a0': `Organisateur préalable`,
 's352719d86112de9a': `Aide`,
 's3687049d1af562c4': `Copier`,
 's39be3c731b2ea7dd': `Type de bordure`,
@@ -37,6 +39,7 @@
 's669b18c6d2d9c95b': `Aucune`,
 's6a7f201c8d3fdb35': `Actions d'aide`,
 's6baf78886c99db89': `Jaune`,
+'s781e64ea47044bd9': `Ajouter une image`,
 's7fd3469f78111589': `Ouvrir le menu contextuel`,
 's81a0bc84b9a58af8': `Thème D`,
 's81a0bd84b9a58cab': `Thème E`,
@@ -58,17 +61,14 @@
 's9fc3568ec8629bda': `Avers`,
 's9ff1de19feac1b7c': `Rouge`,
 'sa30f1981fd1cd441': `Taille de police`,
+'sa88475f0cc54f4c1': `Double-cliquez ou appuyez longuement pour ajouter un concept`,
 'saa7d7cc808f0a35a': `Modifications du concept`,
-'saa987c09599e0f9a': str`Glisser-déposer 
-          les images 
-          ${0} ici
-        `,
+'saa987c09599e0f9a': str`Déposer ${0} images ici`,
 'sabe465e6eb12f208': `Couleur de la bordure`,
 'sabfeef1e4511a839': `Actions sur la page`,
 'sad17444d283ef2db': `Page associée`,
 'sad62ff7ac099b1df': `Modifications du texte`,
 'sb206d700d26b14ff': `Souligné`,
-'sb3a97475cf766cba': `Ajoutez des concepts à l'aide de la barre d'outils ci-dessus.`,
 'sb6f7c888c7d917a1': `Parcourir le canevas`,
 'sb9762427948cf2b3': `Modifications de l'image`,
 'sbadcfb6aa6ef38b1': `Ellipse`,
@@ -84,6 +84,7 @@
 'sdc673e73b5c13aea': `Supprimer`,
 'sdca5284f30b50177': `Thème principal`,
 'se0a34419921b022a': `Supprimer`,
+'se182079c831c456d': `Le fichier n’est pas un organisateur préalable valide.`,
 'se610cb50ceb6ad1d': `Déplacer la sélection`,
 'se615f6ce0dd01061': `Épaisseur du trait`,
 'se87e58cabf0417aa': `Préréglage de concept`,
@@ -95,4 +96,3 @@
 'sfac15b89e0668996': `Dupliquer`,
 'sfe31d1c784d29ef4': `Plein`,
     };
-  

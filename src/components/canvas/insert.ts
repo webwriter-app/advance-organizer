@@ -1,3 +1,4 @@
+import type { MsgFn } from "@lit/localize";
 import {
   Bounds,
   Dimension,
@@ -6,18 +7,17 @@ import {
   NodeStyle,
   Point,
 } from "../../model/types";
-import { DEFAULT_PRESET, presetStyle } from "../../model/presets";
-import type { DocumentController } from "../../state/document";
-import type { PageController } from "../../state/page";
-import type { SelectionController } from "../../state/selection";
-import { ClipboardPayload } from "../../utils/clipboard";
+import { DEFAULT_PRESET, presetStyle } from "../options/presets";
+import type { DocumentController } from "../store/document";
+import type { PageController } from "../store/page";
+import type { SelectionController } from "../store/selection";
+import { ClipboardPayload } from "../io/clipboard";
 import {
   displayDimension,
   importImage,
   pickImageFiles,
-} from "../../utils/image-import";
+} from "../io/image-import";
 import { INSERT_GAP } from "./helper";
-import { msg } from "@lit/localize";
 
 export interface CanvasStores {
   doc: DocumentController;
@@ -25,12 +25,13 @@ export interface CanvasStores {
   pages: PageController;
 }
 
-export type ItemStores = Pick<CanvasStores, "doc" | "selection">;
+type ItemStores = Pick<CanvasStores, "doc" | "selection">;
 
 const NEW_NODE_DIMENSION: Dimension = { width: 160, height: 80 };
 const NEW_NODE_STYLE: NodeStyle = presetStyle(DEFAULT_PRESET);
 
-export function insertNode(position: Point, stores: ItemStores): Node {
+export function insertNode(position: Point, stores: ItemStores & { msg: MsgFn }): Node {
+  const { msg } = stores;
   const node = stores.doc.addNode({
     dimension: NEW_NODE_DIMENSION,
     label: { text: msg("New concept") },

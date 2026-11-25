@@ -1,4 +1,5 @@
-<xliff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 http://docs.oasis-open.org/xliff/v1.2/os/xliff-core-1.2-strict.xsd" xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 http://docs.oasis-open.org/xliff/v1.2/os/xliff-core-1.2-strict.xsd" version="1.2">
   <file original="lit-localize-inputs" datatype="plaintext" source-language="en" target-language="de">
     <body>
       <trans-unit id="s0bc31719aa7a8f43">
@@ -26,13 +27,8 @@
         <target>Entf</target>
       </trans-unit>
       <trans-unit id="saa987c09599e0f9a">
-        <source>Drop 
-          <x id="0" equiv-text="${this.imageCount}"/> images here
-        </source>
-        <target>Hier 
-          <x id="0" equiv-text="${this.imageCount}"/> Bilder ablegen
-        </target>
-      </trans-unit>
+        <source>Drop <x id="0" equiv-text="${this.imageCount}"/> images here</source>
+<target><x id="0" equiv-text="${this.imageCount}"/> Bilder hier ablegen</target></trans-unit>
       <trans-unit id="sd6f0f760e3bb3148">
         <source>Drop 1 image here</source>
         <target>1 Bild hier ablegen</target>
@@ -217,10 +213,6 @@
         <source>Zoom in and out</source>
         <target>Zoomen</target>
       </trans-unit>
-      <trans-unit id="sb3a97475cf766cba">
-        <source>Add concepts via the toolbar above.</source>
-        <target>Fügen Sie Konzepte über die Symbolleiste oben hinzu.</target>
-      </trans-unit>
       <trans-unit id="s637ca9e5a893dcf5">
         <source>New concept</source>
         <target>Neues Konzept</target>
@@ -333,6 +325,28 @@
         <source>Topic E</source>
         <target>Thema E</target>
       </trans-unit>
-    </body>
+    <trans-unit id="s781e64ea47044bd9">
+  <source>Add image</source>
+<target>Bild hinzufügen</target></trans-unit>
+<trans-unit id="s163eda8ddbb113ba">
+  <source>Organizer</source>
+<target>Organizer</target></trans-unit>
+<trans-unit id="s2ec69d892689b2a0">
+  <source>Advance organizer</source>
+        <target>Advance Organizer</target>
+</trans-unit>
+<trans-unit id="sa88475f0cc54f4c1">
+  <source>Double click / long tap to add a concept</source>
+        <target>Doppelklicken oder lange drücken, um einen Begriff hinzuzufügen</target>
+</trans-unit>
+<trans-unit id="se182079c831c456d">
+  <source>The file is not a valid advance organizer.</source>
+        <target>Die Datei ist kein gültiger Advance Organizer.</target>
+</trans-unit>
+<trans-unit id="sb3a97475cf766cba">
+        <source>Add concepts via the toolbar above.</source>
+        <target>Fügen Sie Konzepte über die Symbolleiste oben hinzu.</target>
+      </trans-unit>
+</body>
   </file>
 </xliff>

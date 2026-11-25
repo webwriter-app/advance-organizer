@@ -2,7 +2,7 @@
     // Do not modify this file by hand!
     // Re-generate this file by running lit-localize
 
-    
+
     import {str} from '@lit/localize';
 
     /* eslint-disable no-irregular-whitespace */
@@ -12,6 +12,7 @@
       's0520016b18aadf60': `Toveis`,
 's0bc31719aa7a8f43': `Klipp`,
 's109991b0423f1512': `Fiolett`,
+'s163eda8ddbb113ba': `Organisator`,
 's1c8cc3603762c768': `Zoom inn og ut`,
 's236ae937cbcd6a39': `Zoom inn`,
 's2470dafb1ae8a017': `Begrep`,
@@ -19,6 +20,7 @@
 's2afc172e45ceaabe': `Strekfarge`,
 's2ceb11be2290bb1b': `Avbryt`,
 's2de969afacdaa7a6': `Form`,
+'s2ec69d892689b2a0': `Forhåndsorganisator`,
 's352719d86112de9a': `Hjelp`,
 's3687049d1af562c4': `Kopier`,
 's39be3c731b2ea7dd': `Kantlinjetype`,
@@ -37,6 +39,7 @@
 's669b18c6d2d9c95b': `Ingen`,
 's6a7f201c8d3fdb35': `Hjelpehandlinger`,
 's6baf78886c99db89': `Gul`,
+'s781e64ea47044bd9': `Legg til bilde`,
 's7fd3469f78111589': `Åpne kontekstmenyen`,
 's81a0bc84b9a58af8': `Tema D`,
 's81a0bd84b9a58cab': `Tema E`,
@@ -58,16 +61,14 @@
 's9fc3568ec8629bda': `Fremover`,
 's9ff1de19feac1b7c': `Rød`,
 'sa30f1981fd1cd441': `Skriftstørrelse`,
+'sa88475f0cc54f4c1': `Dobbeltklikk eller trykk lenge for å legge til et begrep`,
 'saa7d7cc808f0a35a': `Redigering av begrep`,
-'saa987c09599e0f9a': str`Slipp 
-          ${0} bilder her
-        `,
+'saa987c09599e0f9a': str`Slipp ${0} bilder her`,
 'sabe465e6eb12f208': `Kantfarge`,
 'sabfeef1e4511a839': `Sidehandlinger`,
 'sad17444d283ef2db': `Tilknyttet side`,
 'sad62ff7ac099b1df': `Tekstredigeringer`,
 'sb206d700d26b14ff': `Understreket`,
-'sb3a97475cf766cba': `Legg til begreper via verktøylinjen ovenfor.`,
 'sb6f7c888c7d917a1': `Panorer lerretet`,
 'sb9762427948cf2b3': `Bildredigeringer`,
 'sbadcfb6aa6ef38b1': `Ellips`,
@@ -83,6 +84,7 @@
 'sdc673e73b5c13aea': `Slett`,
 'sdca5284f30b50177': `Hovedtema`,
 'se0a34419921b022a': `Slett`,
+'se182079c831c456d': `Filen er ikke en gyldig forhåndsorganisator.`,
 'se610cb50ceb6ad1d': `Flytt markeringen`,
 'se615f6ce0dd01061': `Strekbredde`,
 'se87e58cabf0417aa': `Forhåndsinnstilt begrep`,
@@ -94,4 +96,3 @@
 'sfac15b89e0668996': `Dupliser`,
 'sfe31d1c784d29ef4': `Fylt`,
     };
-  

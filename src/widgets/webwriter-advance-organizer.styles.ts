@@ -9,15 +9,22 @@ export const styles = css`
     border: 1px solid var(--sl-color-neutral-300);
     border-radius: var(--sl-border-radius-medium);
     box-sizing: border-box;
+    min-width: 300px;
+    max-width: 2100px;
+    color: var(--ww-text-color, inherit);
+    font-family: var(--ww-font-family, inherit);
   }
 
   .root {
     display: flex;
     flex-direction: column;
+    container-type: inline-size;
+    /* 600px from about 790px wide on as before, lower and never under 360px when narrower. */
+    --ao-height: clamp(360px, 76cqi, 600px);
   }
 
   .root.reading {
-    height: 600px;
+    height: var(--ao-height);
   }
 
   .root.reading ao-canvas,
@@ -31,7 +38,7 @@ export const styles = css`
     display: none;
     flex-direction: column;
 
-    height: 600px;
+    height: var(--ao-height);
     padding: var(--sl-spacing-medium);
     padding-bottom: 0;
     box-sizing: border-box;
@@ -115,6 +122,17 @@ export const styles = css`
 
   ao-toolbar.page-view {
     flex-wrap: nowrap;
+  }
+
+  @container (max-width: 480px) {
+    .page-container {
+      padding: var(--sl-spacing-x-small);
+      padding-bottom: 0;
+    }
+
+    .page slot {
+      padding: var(--sl-spacing-small);
+    }
   }
 
   /* --- PRINT VIEW --- */

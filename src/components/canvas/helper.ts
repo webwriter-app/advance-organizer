@@ -15,7 +15,7 @@ export const TOUCH_INDICATOR_RADIUS = 32;
 export const MIN_TARGET_SIZE = 24;
 export const SNAP_RADIUS = 16;
 export const ANCHOR_HOVER_RADIUS = 24;
-export const MIN_EDGE_LABEL_WIDTH = 80;
+const MIN_EDGE_LABEL_WIDTH = 80;
 export const INSERT_GAP = 24;
 
 export const INTERACTIVE_SELECTOR =

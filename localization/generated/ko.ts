@@ -2,7 +2,7 @@
     // Do not modify this file by hand!
     // Re-generate this file by running lit-localize
 
-    
+
     import {str} from '@lit/localize';
 
     /* eslint-disable no-irregular-whitespace */
@@ -12,6 +12,7 @@
       's0520016b18aadf60': `양방향`,
 's0bc31719aa7a8f43': `잘라내기`,
 's109991b0423f1512': `보라`,
+'s163eda8ddbb113ba': `개념 정리`,
 's1c8cc3603762c768': `확대 및 축소`,
 's236ae937cbcd6a39': `확대`,
 's2470dafb1ae8a017': `용어`,
@@ -19,6 +20,7 @@
 's2afc172e45ceaabe': `선 색상`,
 's2ceb11be2290bb1b': `취소`,
 's2de969afacdaa7a6': `도형`,
+'s2ec69d892689b2a0': `선행 조직자`,
 's352719d86112de9a': `도움말`,
 's3687049d1af562c4': `복사`,
 's39be3c731b2ea7dd': `테두리 유형`,
@@ -37,6 +39,7 @@
 's669b18c6d2d9c95b': `없음`,
 's6a7f201c8d3fdb35': `도움말 동작`,
 's6baf78886c99db89': `노랑`,
+'s781e64ea47044bd9': `이미지 추가`,
 's7fd3469f78111589': `컨텍스트 메뉴 열기`,
 's81a0bc84b9a58af8': `주제 D`,
 's81a0bd84b9a58cab': `주제 E`,
@@ -58,16 +61,14 @@
 's9fc3568ec8629bda': `앞으로`,
 's9ff1de19feac1b7c': `빨강`,
 'sa30f1981fd1cd441': `글꼴 크기`,
+'sa88475f0cc54f4c1': `개념을 추가하려면 두 번 클릭하거나 길게 누르세요`,
 'saa7d7cc808f0a35a': `개념 편집`,
-'saa987c09599e0f9a': str`여기에 
-          ${0} 이미지를 드래그 앤 드롭하세요
-        `,
+'saa987c09599e0f9a': str`여기에 이미지 ${0}개 놓기`,
 'sabe465e6eb12f208': `테두리 색상`,
 'sabfeef1e4511a839': `페이지 작업`,
 'sad17444d283ef2db': `연결된 페이지`,
 'sad62ff7ac099b1df': `텍스트 편집`,
 'sb206d700d26b14ff': `밑줄`,
-'sb3a97475cf766cba': `상단의 도구 모음을 통해 개념을 추가하세요.`,
 'sb6f7c888c7d917a1': `캔버스 이동`,
 'sb9762427948cf2b3': `이미지 편집`,
 'sbadcfb6aa6ef38b1': `타원`,
@@ -83,6 +84,7 @@
 'sdc673e73b5c13aea': `삭제`,
 'sdca5284f30b50177': `주 주제`,
 'se0a34419921b022a': `삭제`,
+'se182079c831c456d': `파일이 유효한 선행 조직자가 아닙니다.`,
 'se610cb50ceb6ad1d': `선택 항목 이동`,
 'se615f6ce0dd01061': `선 너비`,
 'se87e58cabf0417aa': `개념 사전 설정`,
@@ -94,4 +96,3 @@
 'sfac15b89e0668996': `복제`,
 'sfe31d1c784d29ef4': `실선`,
     };
-  

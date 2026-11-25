@@ -1,12 +1,12 @@
+import { widgetMsg } from "@webwriter/lit/localize";
 import { consume } from "@lit/context";
 import { LitElementWw } from "@webwriter/lit";
-import { documentContext, selectionContext } from "../../../state/contexts";
-import { DocumentController } from "../../../state/document";
-import { SelectionController } from "../../../state/selection";
+import { documentContext, selectionContext } from "../../store/contexts";
+import { DocumentController } from "../../store/document";
+import { SelectionController } from "../../store/selection";
 import { html, nothing, PropertyValues, type TemplateResult } from "lit";
-import { SubscribeController } from "../../../state/subscribe";
+import { SubscribeController } from "../../store/subscribe";
 import { actionsStyles } from "./toolbar-actions.styles";
-import { localized, msg } from "@lit/localize";
 
 import SlButton from "@shoelace-style/shoelace/dist/components/button/button.component.js";
 import SlButtonGroup from "@shoelace-style/shoelace/dist/components/button-group/button-group.component.js";
@@ -15,8 +15,8 @@ import SlTooltip from "@shoelace-style/shoelace/dist/components/tooltip/tooltip.
 
 import iconEditFile from "@tabler/icons/outline/file-pencil.svg";
 
-@localized()
 export class AoPageActionsGroup extends LitElementWw {
+  protected readonly msg = widgetMsg(this);
   @consume({ context: documentContext })
   accessor doc!: DocumentController;
 
@@ -55,13 +55,13 @@ export class AoPageActionsGroup extends LitElementWw {
       return nothing;
     }
 
-    return html`<sl-button-group label=${msg("Connected page")}>
-      <sl-tooltip content=${msg("Connected page")}>
+    return html`<sl-button-group label=${this.msg("Connected page")}>
+      <sl-tooltip content=${this.msg("Connected page")}>
         <sl-button
           size="small"
           variant="primary"
           @click=${this._handleOpenPageClick}>
-          <sl-icon label=${msg("Connected page")} src=${iconEditFile}></sl-icon>
+          <sl-icon label=${this.msg("Connected page")} src=${iconEditFile}></sl-icon>
         </sl-button>
       </sl-tooltip>
     </sl-button-group>`;

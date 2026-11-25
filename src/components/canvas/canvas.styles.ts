@@ -5,7 +5,8 @@ export const canvasStyles = css`
     display: block;
     position: relative;
     width: 100%;
-    height: 600px;
+    height: var(--ao-height, 600px);
+    min-height: 240px;
   }
 
   :host(.resizing),
@@ -23,6 +24,15 @@ export const canvasStyles = css`
     outline: none;
   }
 
+  .node:focus {
+    outline: none;
+  }
+
+  .node:focus-visible .shape {
+    outline: 3px solid var(--ao-selection-color, var(--ww-theme-accent-1, #3b82f6));
+    outline-offset: 3px;
+  }
+
   ao-zoom-controls {
     z-index: 10;
   }
@@ -30,14 +40,12 @@ export const canvasStyles = css`
   .empty-hint {
     position: absolute;
     inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: var(--sl-spacing-large);
-    box-sizing: border-box;
+    display: grid;
+    place-items: center;
+    padding: 16px;
     text-align: center;
+    font-family: var(--sl-font-sans, sans-serif);
     color: var(--sl-color-neutral-500);
-    font-size: var(--sl-font-size-small);
     -webkit-user-select: none;
     user-select: none;
     pointer-events: none;
@@ -63,6 +71,13 @@ export const canvasStyles = css`
   :host(:not([editable])) .node.has-page,
   .badge {
     cursor: pointer;
+  }
+
+  /* Readers cannot use these, so a drag that starts on them pans the view. */
+  :host(:not([editable])) .node:not(.has-page),
+  :host(:not([editable])) .edges,
+  :host(:not([editable])) .images {
+    pointer-events: none;
   }
 
   .resize-handle-target {

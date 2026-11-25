@@ -1,0 +1,12 @@
+{
+  "nodes": [
+    { "id": "a", "kind": "node", "position": { "x": 0, "y": 0 }, "dimension": { "width": 160, "height": 60 }, "style": { "shape": "rectangle" }, "label": { "text": "Cells" } },
+    { "id": "b", "kind": "node", "position": { "x": 240, "y": -40 }, "dimension": { "width": 160, "height": 60 }, "style": {}, "label": { "text": "Nucleus" } },
+    { "id": "c", "kind": "node", "position": { "x": 240, "y": 60 }, "dimension": { "width": 160, "height": 60 }, "style": {}, "label": { "text": "Membrane" } }
+  ],
+  "edges": [
+    { "id": "e1", "kind": "edge", "source": "a", "target": "b", "style": { "markerEnd": "arrow" } },
+    { "id": "e2", "kind": "edge", "source": "a", "target": "c", "style": {} }
+  ],
+  "images": []
+}

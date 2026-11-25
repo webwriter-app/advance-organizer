@@ -2,7 +2,7 @@
     // Do not modify this file by hand!
     // Re-generate this file by running lit-localize
 
-    
+
     import {str} from '@lit/localize';
 
     /* eslint-disable no-irregular-whitespace */
@@ -12,6 +12,7 @@
       's0520016b18aadf60': `Bidirecional`,
 's0bc31719aa7a8f43': `Cortar`,
 's109991b0423f1512': `Violeta`,
+'s163eda8ddbb113ba': `Organizador`,
 's1c8cc3603762c768': `Aumentar e diminuir o zoom`,
 's236ae937cbcd6a39': `Ampliar`,
 's2470dafb1ae8a017': `Termo`,
@@ -19,6 +20,7 @@
 's2afc172e45ceaabe': `Cor do traço`,
 's2ceb11be2290bb1b': `Cancelar`,
 's2de969afacdaa7a6': `Forma`,
+'s2ec69d892689b2a0': `Organizador prévio`,
 's352719d86112de9a': `Ajuda`,
 's3687049d1af562c4': `Copiar`,
 's39be3c731b2ea7dd': `Tipo de borda`,
@@ -37,6 +39,7 @@
 's669b18c6d2d9c95b': `Nenhuma`,
 's6a7f201c8d3fdb35': `Ações de ajuda`,
 's6baf78886c99db89': `Amarelo`,
+'s781e64ea47044bd9': `Adicionar imagem`,
 's7fd3469f78111589': `Abrir menu de contexto`,
 's81a0bc84b9a58af8': `Tema D`,
 's81a0bd84b9a58cab': `Tema E`,
@@ -58,17 +61,14 @@
 's9fc3568ec8629bda': `Para a frente`,
 's9ff1de19feac1b7c': `Vermelho`,
 'sa30f1981fd1cd441': `Tamanho da fonte`,
+'sa88475f0cc54f4c1': `Dê um duplo clique ou pressione e segure para adicionar um conceito`,
 'saa7d7cc808f0a35a': `Edições de conceito`,
-'saa987c09599e0f9a': str`Arraste 
-          imagens do 
-          ${0} para cá
-        `,
+'saa987c09599e0f9a': str`Solte ${0} imagens aqui`,
 'sabe465e6eb12f208': `Cor da borda`,
 'sabfeef1e4511a839': `Ações da página`,
 'sad17444d283ef2db': `Página relacionada`,
 'sad62ff7ac099b1df': `Edições de texto`,
 'sb206d700d26b14ff': `Sublinhado`,
-'sb3a97475cf766cba': `Adicione conceitos pela barra de ferramentas acima.`,
 'sb6f7c888c7d917a1': `Deslocar a tela`,
 'sb9762427948cf2b3': `Edições de imagem`,
 'sbadcfb6aa6ef38b1': `Elipse`,
@@ -84,6 +84,7 @@
 'sdc673e73b5c13aea': `Excluir`,
 'sdca5284f30b50177': `Tópico principal`,
 'se0a34419921b022a': `Del`,
+'se182079c831c456d': `O arquivo não é um organizador prévio válido.`,
 'se610cb50ceb6ad1d': `Mover a seleção`,
 'se615f6ce0dd01061': `Largura do traço`,
 'se87e58cabf0417aa': `Predefinição de conceito`,
@@ -95,4 +96,3 @@
 'sfac15b89e0668996': `Duplicar`,
 'sfe31d1c784d29ef4': `Sólido`,
     };
-  

@@ -2,7 +2,7 @@
     // Do not modify this file by hand!
     // Re-generate this file by running lit-localize
 
-    
+
     import {str} from '@lit/localize';
 
     /* eslint-disable no-irregular-whitespace */
@@ -12,6 +12,7 @@
       's0520016b18aadf60': `Bidireccional`,
 's0bc31719aa7a8f43': `Cortar`,
 's109991b0423f1512': `Violeta`,
+'s163eda8ddbb113ba': `Organizador`,
 's1c8cc3603762c768': `Acercar y alejar`,
 's236ae937cbcd6a39': `Acercar`,
 's2470dafb1ae8a017': `Término`,
@@ -19,6 +20,7 @@
 's2afc172e45ceaabe': `Color del trazo`,
 's2ceb11be2290bb1b': `Cancelar`,
 's2de969afacdaa7a6': `Forma`,
+'s2ec69d892689b2a0': `Organizador previo`,
 's352719d86112de9a': `Ayuda`,
 's3687049d1af562c4': `Copiar`,
 's39be3c731b2ea7dd': `Tipo de borde`,
@@ -37,6 +39,7 @@
 's669b18c6d2d9c95b': `Ninguna`,
 's6a7f201c8d3fdb35': `Acciones de ayuda`,
 's6baf78886c99db89': `Amarillo`,
+'s781e64ea47044bd9': `Añadir imagen`,
 's7fd3469f78111589': `Abrir el menú contextual`,
 's81a0bc84b9a58af8': `Tema D`,
 's81a0bd84b9a58cab': `Tema E`,
@@ -58,17 +61,14 @@
 's9fc3568ec8629bda': `Adelante`,
 's9ff1de19feac1b7c': `Rojo`,
 'sa30f1981fd1cd441': `Tamaño de fuente`,
+'sa88475f0cc54f4c1': `Haz doble clic o mantén pulsado para añadir un concepto`,
 'saa7d7cc808f0a35a': `Modificaciones de conceptos`,
-'saa987c09599e0f9a': str`Arrastra 
-          las imágenes de 
-          ${0} aquí
-        `,
+'saa987c09599e0f9a': str`Suelta ${0} imágenes aquí`,
 'sabe465e6eb12f208': `Color del borde`,
 'sabfeef1e4511a839': `Acciones de la página`,
 'sad17444d283ef2db': `Página relacionada`,
 'sad62ff7ac099b1df': `Modificaciones de texto`,
 'sb206d700d26b14ff': `Subrayado`,
-'sb3a97475cf766cba': `Añade conceptos mediante la barra de herramientas de arriba.`,
 'sb6f7c888c7d917a1': `Desplazar el lienzo`,
 'sb9762427948cf2b3': `Ediciones de imagen`,
 'sbadcfb6aa6ef38b1': `Elipse`,
@@ -84,6 +84,7 @@
 'sdc673e73b5c13aea': `Eliminar`,
 'sdca5284f30b50177': `Tema principal`,
 'se0a34419921b022a': `Supr`,
+'se182079c831c456d': `El archivo no es un organizador previo válido.`,
 'se610cb50ceb6ad1d': `Mover la selección`,
 'se615f6ce0dd01061': `Ancho del trazo`,
 'se87e58cabf0417aa': `Preajuste de concepto`,
@@ -95,4 +96,3 @@
 'sfac15b89e0668996': `Duplicar`,
 'sfe31d1c784d29ef4': `Liso`,
     };
-  

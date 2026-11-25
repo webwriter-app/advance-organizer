@@ -2,7 +2,7 @@
     // Do not modify this file by hand!
     // Re-generate this file by running lit-localize
 
-    
+
     import {str} from '@lit/localize';
 
     /* eslint-disable no-irregular-whitespace */
@@ -12,6 +12,7 @@
       's0520016b18aadf60': `Dubbelriktad`,
 's0bc31719aa7a8f43': `Klipp`,
 's109991b0423f1512': `Violett`,
+'s163eda8ddbb113ba': `Organisatör`,
 's1c8cc3603762c768': `Zooma in och ut`,
 's236ae937cbcd6a39': `Zooma in`,
 's2470dafb1ae8a017': `Begrepp`,
@@ -19,6 +20,7 @@
 's2afc172e45ceaabe': `Strokefärg`,
 's2ceb11be2290bb1b': `Avbryt`,
 's2de969afacdaa7a6': `Form`,
+'s2ec69d892689b2a0': `Förhandsorganisatör`,
 's352719d86112de9a': `Hjälp`,
 's3687049d1af562c4': `Kopiera`,
 's39be3c731b2ea7dd': `Kantlinjetyp`,
@@ -37,6 +39,7 @@
 's669b18c6d2d9c95b': `Inga`,
 's6a7f201c8d3fdb35': `Hjälpåtgärder`,
 's6baf78886c99db89': `Gul`,
+'s781e64ea47044bd9': `Lägg till bild`,
 's7fd3469f78111589': `Öppna snabbmenyn`,
 's81a0bc84b9a58af8': `Ämne D`,
 's81a0bd84b9a58cab': `Ämne E`,
@@ -58,16 +61,14 @@
 's9fc3568ec8629bda': `Framåt`,
 's9ff1de19feac1b7c': `Röd`,
 'sa30f1981fd1cd441': `Teckenstorlek`,
+'sa88475f0cc54f4c1': `Dubbelklicka eller tryck länge för att lägga till ett begrepp`,
 'saa7d7cc808f0a35a': `Redigering av begrepp`,
-'saa987c09599e0f9a': str`Släpp 
-          ${0} bilder här
-        `,
+'saa987c09599e0f9a': str`Släpp ${0} bilder här`,
 'sabe465e6eb12f208': `Ramfärg`,
 'sabfeef1e4511a839': `Sidåtgärder`,
 'sad17444d283ef2db': `Ansluten sida`,
 'sad62ff7ac099b1df': `Textredigeringar`,
 'sb206d700d26b14ff': `Understrykning`,
-'sb3a97475cf766cba': `Lägg till begrepp via verktygsfältet ovan.`,
 'sb6f7c888c7d917a1': `Panorera arbetsytan`,
 'sb9762427948cf2b3': `Bildredigering`,
 'sbadcfb6aa6ef38b1': `Ellips`,
@@ -83,6 +84,7 @@
 'sdc673e73b5c13aea': `Ta bort`,
 'sdca5284f30b50177': `Huvudämne`,
 'se0a34419921b022a': `Ta bort`,
+'se182079c831c456d': `Filen är inte en giltig förhandsorganisatör.`,
 'se610cb50ceb6ad1d': `Flytta markeringen`,
 'se615f6ce0dd01061': `Linjebredd`,
 'se87e58cabf0417aa': `Förinställt koncept`,
@@ -94,4 +96,3 @@
 'sfac15b89e0668996': `Duplicera`,
 'sfe31d1c784d29ef4': `Fyllning`,
     };
-  

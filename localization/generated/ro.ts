@@ -2,7 +2,7 @@
     // Do not modify this file by hand!
     // Re-generate this file by running lit-localize
 
-    
+
     import {str} from '@lit/localize';
 
     /* eslint-disable no-irregular-whitespace */
@@ -12,6 +12,7 @@
       's0520016b18aadf60': `Bidirecțional`,
 's0bc31719aa7a8f43': `Tăiere`,
 's109991b0423f1512': `Violet`,
+'s163eda8ddbb113ba': `Organizator`,
 's1c8cc3603762c768': `Măriți și micșorați`,
 's236ae937cbcd6a39': `Mărire`,
 's2470dafb1ae8a017': `Termen`,
@@ -19,6 +20,7 @@
 's2afc172e45ceaabe': `Culoarea conturului`,
 's2ceb11be2290bb1b': `Anulează`,
 's2de969afacdaa7a6': `Formă`,
+'s2ec69d892689b2a0': `Organizator anticipativ`,
 's352719d86112de9a': `Ajutor`,
 's3687049d1af562c4': `Copiere`,
 's39be3c731b2ea7dd': `Tip de margine`,
@@ -37,6 +39,7 @@
 's669b18c6d2d9c95b': `Niciuna`,
 's6a7f201c8d3fdb35': `Acțiuni de ajutor`,
 's6baf78886c99db89': `Galben`,
+'s781e64ea47044bd9': `Adaugă o imagine`,
 's7fd3469f78111589': `Deschide meniul contextual`,
 's81a0bc84b9a58af8': `Subiectul D`,
 's81a0bd84b9a58cab': `Subiectul E`,
@@ -58,17 +61,14 @@
 's9fc3568ec8629bda': `Față`,
 's9ff1de19feac1b7c': `Roșu`,
 'sa30f1981fd1cd441': `Dimensiunea fontului`,
+'sa88475f0cc54f4c1': `Faceți dublu clic sau apăsați lung pentru a adăuga un concept`,
 'saa7d7cc808f0a35a': `Modificări concept`,
-'saa987c09599e0f9a': str`Trage 
-          imaginile de pe 
-          ${0} aici
-        `,
+'saa987c09599e0f9a': str`Plasează aici ${0} imagini`,
 'sabe465e6eb12f208': `Culoarea chenarului`,
 'sabfeef1e4511a839': `Acțiuni pagină`,
 'sad17444d283ef2db': `Pagină asociată`,
 'sad62ff7ac099b1df': `Modificări de text`,
 'sb206d700d26b14ff': `Subliniat`,
-'sb3a97475cf766cba': `Adăugați concepte folosind bara de instrumente de mai sus.`,
 'sb6f7c888c7d917a1': `Deplasați pânza`,
 'sb9762427948cf2b3': `Modificări ale imaginii`,
 'sbadcfb6aa6ef38b1': `Elipsă`,
@@ -84,6 +84,7 @@
 'sdc673e73b5c13aea': `Ștergere`,
 'sdca5284f30b50177': `Subiect principal`,
 'se0a34419921b022a': `Del`,
+'se182079c831c456d': `Fișierul nu este un organizator anticipativ valid.`,
 'se610cb50ceb6ad1d': `Mutați selecția`,
 'se615f6ce0dd01061': `Lățimea conturului`,
 'se87e58cabf0417aa': `Presetare concept`,
@@ -95,4 +96,3 @@
 'sfac15b89e0668996': `Duplicare`,
 'sfe31d1c784d29ef4': `Continuu`,
     };
-  

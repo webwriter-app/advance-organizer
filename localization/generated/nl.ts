@@ -2,7 +2,7 @@
     // Do not modify this file by hand!
     // Re-generate this file by running lit-localize
 
-    
+
     import {str} from '@lit/localize';
 
     /* eslint-disable no-irregular-whitespace */
@@ -12,6 +12,7 @@
       's0520016b18aadf60': `Bidirectioneel`,
 's0bc31719aa7a8f43': `Knippen`,
 's109991b0423f1512': `Violet`,
+'s163eda8ddbb113ba': `Organizer`,
 's1c8cc3603762c768': `In- en uitzoomen`,
 's236ae937cbcd6a39': `Uitzoomen`,
 's2470dafb1ae8a017': `Term`,
@@ -19,6 +20,7 @@
 's2afc172e45ceaabe': `Lijnkleur`,
 's2ceb11be2290bb1b': `Annuleren`,
 's2de969afacdaa7a6': `Vorm`,
+'s2ec69d892689b2a0': `Advance organizer`,
 's352719d86112de9a': `Help`,
 's3687049d1af562c4': `Kopiëren`,
 's39be3c731b2ea7dd': `Randtype`,
@@ -37,6 +39,7 @@
 's669b18c6d2d9c95b': `Geen`,
 's6a7f201c8d3fdb35': `Help-acties`,
 's6baf78886c99db89': `Geel`,
+'s781e64ea47044bd9': `Afbeelding toevoegen`,
 's7fd3469f78111589': `Contextmenu openen`,
 's81a0bc84b9a58af8': `Onderwerp D`,
 's81a0bd84b9a58cab': `Onderwerp E`,
@@ -58,16 +61,14 @@
 's9fc3568ec8629bda': `Voorzijde`,
 's9ff1de19feac1b7c': `Rood`,
 'sa30f1981fd1cd441': `Lettergrootte`,
+'sa88475f0cc54f4c1': `Dubbelklik of houd lang ingedrukt om een concept toe te voegen`,
 'saa7d7cc808f0a35a': `Concept bewerken`,
-'saa987c09599e0f9a': str`Zet 
-          ${0} afbeeldingen hier neer
-        `,
+'saa987c09599e0f9a': str`Zet hier ${0} afbeeldingen neer`,
 'sabe465e6eb12f208': `Randkleur`,
 'sabfeef1e4511a839': `Pagina-acties`,
 'sad17444d283ef2db': `Gekoppelde pagina`,
 'sad62ff7ac099b1df': `Tekstbewerkingen`,
 'sb206d700d26b14ff': `Onderstrepen`,
-'sb3a97475cf766cba': `Voeg concepten toe via de werkbalk hierboven.`,
 'sb6f7c888c7d917a1': `Schuif over het canvas`,
 'sb9762427948cf2b3': `Afbeeldingsbewerkingen`,
 'sbadcfb6aa6ef38b1': `Ellips`,
@@ -83,6 +84,7 @@
 'sdc673e73b5c13aea': `Verwijderen`,
 'sdca5284f30b50177': `Hoofdonderwerp`,
 'se0a34419921b022a': `Verwijderen`,
+'se182079c831c456d': `Het bestand is geen geldige advance organizer.`,
 'se610cb50ceb6ad1d': `De selectie verplaatsen`,
 'se615f6ce0dd01061': `Lijnbreedte`,
 'se87e58cabf0417aa': `Conceptvoorinstelling`,
@@ -94,4 +96,3 @@
 'sfac15b89e0668996': `Dupliceren`,
 'sfe31d1c784d29ef4': `Volledig`,
     };
-  

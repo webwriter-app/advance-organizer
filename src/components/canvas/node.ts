@@ -13,18 +13,23 @@ import { renderLabel } from "./label";
 
 /**
  * If `pageNumber` is given, the badge shows that number instead of the open-page icon.
+ * An `openable` node is a tab stop with the role of a button, for readers who use the keyboard.
  */
 export function renderNode(
   n: Node,
   hasPage: boolean = false,
   editingLabel: boolean = false,
   pageNumber?: number,
+  openable: boolean = false,
 ): TemplateResult {
   const label = getLabelBounds(n.style.shape, n.dimension);
   return svg`
     <g
       class="node${hasPage ? " has-page" : ""}"
       data-item-id="${n.id}"
+      tabindex=${openable ? "0" : nothing}
+      role=${openable ? "button" : nothing}
+      aria-label=${openable ? n.label.text || nothing : nothing}
       transform="translate(${n.position.x}, ${n.position.y})"
     >
     ${renderShape(n.style, n.dimension)}

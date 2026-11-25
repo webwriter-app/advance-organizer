@@ -1,5 +1,5 @@
 import { ReactiveControllerHost } from "lit";
-import { countImageItems, filterImageFiles } from "../../utils/image-import";
+import { countImageItems, filterImageFiles } from "../io/image-import";
 import { CanvasStores, insertImages } from "./insert";
 import { ZoomController } from "./zoom";
 

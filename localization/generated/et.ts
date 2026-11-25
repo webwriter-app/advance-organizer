@@ -2,7 +2,7 @@
     // Do not modify this file by hand!
     // Re-generate this file by running lit-localize
 
-    
+
     import {str} from '@lit/localize';
 
     /* eslint-disable no-irregular-whitespace */
@@ -12,6 +12,7 @@
       's0520016b18aadf60': `Kahepoolne`,
 's0bc31719aa7a8f43': `Lõika`,
 's109991b0423f1512': `Lilla`,
+'s163eda8ddbb113ba': `Korrastaja`,
 's1c8cc3603762c768': `Suurenda ja vähenda`,
 's236ae937cbcd6a39': `Suurenda`,
 's2470dafb1ae8a017': `Termin`,
@@ -19,6 +20,7 @@
 's2afc172e45ceaabe': `Joon värv`,
 's2ceb11be2290bb1b': `Tühista`,
 's2de969afacdaa7a6': `Kuju`,
+'s2ec69d892689b2a0': `Eelkorraldaja`,
 's352719d86112de9a': `Abi`,
 's3687049d1af562c4': `Kopeeri`,
 's39be3c731b2ea7dd': `Piirjoone tüüp`,
@@ -37,6 +39,7 @@
 's669b18c6d2d9c95b': `Puuduvad`,
 's6a7f201c8d3fdb35': `Abi toimingud`,
 's6baf78886c99db89': `Kollane`,
+'s781e64ea47044bd9': `Lisa pilt`,
 's7fd3469f78111589': `Ava kontekstimenüü`,
 's81a0bc84b9a58af8': `Teema D`,
 's81a0bd84b9a58cab': `Teema E`,
@@ -58,16 +61,14 @@
 's9fc3568ec8629bda': `Edasi`,
 's9ff1de19feac1b7c': `Punane`,
 'sa30f1981fd1cd441': `Kirjasuurus`,
+'sa88475f0cc54f4c1': `Mõiste lisamiseks topeltklõpsake või vajutage pikalt`,
 'saa7d7cc808f0a35a': `Mõiste muudatused`,
-'saa987c09599e0f9a': str`Lohistage 
-          ${0} pildid siia
-        `,
+'saa987c09599e0f9a': str`Lohista siia ${0} pilti`,
 'sabe465e6eb12f208': `Piirjoone värv`,
 'sabfeef1e4511a839': `Lehe toimingud`,
 'sad17444d283ef2db': `Seotud leht`,
 'sad62ff7ac099b1df': `Teksti muudatused`,
 'sb206d700d26b14ff': `Allajoonitud`,
-'sb3a97475cf766cba': `Lisage mõisted ülal asuva tööriistariba kaudu.`,
 'sb6f7c888c7d917a1': `Liiguta tööpinda`,
 'sb9762427948cf2b3': `Pildi muudatused`,
 'sbadcfb6aa6ef38b1': `Ellips`,
@@ -83,6 +84,7 @@
 'sdc673e73b5c13aea': `Kustuta`,
 'sdca5284f30b50177': `Põhiteema`,
 'se0a34419921b022a': `Kustuta`,
+'se182079c831c456d': `Fail ei ole kehtiv eelkorraldaja.`,
 'se610cb50ceb6ad1d': `Liiguta valikut`,
 'se615f6ce0dd01061': `Kontuuri laius`,
 'se87e58cabf0417aa': `Mõiste eelseadistus`,
@@ -94,4 +96,3 @@
 'sfac15b89e0668996': `Kopeeri`,
 'sfe31d1c784d29ef4': `Täisjoon`,
     };
-  

@@ -61,7 +61,7 @@ export interface Node {
 
 export type EdgePosition = "top" | "bottom" | "left" | "right";
 
-export type EdgeRouting = "straight";
+type EdgeRouting = "straight";
 
 export type EdgeMarker = "none" | "arrow";
 
@@ -106,13 +106,6 @@ export interface Image {
 export type CanvasItem = Node | Edge | Image;
 
 export type BoxItem = Node | Image;
-
-export interface AdvanceOrganizer {
-  readonly version: 1;
-  readonly nodes: readonly Node[];
-  readonly edges: readonly Edge[];
-  readonly images: readonly Image[];
-}
 
 export type ResizeHandle = "tl" | "t" | "tr" | "r" | "br" | "b" | "bl" | "l";
 

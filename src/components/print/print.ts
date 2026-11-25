@@ -1,8 +1,8 @@
 import { html, nothing, type TemplateResult } from "lit";
 import { styleMap } from "lit/directives/style-map.js";
 import { Id, Node } from "../../model/types";
-import { DocumentController } from "../../state/document";
-import { PageController } from "../../state/page";
+import { DocumentController } from "../store/document";
+import { PageController } from "../store/page";
 import { renderEdge } from "../canvas/edge";
 import { computeBounds } from "../canvas/helper";
 import { renderImage } from "../canvas/image";
@@ -10,7 +10,7 @@ import { getBadgeColors, renderNode } from "../canvas/node";
 
 const PRINT_PADDING = 32;
 
-export interface PrintEntry {
+interface PrintEntry {
   readonly node: Node;
   readonly number: number;
 }
@@ -69,7 +69,7 @@ export function renderPages(
   return html`<div class="page-container${openPageId === null ? "" : " open"}">
     ${entries.map(({ node, number }) => {
       const { badge, icon } = getBadgeColors(node.style);
-      return html`<section class="page${node.id === openPageId ? " open" : ""}">
+      return html`<section part="page" class="page${node.id === openPageId ? " open" : ""}">
         <header class="page-header">
           <span
             class="page-number"

@@ -2,7 +2,7 @@
     // Do not modify this file by hand!
     // Re-generate this file by running lit-localize
 
-    
+
     import {str} from '@lit/localize';
 
     /* eslint-disable no-irregular-whitespace */
@@ -12,6 +12,7 @@
       's0520016b18aadf60': `Dviejų krypčių`,
 's0bc31719aa7a8f43': `Iškirpti`,
 's109991b0423f1512': `Violetinė`,
+'s163eda8ddbb113ba': `Tvarkyklė`,
 's1c8cc3603762c768': `Padidinti ir sumažinti`,
 's236ae937cbcd6a39': `Padidinti`,
 's2470dafb1ae8a017': `Terminas`,
@@ -19,6 +20,7 @@
 's2afc172e45ceaabe': `Kontūro spalva`,
 's2ceb11be2290bb1b': `Atšaukti`,
 's2de969afacdaa7a6': `Figūra`,
+'s2ec69d892689b2a0': `Išankstinis organizatorius`,
 's352719d86112de9a': `Pagalba`,
 's3687049d1af562c4': `Kopijuoti`,
 's39be3c731b2ea7dd': `Apvado tipas`,
@@ -37,6 +39,7 @@
 's669b18c6d2d9c95b': `Nėra`,
 's6a7f201c8d3fdb35': `Pagalbos veiksmai`,
 's6baf78886c99db89': `Geltona`,
+'s781e64ea47044bd9': `Pridėti vaizdą`,
 's7fd3469f78111589': `Atidaryti kontekstinį meniu`,
 's81a0bc84b9a58af8': `Tema D`,
 's81a0bd84b9a58cab': `Tema E`,
@@ -58,16 +61,14 @@
 's9fc3568ec8629bda': `Pirmyn`,
 's9ff1de19feac1b7c': `Raudona`,
 'sa30f1981fd1cd441': `Šrifto dydis`,
+'sa88475f0cc54f4c1': `Dukart spustelėkite arba ilgai paspauskite, kad pridėtumėte sąvoką`,
 'saa7d7cc808f0a35a': `Sąvokos redagavimas`,
-'saa987c09599e0f9a': str`Paleiskite 
-          ${0} paveikslėlius čia
-        `,
+'saa987c09599e0f9a': str`Nuvilkite čia vaizdus (skaičius: ${0})`,
 'sabe465e6eb12f208': `Apvado spalva`,
 'sabfeef1e4511a839': `Puslapio veiksmai`,
 'sad17444d283ef2db': `Susijęs puslapis`,
 'sad62ff7ac099b1df': `Teksto redagavimas`,
 'sb206d700d26b14ff': `Pabraukimas`,
-'sb3a97475cf766cba': `Pridėkite sąvokas naudodami viršutinę įrankių juostą.`,
 'sb6f7c888c7d917a1': `Perkelti drobę`,
 'sb9762427948cf2b3': `Vaizdo redagavimas`,
 'sbadcfb6aa6ef38b1': `Elipsė`,
@@ -83,6 +84,7 @@
 'sdc673e73b5c13aea': `Ištrinti`,
 'sdca5284f30b50177': `Pagrindinė tema`,
 'se0a34419921b022a': `Ištrinti`,
+'se182079c831c456d': `Failas nėra tinkamas išankstinis organizatorius.`,
 'se610cb50ceb6ad1d': `Perkelti pasirinkimą`,
 'se615f6ce0dd01061': `Kontūro plotis`,
 'se87e58cabf0417aa': `Sąvokos nustatymas`,
@@ -94,4 +96,3 @@
 'sfac15b89e0668996': `Duplikuoti`,
 'sfe31d1c784d29ef4': `Vienalytė`,
     };
-  

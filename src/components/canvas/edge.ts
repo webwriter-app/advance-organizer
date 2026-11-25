@@ -1,7 +1,7 @@
 import { svg, type TemplateResult } from "lit";
 import { type Edge, type EdgeStyle, type Point } from "../../model/types";
 import { DEFAULT_BLACK } from "../../model/colors";
-import { DocumentController } from "../../state/document";
+import { DocumentController } from "../store/document";
 import {
   getArrowPath,
   getStrokeDashArray,

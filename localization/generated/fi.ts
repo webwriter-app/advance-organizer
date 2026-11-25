@@ -2,7 +2,7 @@
     // Do not modify this file by hand!
     // Re-generate this file by running lit-localize
 
-    
+
     import {str} from '@lit/localize';
 
     /* eslint-disable no-irregular-whitespace */
@@ -12,6 +12,7 @@
       's0520016b18aadf60': `Kaksisuuntainen`,
 's0bc31719aa7a8f43': `Leikkaa`,
 's109991b0423f1512': `Violetti`,
+'s163eda8ddbb113ba': `Jäsennin`,
 's1c8cc3603762c768': `Lähennä ja loitonna`,
 's236ae937cbcd6a39': `Lähennä`,
 's2470dafb1ae8a017': `Termi`,
@@ -19,6 +20,7 @@
 's2afc172e45ceaabe': `Viivan väri`,
 's2ceb11be2290bb1b': `Peruuta`,
 's2de969afacdaa7a6': `Muoto`,
+'s2ec69d892689b2a0': `Ennakkojäsentäjä`,
 's352719d86112de9a': `Ohje`,
 's3687049d1af562c4': `Kopioi`,
 's39be3c731b2ea7dd': `Reunan tyyppi`,
@@ -37,6 +39,7 @@
 's669b18c6d2d9c95b': `Ei mitään`,
 's6a7f201c8d3fdb35': `Ohjeet`,
 's6baf78886c99db89': `Keltainen`,
+'s781e64ea47044bd9': `Lisää kuva`,
 's7fd3469f78111589': `Avaa kontekstivalikko`,
 's81a0bc84b9a58af8': `Aihe D`,
 's81a0bd84b9a58cab': `Aihe E`,
@@ -58,16 +61,14 @@
 's9fc3568ec8629bda': `Eteenpäin`,
 's9ff1de19feac1b7c': `Punainen`,
 'sa30f1981fd1cd441': `Fonttikoko`,
+'sa88475f0cc54f4c1': `Lisää käsite kaksoisnapsauttamalla tai painamalla pitkään`,
 'saa7d7cc808f0a35a': `Käsitteen muokkaukset`,
-'saa987c09599e0f9a': str`Pudota 
-          ${0} kuvat tähän
-        `,
+'saa987c09599e0f9a': str`Pudota tähän ${0} kuvaa`,
 'sabe465e6eb12f208': `Reunan väri`,
 'sabfeef1e4511a839': `Sivun toiminnot`,
 'sad17444d283ef2db': `Liitetty sivu`,
 'sad62ff7ac099b1df': `Tekstin muokkaukset`,
 'sb206d700d26b14ff': `Alleviivaus`,
-'sb3a97475cf766cba': `Lisää käsitteitä yläreunan työkaluriviltä.`,
 'sb6f7c888c7d917a1': `Panoroi kankaalla`,
 'sb9762427948cf2b3': `Kuvien muokkaukset`,
 'sbadcfb6aa6ef38b1': `Ellipsi`,
@@ -83,6 +84,7 @@
 'sdc673e73b5c13aea': `Poista`,
 'sdca5284f30b50177': `Pääaihe`,
 'se0a34419921b022a': `Poista`,
+'se182079c831c456d': `Tiedosto ei ole kelvollinen ennakkojäsentäjä.`,
 'se610cb50ceb6ad1d': `Siirrä valintaa`,
 'se615f6ce0dd01061': `Viivan leveys`,
 'se87e58cabf0417aa': `Käsitteen esiasetus`,
@@ -94,4 +96,3 @@
 'sfac15b89e0668996': `Kopioi`,
 'sfe31d1c784d29ef4': `Yhtenäinen`,
     };
-  

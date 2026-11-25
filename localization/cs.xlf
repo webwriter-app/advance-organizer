@@ -1,4 +1,5 @@
-<xliff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 http://docs.oasis-open.org/xliff/v1.2/os/xliff-core-1.2-strict.xsd" xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 http://docs.oasis-open.org/xliff/v1.2/os/xliff-core-1.2-strict.xsd" version="1.2">
   <file original="lit-localize-inputs" datatype="plaintext" source-language="en" target-language="cs">
     <body>
       <trans-unit id="s0bc31719aa7a8f43">
@@ -26,14 +27,8 @@
         <target>Odstranit</target>
       </trans-unit>
       <trans-unit id="saa987c09599e0f9a">
-        <source>Drop 
-          <x id="0" equiv-text="${this.imageCount}"/> images here
-        </source>
-        <target>Přetáhněte 
-          obrázky z 
-          <x id="0" equiv-text="${this.imageCount}"/> sem
-        </target>
-      </trans-unit>
+        <source>Drop <x id="0" equiv-text="${this.imageCount}"/> images here</source>
+<target>Přetáhněte sem obrázky (počet: <x id="0" equiv-text="${this.imageCount}"/>)</target></trans-unit>
       <trans-unit id="sd6f0f760e3bb3148">
         <source>Drop 1 image here</source>
         <target>Přetáhněte sem 1 obrázek</target>
@@ -218,10 +213,6 @@
         <source>Zoom in and out</source>
         <target>Přiblížit a oddálit</target>
       </trans-unit>
-      <trans-unit id="sb3a97475cf766cba">
-        <source>Add concepts via the toolbar above.</source>
-        <target>Přidejte pojmy pomocí panelu nástrojů nahoře.</target>
-      </trans-unit>
       <trans-unit id="s637ca9e5a893dcf5">
         <source>New concept</source>
         <target>Nový pojem</target>
@@ -334,6 +325,28 @@
         <source>Topic E</source>
         <target>Téma E</target>
       </trans-unit>
-    </body>
+    <trans-unit id="s781e64ea47044bd9">
+  <source>Add image</source>
+<target>Přidat obrázek</target></trans-unit>
+<trans-unit id="s163eda8ddbb113ba">
+  <source>Organizer</source>
+<target>Organizér</target></trans-unit>
+<trans-unit id="s2ec69d892689b2a0">
+  <source>Advance organizer</source>
+        <target>Předběžný organizér</target>
+</trans-unit>
+<trans-unit id="sa88475f0cc54f4c1">
+  <source>Double click / long tap to add a concept</source>
+        <target>Dvojitým kliknutím nebo dlouhým stisknutím přidáte pojem</target>
+</trans-unit>
+<trans-unit id="se182079c831c456d">
+  <source>The file is not a valid advance organizer.</source>
+        <target>Soubor není platný předběžný organizér.</target>
+</trans-unit>
+<trans-unit id="sb3a97475cf766cba">
+        <source>Add concepts via the toolbar above.</source>
+        <target>Přidejte pojmy pomocí panelu nástrojů nahoře.</target>
+      </trans-unit>
+</body>
   </file>
 </xliff>

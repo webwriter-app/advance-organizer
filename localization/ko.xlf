@@ -1,4 +1,5 @@
-<xliff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 http://docs.oasis-open.org/xliff/v1.2/os/xliff-core-1.2-strict.xsd" xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 http://docs.oasis-open.org/xliff/v1.2/os/xliff-core-1.2-strict.xsd" version="1.2">
   <file original="lit-localize-inputs" datatype="plaintext" source-language="en" target-language="ko">
     <body>
       <trans-unit id="s0bc31719aa7a8f43">
@@ -26,13 +27,8 @@
         <target>삭제</target>
       </trans-unit>
       <trans-unit id="saa987c09599e0f9a">
-        <source>Drop 
-          <x id="0" equiv-text="${this.imageCount}"/> images here
-        </source>
-        <target>여기에 
-          <x id="0" equiv-text="${this.imageCount}"/> 이미지를 드래그 앤 드롭하세요
-        </target>
-      </trans-unit>
+        <source>Drop <x id="0" equiv-text="${this.imageCount}"/> images here</source>
+<target>여기에 이미지 <x id="0" equiv-text="${this.imageCount}"/>개 놓기</target></trans-unit>
       <trans-unit id="sd6f0f760e3bb3148">
         <source>Drop 1 image here</source>
         <target>이미지 1개를 여기에 드래그하세요</target>
@@ -217,10 +213,6 @@
         <source>Zoom in and out</source>
         <target>확대 및 축소</target>
       </trans-unit>
-      <trans-unit id="sb3a97475cf766cba">
-        <source>Add concepts via the toolbar above.</source>
-        <target>상단의 도구 모음을 통해 개념을 추가하세요.</target>
-      </trans-unit>
       <trans-unit id="s637ca9e5a893dcf5">
         <source>New concept</source>
         <target>새 개념</target>
@@ -333,6 +325,28 @@
         <source>Topic E</source>
         <target>주제 E</target>
       </trans-unit>
-    </body>
+    <trans-unit id="s781e64ea47044bd9">
+  <source>Add image</source>
+<target>이미지 추가</target></trans-unit>
+<trans-unit id="s163eda8ddbb113ba">
+  <source>Organizer</source>
+<target>개념 정리</target></trans-unit>
+<trans-unit id="s2ec69d892689b2a0">
+  <source>Advance organizer</source>
+        <target>선행 조직자</target>
+</trans-unit>
+<trans-unit id="sa88475f0cc54f4c1">
+  <source>Double click / long tap to add a concept</source>
+        <target>개념을 추가하려면 두 번 클릭하거나 길게 누르세요</target>
+</trans-unit>
+<trans-unit id="se182079c831c456d">
+  <source>The file is not a valid advance organizer.</source>
+        <target>파일이 유효한 선행 조직자가 아닙니다.</target>
+</trans-unit>
+<trans-unit id="sb3a97475cf766cba">
+        <source>Add concepts via the toolbar above.</source>
+        <target>상단의 도구 모음을 통해 개념을 추가하세요.</target>
+      </trans-unit>
+</body>
   </file>
 </xliff>

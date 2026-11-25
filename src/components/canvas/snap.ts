@@ -2,7 +2,7 @@ import { EdgePosition, Id, Node, Point } from "../../model/types";
 import { applyAnchorHighlightDom } from "./dom-sync";
 import { getAnchorPoints, SNAP_RADIUS } from "./helper";
 
-export interface SnapTarget {
+interface SnapTarget {
   nodeId: Id;
   position: EdgePosition;
   point: Point;

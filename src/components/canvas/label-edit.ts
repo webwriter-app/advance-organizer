@@ -1,10 +1,10 @@
 import { ReactiveController, ReactiveControllerHost } from "lit";
 import { Id } from "../../model/types";
-import type { DocumentController } from "../../state/document";
+import type { DocumentController } from "../store/document";
 
 export const EDITOR_CLASS = "label-editor";
 
-export interface LabelEditHost extends ReactiveControllerHost {
+interface LabelEditHost extends ReactiveControllerHost {
   readonly renderRoot: ParentNode;
   readonly doc: DocumentController;
 }

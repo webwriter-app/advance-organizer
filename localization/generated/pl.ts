@@ -2,7 +2,7 @@
     // Do not modify this file by hand!
     // Re-generate this file by running lit-localize
 
-    
+
     import {str} from '@lit/localize';
 
     /* eslint-disable no-irregular-whitespace */
@@ -12,6 +12,7 @@
       's0520016b18aadf60': `Dwukierunkowe`,
 's0bc31719aa7a8f43': `Wytnij`,
 's109991b0423f1512': `Fioletowy`,
+'s163eda8ddbb113ba': `Organizator`,
 's1c8cc3603762c768': `Powiększ i pomniejsz`,
 's236ae937cbcd6a39': `Powiększ`,
 's2470dafb1ae8a017': `Termin`,
@@ -19,6 +20,7 @@
 's2afc172e45ceaabe': `Kolor obrysu`,
 's2ceb11be2290bb1b': `Anuluj`,
 's2de969afacdaa7a6': `Kształt`,
+'s2ec69d892689b2a0': `Organizator wprowadzający`,
 's352719d86112de9a': `Pomoc`,
 's3687049d1af562c4': `Kopiuj`,
 's39be3c731b2ea7dd': `Typ obramowania`,
@@ -37,6 +39,7 @@
 's669b18c6d2d9c95b': `Brak`,
 's6a7f201c8d3fdb35': `Działania pomocy`,
 's6baf78886c99db89': `Żółty`,
+'s781e64ea47044bd9': `Dodaj obraz`,
 's7fd3469f78111589': `Otwórz menu kontekstowe`,
 's81a0bc84b9a58af8': `Temat D`,
 's81a0bd84b9a58cab': `Temat E`,
@@ -58,17 +61,14 @@
 's9fc3568ec8629bda': `Dalej`,
 's9ff1de19feac1b7c': `Czerwony`,
 'sa30f1981fd1cd441': `Rozmiar czcionki`,
+'sa88475f0cc54f4c1': `Kliknij dwukrotnie lub naciśnij i przytrzymaj, aby dodać pojęcie`,
 'saa7d7cc808f0a35a': `Edytowanie pojęcia`,
-'saa987c09599e0f9a': str`Przeciągnij 
-          obrazy z 
-          ${0} tutaj
-        `,
+'saa987c09599e0f9a': str`Upuść tutaj ${0} obrazów`,
 'sabe465e6eb12f208': `Kolor obramowania`,
 'sabfeef1e4511a839': `Działania na stronie`,
 'sad17444d283ef2db': `Powiązana strona`,
 'sad62ff7ac099b1df': `Edytowanie tekstu`,
 'sb206d700d26b14ff': `Podkreślenie`,
-'sb3a97475cf766cba': `Dodaj pojęcia za pomocą paska narzędzi powyżej.`,
 'sb6f7c888c7d917a1': `Przesuń obszar roboczy`,
 'sb9762427948cf2b3': `Edycja obrazu`,
 'sbadcfb6aa6ef38b1': `Elipsa`,
@@ -84,6 +84,7 @@
 'sdc673e73b5c13aea': `Usuń`,
 'sdca5284f30b50177': `Temat główny`,
 'se0a34419921b022a': `Usuń`,
+'se182079c831c456d': `Plik nie jest prawidłowym organizatorem wprowadzającym.`,
 'se610cb50ceb6ad1d': `Przesuń zaznaczenie`,
 'se615f6ce0dd01061': `Szerokość obrysu`,
 'se87e58cabf0417aa': `Ustawienia wstępne pojęcia`,
@@ -95,4 +96,3 @@
 'sfac15b89e0668996': `Powiel`,
 'sfe31d1c784d29ef4': `Ciągła`,
     };
-  

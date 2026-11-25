@@ -8,15 +8,15 @@ import {
   readPayload,
   writePayload,
   writePayloadToClipboard,
-} from "../../utils/clipboard";
-import { filterImageFiles } from "../../utils/image-import";
+} from "../io/clipboard";
+import { filterImageFiles } from "../io/image-import";
 import { CanvasStores, insertImages, insertPayload } from "./insert";
 
-export interface ClipboardHost extends CanvasStores {
+interface ClipboardHost extends CanvasStores {
   readonly editingId: Id | null;
 }
 
-export function selectionPayload(
+function selectionPayload(
   stores: ClipboardHost,
 ): ClipboardPayload | null {
   if (stores.editingId) return null;

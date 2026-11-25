@@ -5,8 +5,6 @@
 .env.*
 
 # Editor-/Tooling-Config
-.editorconfig
-.prettierrc
 .gitattributes
 .vscode/
 .idea/

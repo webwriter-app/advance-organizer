@@ -2,7 +2,7 @@
     // Do not modify this file by hand!
     // Re-generate this file by running lit-localize
 
-    
+
     import {str} from '@lit/localize';
 
     /* eslint-disable no-irregular-whitespace */
@@ -12,6 +12,7 @@
       's0520016b18aadf60': `Tovejs`,
 's0bc31719aa7a8f43': `Klip`,
 's109991b0423f1512': `Violet`,
+'s163eda8ddbb113ba': `Organisator`,
 's1c8cc3603762c768': `Zoom ind og ud`,
 's236ae937cbcd6a39': `Zoom ind`,
 's2470dafb1ae8a017': `Begreb`,
@@ -19,6 +20,7 @@
 's2afc172e45ceaabe': `Stregfarve`,
 's2ceb11be2290bb1b': `Annuller`,
 's2de969afacdaa7a6': `Form`,
+'s2ec69d892689b2a0': `Forhåndsorganisator`,
 's352719d86112de9a': `Hjælp`,
 's3687049d1af562c4': `Kopier`,
 's39be3c731b2ea7dd': `Kanttype`,
@@ -37,6 +39,7 @@
 's669b18c6d2d9c95b': `Ingen`,
 's6a7f201c8d3fdb35': `Hjælp til handlinger`,
 's6baf78886c99db89': `Gul`,
+'s781e64ea47044bd9': `Tilføj billede`,
 's7fd3469f78111589': `Åbn kontekstmenuen`,
 's81a0bc84b9a58af8': `Emne D`,
 's81a0bd84b9a58cab': `Emne E`,
@@ -58,16 +61,14 @@
 's9fc3568ec8629bda': `Frem`,
 's9ff1de19feac1b7c': `Rød`,
 'sa30f1981fd1cd441': `Skriftstørrelse`,
+'sa88475f0cc54f4c1': `Dobbeltklik eller tryk længe for at tilføje et begreb`,
 'saa7d7cc808f0a35a': `Redigering af begreber`,
-'saa987c09599e0f9a': str`Slip 
-          ${0} billeder her
-        `,
+'saa987c09599e0f9a': str`Slip ${0} billeder her`,
 'sabe465e6eb12f208': `Kantfarve`,
 'sabfeef1e4511a839': `Sidehandlinger`,
 'sad17444d283ef2db': `Tilknyttet side`,
 'sad62ff7ac099b1df': `Tekstredigeringer`,
 'sb206d700d26b14ff': `Understreget`,
-'sb3a97475cf766cba': `Tilføj begreber via værktøjslinjen ovenfor.`,
 'sb6f7c888c7d917a1': `Panorer lærredet`,
 'sb9762427948cf2b3': `Billedredigeringer`,
 'sbadcfb6aa6ef38b1': `Ellipse`,
@@ -83,6 +84,7 @@
 'sdc673e73b5c13aea': `Slet`,
 'sdca5284f30b50177': `Hovedemne`,
 'se0a34419921b022a': `Slet`,
+'se182079c831c456d': `Filen er ikke en gyldig forhåndsorganisator.`,
 'se610cb50ceb6ad1d': `Flyt markeringen`,
 'se615f6ce0dd01061': `Stregbredde`,
 'se87e58cabf0417aa': `Forudindstilling af begreb`,
@@ -94,4 +96,3 @@
 'sfac15b89e0668996': `Dupliker`,
 'sfe31d1c784d29ef4': `Fyld`,
     };
-  

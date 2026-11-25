@@ -2,7 +2,7 @@
     // Do not modify this file by hand!
     // Re-generate this file by running lit-localize
 
-    
+
     import {str} from '@lit/localize';
 
     /* eslint-disable no-irregular-whitespace */
@@ -12,6 +12,7 @@
       's0520016b18aadf60': `Bidirektional`,
 's0bc31719aa7a8f43': `Ausschneiden`,
 's109991b0423f1512': `Violett`,
+'s163eda8ddbb113ba': `Organizer`,
 's1c8cc3603762c768': `Zoomen`,
 's236ae937cbcd6a39': `Vergrößern`,
 's2470dafb1ae8a017': `Begriff`,
@@ -19,6 +20,7 @@
 's2afc172e45ceaabe': `Strichfarbe`,
 's2ceb11be2290bb1b': `Abbrechen`,
 's2de969afacdaa7a6': `Form`,
+'s2ec69d892689b2a0': `Advance Organizer`,
 's352719d86112de9a': `Hilfe`,
 's3687049d1af562c4': `Kopieren`,
 's39be3c731b2ea7dd': `Rahmentyp`,
@@ -37,6 +39,7 @@
 's669b18c6d2d9c95b': `Keine`,
 's6a7f201c8d3fdb35': `Hilfeaktionen`,
 's6baf78886c99db89': `Gelb`,
+'s781e64ea47044bd9': `Bild hinzufügen`,
 's7fd3469f78111589': `Kontextmenü öffnen`,
 's81a0bc84b9a58af8': `Thema D`,
 's81a0bd84b9a58cab': `Thema E`,
@@ -58,16 +61,14 @@
 's9fc3568ec8629bda': `Vorwärts`,
 's9ff1de19feac1b7c': `Rot`,
 'sa30f1981fd1cd441': `Schriftgröße`,
+'sa88475f0cc54f4c1': `Doppelklicken oder lange drücken, um einen Begriff hinzuzufügen`,
 'saa7d7cc808f0a35a': `Konzeptbearbeitung`,
-'saa987c09599e0f9a': str`Hier 
-          ${0} Bilder ablegen
-        `,
+'saa987c09599e0f9a': str`${0} Bilder hier ablegen`,
 'sabe465e6eb12f208': `Rahmenfarbe`,
 'sabfeef1e4511a839': `Seitenaktionen`,
 'sad17444d283ef2db': `Verbundene Seite`,
 'sad62ff7ac099b1df': `Textbearbeitungen`,
 'sb206d700d26b14ff': `Unterstrichen`,
-'sb3a97475cf766cba': `Fügen Sie Konzepte über die Symbolleiste oben hinzu.`,
 'sb6f7c888c7d917a1': `Leinwand verschieben`,
 'sb9762427948cf2b3': `Bildbearbeitung`,
 'sbadcfb6aa6ef38b1': `Ellipse`,
@@ -83,6 +84,7 @@
 'sdc673e73b5c13aea': `Löschen`,
 'sdca5284f30b50177': `Hauptthema`,
 'se0a34419921b022a': `Entf`,
+'se182079c831c456d': `Die Datei ist kein gültiger Advance Organizer.`,
 'se610cb50ceb6ad1d': `Auswahl verschieben`,
 'se615f6ce0dd01061': `Linienbreite`,
 'se87e58cabf0417aa': `Konzeptvorlage`,
@@ -94,4 +96,3 @@
 'sfac15b89e0668996': `Duplizieren`,
 'sfe31d1c784d29ef4': `Durchgehend`,
     };
-  
