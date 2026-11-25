@@ -2,9 +2,6 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
 <file target-language="te" source-language="en" original="lit-localize-inputs" datatype="plaintext">
 <body>
-<trans-unit id="sb3a97475cf766cba">
-  <source>Add concepts via the toolbar above.</source>
-<target>పై టూల్‌బార్ ద్వారా భావనలను జోడించండి.</target></trans-unit>
 <trans-unit id="s637ca9e5a893dcf5">
   <source>New concept</source>
 <target>కొత్త భావన</target></trans-unit>
@@ -254,6 +251,21 @@
 <trans-unit id="s163eda8ddbb113ba">
   <source>Organizer</source>
 <target>ముందస్తు నిర్వాహకం</target></trans-unit>
+<trans-unit id="s2ec69d892689b2a0">
+  <source>Advance organizer</source>
+        <target>పూర్వ నిర్వాహకం</target>
+</trans-unit>
+<trans-unit id="sa88475f0cc54f4c1">
+  <source>Double click / long tap to add a concept</source>
+        <target>భావనను జోడించడానికి రెండుసార్లు క్లిక్ చేయండి లేదా ఎక్కువసేపు నొక్కండి</target>
+</trans-unit>
+<trans-unit id="se182079c831c456d">
+  <source>The file is not a valid advance organizer.</source>
+        <target>ఫైల్ చెల్లుబాటు అయ్యే పూర్వ నిర్వాహకం కాదు.</target>
+</trans-unit>
+<trans-unit id="sb3a97475cf766cba">
+  <source>Add concepts via the toolbar above.</source>
+<target>పై టూల్‌బార్ ద్వారా భావనలను జోడించండి.</target></trans-unit>
 </body>
 </file>
 </xliff>

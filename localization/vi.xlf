@@ -254,6 +254,21 @@
 <trans-unit id="s163eda8ddbb113ba">
   <source>Organizer</source>
 <target>Sơ đồ tổ chức kiến thức</target></trans-unit>
+
+<trans-unit id="s2ec69d892689b2a0">
+  <source>Advance organizer</source>
+  <target>Công cụ tổ chức định hướng</target>
+</trans-unit>
+
+<trans-unit id="sa88475f0cc54f4c1">
+  <source>Double click / long tap to add a concept</source>
+  <target>Nhấp đúp hoặc nhấn giữ để thêm một khái niệm</target>
+</trans-unit>
+
+<trans-unit id="se182079c831c456d">
+  <source>The file is not a valid advance organizer.</source>
+  <target>Tệp không phải là công cụ tổ chức định hướng hợp lệ.</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

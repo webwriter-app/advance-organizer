@@ -43,9 +43,7 @@
             "package": "@webwriter/lit"
           },
           "tagName": "webwriter-advance-organizer-page",
-          "customElement": true,
-          "modulePath": "src/widgets/webwriter-advance-organizer-page.ts",
-          "definitionPath": "src/widgets/webwriter-advance-organizer-page.ts"
+          "customElement": true
         }
       ],
       "exports": [
@@ -353,9 +351,7 @@
             "package": "@webwriter/lit"
           },
           "tagName": "webwriter-advance-organizer",
-          "customElement": true,
-          "modulePath": "src/widgets/webwriter-advance-organizer.ts",
-          "definitionPath": "src/widgets/webwriter-advance-organizer.ts"
+          "customElement": true
         }
       ],
       "exports": [

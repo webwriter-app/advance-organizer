@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 http://docs.oasis-open.org/xliff/v1.2/os/xliff-core-1.2-strict.xsd" version="1.2">
-  <file original="lit-localize-inputs" datatype="plaintext" source-language="en" target-language="zh-hans">
+  <file original="lit-localize-inputs" datatype="plaintext" source-language="en" target-language="zh-Hans">
     <body>
       <trans-unit id="s0bc31719aa7a8f43">
         <source>Cut</source>
@@ -213,10 +213,6 @@
         <source>Zoom in and out</source>
         <target>放大/缩小</target>
       </trans-unit>
-      <trans-unit id="sb3a97475cf766cba">
-        <source>Add concepts via the toolbar above.</source>
-        <target>通过上方工具栏添加概念。</target>
-      </trans-unit>
       <trans-unit id="s637ca9e5a893dcf5">
         <source>New concept</source>
         <target>新概念</target>
@@ -335,6 +331,22 @@
 <trans-unit id="s163eda8ddbb113ba">
   <source>Organizer</source>
 <target>概念组织图</target></trans-unit>
+<trans-unit id="s2ec69d892689b2a0">
+  <source>Advance organizer</source>
+        <target>先行组织者</target>
+</trans-unit>
+<trans-unit id="sa88475f0cc54f4c1">
+  <source>Double click / long tap to add a concept</source>
+        <target>双击或长按以添加概念</target>
+</trans-unit>
+<trans-unit id="se182079c831c456d">
+  <source>The file is not a valid advance organizer.</source>
+        <target>该文件不是有效的先行组织者。</target>
+</trans-unit>
+<trans-unit id="sb3a97475cf766cba">
+        <source>Add concepts via the toolbar above.</source>
+        <target>通过上方工具栏添加概念。</target>
+      </trans-unit>
 </body>
   </file>
 </xliff>

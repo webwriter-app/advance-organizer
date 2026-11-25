@@ -213,10 +213,6 @@
         <source>Zoom in and out</source>
         <target>Zoom ind og ud</target>
       </trans-unit>
-      <trans-unit id="sb3a97475cf766cba">
-        <source>Add concepts via the toolbar above.</source>
-        <target>Tilføj begreber via værktøjslinjen ovenfor.</target>
-      </trans-unit>
       <trans-unit id="s637ca9e5a893dcf5">
         <source>New concept</source>
         <target>Nyt begreb</target>
@@ -335,6 +331,22 @@
 <trans-unit id="s163eda8ddbb113ba">
   <source>Organizer</source>
 <target>Organisator</target></trans-unit>
+<trans-unit id="s2ec69d892689b2a0">
+  <source>Advance organizer</source>
+        <target>Forhåndsorganisator</target>
+</trans-unit>
+<trans-unit id="sa88475f0cc54f4c1">
+  <source>Double click / long tap to add a concept</source>
+        <target>Dobbeltklik eller tryk længe for at tilføje et begreb</target>
+</trans-unit>
+<trans-unit id="se182079c831c456d">
+  <source>The file is not a valid advance organizer.</source>
+        <target>Filen er ikke en gyldig forhåndsorganisator.</target>
+</trans-unit>
+<trans-unit id="sb3a97475cf766cba">
+        <source>Add concepts via the toolbar above.</source>
+        <target>Tilføj begreber via værktøjslinjen ovenfor.</target>
+      </trans-unit>
 </body>
   </file>
 </xliff>
