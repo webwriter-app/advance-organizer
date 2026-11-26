@@ -1,6 +1,6 @@
 {
   "name": "@webwriter/advance-organizer",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Create concept maps and mind maps that introduce topics and link concepts to learning content.",
   "keywords": [
     "webwriter-widget",
@@ -193,6 +193,7 @@
     },
     "./icon": "./icon.svg",
     "./preview": "./assets/preview.mp4",
+    "./preview/de": "./assets/preview-de.mp4",
     "./editing-config.json": "./editing-config.json",
     "./custom-elements.json": "./custom-elements.json"
   },
