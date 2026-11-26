@@ -1,5 +1,5 @@
-# Advance Organizer (`@webwriter/advance-organizer@2.0.0`)
-[License: MIT](LICENSE) | Version: 2.0.0
+# Advance Organizer (`@webwriter/advance-organizer@2.1.0`)
+[License: MIT](LICENSE) | Version: 2.1.0
 
 Create concept maps and mind maps that introduce topics and link concepts to learning content.
 
